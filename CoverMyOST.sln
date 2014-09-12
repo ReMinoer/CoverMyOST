@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1AD7B2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniMAL", "..\MiniMAL\MiniMAL\MiniMAL.csproj", "{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{97BAC9C2-3802-42CD-9926-0F4633D925C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,8 +38,15 @@ Global
 		{702C304C-E9EC-4491-A8A6-639CFBBE8510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{702C304C-E9EC-4491-A8A6-639CFBBE8510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{702C304C-E9EC-4491-A8A6-639CFBBE8510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 	EndGlobalSection
 EndGlobal
