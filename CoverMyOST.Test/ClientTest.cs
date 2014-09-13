@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using NUnit.Framework;
 using TagLib;
+using File = TagLib.File;
 
 namespace CoverMyOST.Test
 {
@@ -78,13 +81,22 @@ namespace CoverMyOST.Test
             client.AddFile(TestPaths.MusicB);
 
             MusicFile file = client.Files[TestPaths.MusicB];
-            Image cover = Image.FromFile(TestPaths.CoverA);
+            var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
             file.Cover = cover;
             file.Save();
 
             // Test
-            var result = new MusicFile(TestPaths.MusicB);
-            Assert.AreEqual(result.Cover.PhysicalDimension, cover.PhysicalDimension);
+            var result = new MusicFile(TestPaths.MusicB).Cover;
+
+            var memoryStream = new MemoryStream();
+            result.Save(memoryStream, ImageFormat.Jpeg);
+            byte[] resultBytes = memoryStream.ToArray();
+
+            memoryStream = new MemoryStream();
+            result.Save(memoryStream, ImageFormat.Jpeg);
+            byte[] coverBytes = memoryStream.ToArray();
+
+            Assert.AreEqual(resultBytes, coverBytes);
         }
     }
 }

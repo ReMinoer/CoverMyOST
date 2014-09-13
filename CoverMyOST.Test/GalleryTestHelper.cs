@@ -21,7 +21,7 @@ namespace CoverMyOST.Test
 
             string albumName = client.Files[filePath].Album;
             ICoversGallery gallery = new TCoversGallery();
-            Dictionary<string, Image> cover = gallery.Search(albumName);
+            Dictionary<string, Bitmap> cover = gallery.Search(albumName);
 
             MusicFile file = client.Files[filePath];
             file.Cover = cover.Values.First();

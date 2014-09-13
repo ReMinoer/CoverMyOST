@@ -11,13 +11,13 @@ namespace CoverMyOST
 {
     public class MusicFile
     {
-        public Image Cover
+        public Bitmap Cover
         {
             get
             {
                 IPicture picture = _file.Tag.Pictures.First(p => p.Type == PictureType.FrontCover);
                 var memoryStream = new MemoryStream(picture.Data.Data);
-                return Image.FromStream(memoryStream);
+                return new Bitmap(Image.FromStream(memoryStream));
             }
             set
             {

@@ -5,6 +5,6 @@ namespace CoverMyOST
 {
     public interface ICoversGallery
     {
-        Dictionary<string, Image> Search(string query);
+        Dictionary<string, Bitmap> Search(string query);
     }
 }

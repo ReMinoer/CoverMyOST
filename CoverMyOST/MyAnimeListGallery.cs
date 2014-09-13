@@ -16,9 +16,9 @@ namespace CoverMyOST
             _miniMal.Login("TryMiniMAL", "tryminimal");
         }
 
-        public Dictionary<string, Image> Search(string query)
+        public Dictionary<string, Bitmap> Search(string query)
         {
-            var result = new Dictionary<string, Image>();
+            var result = new Dictionary<string, Bitmap>();
 
             List<AnimeSearchEntry> search = _miniMal.SearchAnime(query.Split(' '));
             foreach (AnimeSearchEntry entry in search)
@@ -30,7 +30,7 @@ namespace CoverMyOST
                     if (stream == null)
                         continue;
 
-                    Image image = Image.FromStream(stream);
+                    var image = new Bitmap(Image.FromStream(stream));
                     result.Add(entry.Title, image);
                 }
             }
