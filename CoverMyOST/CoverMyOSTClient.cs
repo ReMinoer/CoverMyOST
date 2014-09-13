@@ -1,21 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace CoverMyOST
 {
     public class CoverMyOSTClient
     {
-        public Dictionary<string, MusicFile> Files { get; private set; }
+        public IReadOnlyDictionary<string, MusicFile> Files
+        {
+            get { return new ReadOnlyDictionary<string, MusicFile>(_files); }
+        }
+        private readonly Dictionary<string, MusicFile> _files;
 
         public CoverMyOSTClient()
         {
-            Files = new Dictionary<string, MusicFile>();
+            _files = new Dictionary<string, MusicFile>();
         }
 
         public void AddFile(string path)
         {
             string fullpath = Path.GetFullPath(path);
-            Files.Add(fullpath, new MusicFile(fullpath));
+            _files.Add(fullpath, new MusicFile(fullpath));
         }
 
         public void AddDirectory(string path, bool recursive = false)

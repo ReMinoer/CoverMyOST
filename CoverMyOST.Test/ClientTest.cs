@@ -1,28 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing;
 using NUnit.Framework;
-using File = TagLib.File;
+using TagLib;
 
 namespace CoverMyOST.Test
 {
-    public class ClientTest
+    internal class ClientTest
     {
-        static public readonly string TestDirectory = Path.GetFullPath("Files/");
-        static public readonly string TestPathA = Path.GetFullPath("Files/testA.mp3");
-        static public readonly string TestPathB = Path.GetFullPath("Files/testB.mp3");
-        static public readonly string TestPathC = Path.GetFullPath("Files/dir/testC.mp3");
-
         [Test]
         public void AddFile()
         {
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(TestPathA);
+            client.AddFile(TestPaths.MusicA);
 
             // Test
-            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
         }
 
         [Test]
@@ -30,12 +22,12 @@ namespace CoverMyOST.Test
         {
             // Process
             var client = new CoverMyOSTClient();
-            client.AddDirectory(TestDirectory);
+            client.AddDirectory(TestPaths.MusicDirectory);
 
             // Test
-            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
-            Assert.IsTrue(client.Files.ContainsKey(TestPathB));
-            Assert.IsFalse(client.Files.ContainsKey(TestPathC));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicC));
         }
 
         [Test]
@@ -43,34 +35,56 @@ namespace CoverMyOST.Test
         {
             // Process
             var client = new CoverMyOSTClient();
-            client.AddDirectory(TestDirectory, true);
+            client.AddDirectory(TestPaths.MusicDirectory, true);
 
             // Test
-            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
-            Assert.IsTrue(client.Files.ContainsKey(TestPathB));
-            Assert.IsTrue(client.Files.ContainsKey(TestPathC));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
         }
 
         [Test]
         public void EditAlbumTag()
         {
             // Prerequisites
-            File temp = File.Create(TestPathA);
+            File temp = File.Create(TestPaths.MusicA);
             temp.Tag.Album = "";
             temp.Save();
 
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(TestPathA);
+            client.AddFile(TestPaths.MusicA);
 
             const string name = "Insert an album name here";
-            MusicFile file = client.Files[TestPathA];
+            MusicFile file = client.Files[TestPaths.MusicA];
             file.Album = name;
             file.Save();
 
             // Test
-            File result = File.Create(TestPathA);
-            Assert.AreEqual(result.Tag.Album, name);
+            var result = new MusicFile(TestPaths.MusicA);
+            Assert.AreEqual(result.Album, name);
+        }
+
+        [Test]
+        public void EditCover()
+        {
+            // Prerequisites
+            File temp = File.Create(TestPaths.MusicB);
+            temp.Tag.Pictures = new IPicture[0];
+            temp.Save();
+
+            // Process
+            var client = new CoverMyOSTClient();
+            client.AddFile(TestPaths.MusicB);
+
+            MusicFile file = client.Files[TestPaths.MusicB];
+            Image cover = Image.FromFile(TestPaths.CoverA);
+            file.Cover = cover;
+            file.Save();
+
+            // Test
+            var result = new MusicFile(TestPaths.MusicB);
+            Assert.AreEqual(result.Cover.PhysicalDimension, cover.PhysicalDimension);
         }
     }
 }

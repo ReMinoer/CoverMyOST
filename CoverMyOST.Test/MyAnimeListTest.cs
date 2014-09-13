@@ -2,12 +2,12 @@
 
 namespace CoverMyOST.Test
 {
-    class MyAnimeListTest
+    internal class MyAnimeListTest
     {
         [Test]
         public void AssignCoverFromDataBase()
         {
-            GalleryTestHelper.AssignCoverFromDataBase<MyAnimeListGallery>("Naruto");
+            GalleryTestHelper.AssignCoverFromDataBase<MyAnimeListGallery>(TestPaths.MusicA, "Naruto");
         }
     }
 }
