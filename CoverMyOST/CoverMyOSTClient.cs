@@ -1,9 +1,19 @@
-﻿using TagLib;
+﻿using System.Collections.Generic;
 
 namespace CoverMyOST
 {
-    public class CoverMyOSTClient : IClient
+    public class CoverMyOSTClient
     {
-        public void CoverFromAlbumName(File file) {}
+        public Dictionary<string, MusicFile> Files { get; private set; }
+
+        public CoverMyOSTClient()
+        {
+            Files = new Dictionary<string, MusicFile>();
+        }
+
+        public void LoadFile(string path)
+        {
+            Files.Add(path, new MusicFile(path));
+        }
     }
 }

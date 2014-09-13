@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CoverMyOST.GUI
 {
-    static class Program
+    static internal class Program
     {
         /// <summary>
-        /// Point d'entrée principal de l'application.
+        ///     Point d'entrée principal de l'application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static private void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

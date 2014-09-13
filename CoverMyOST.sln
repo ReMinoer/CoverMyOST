@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1AD7B2
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniMAL", "..\MiniMAL\MiniMAL\MiniMAL.csproj", "{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{97BAC9C2-3802-42CD-9926-0F4633D925C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B5A5DE98-AC82-4EA2-8A07-195515451DA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniMAL", "External\MiniMAL\MiniMAL\MiniMAL.csproj", "{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F} = {B5A5DE98-AC82-4EA2-8A07-195515451DA0}
 		{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 	EndGlobalSection
 EndGlobal

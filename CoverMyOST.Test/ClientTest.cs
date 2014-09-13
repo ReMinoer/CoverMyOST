@@ -1,38 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Net.Mime;
-using MiniMAL;
-using MiniMAL.Anime;
+using System.Linq;
 using NUnit.Framework;
-using TagLib.Riff;
-using File = TagLib.File;
+using TagLib;
 
 namespace CoverMyOST.Test
 {
     [TestFixture]
     public class ClientTest
     {
-        private const string Mp3FilePath = "Files/test.mp3";
+        private const string TestPath = "Files/test.mp3";
 
-        private static IClient GetClient()
+        static private void AssignCoverFromDataBase<TCoversGallery>(string query)
+            where TCoversGallery : ICoversGallery, new()
         {
-            return new CoverMyOSTClient();
+            // Prerequisites
+            File temp = File.Create(TestPath);
+            temp.Tag.Album = query;
+            temp.Save();
+            // End Prerequisites
+
+            var client = new CoverMyOSTClient();
+            client.LoadFile(TestPath);
+
+            string albumName = client.Files[TestPath].Album;
+            ICoversGallery gallery = new TCoversGallery();
+            Dictionary<string, Image> cover = gallery.Search(albumName);
+
+            MusicFile file = client.Files[TestPath];
+            file.Cover = cover.Values.First();
+            file.Save();
+
+            Assert.True(true);
         }
 
         [Test]
-        public void CoverFromAlbumName()
+        public void AssignCoverFromMyAnimeList()
         {
-            const string animeTitle = "Clannad";
-
-            File file = new TagLib.Mpeg.File(Path.Combine(Environment.CurrentDirectory, Mp3FilePath));
-            file.Tag.Album = animeTitle;
-
-            IClient client = GetClient();
-            client.CoverFromAlbumName(file);
-
-            Assert.True(true);
+            const string animeTitle = "Naruto";
+            AssignCoverFromDataBase<MyAnimeListGallery>(animeTitle);
         }
     }
 }

@@ -35,9 +35,6 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="policy.2.0.taglib-sharp">
-      <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -53,10 +50,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MiniMAL\MiniMAL\MiniMAL.csproj">
-      <Project>{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}</Project>
-      <Name>MiniMAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CoverMyOST\CoverMyOST.csproj">
       <Project>{dbcfb4f4-3e66-459b-8ee0-394e2a5801c9}</Project>
       <Name>CoverMyOST</Name>

@@ -67,12 +67,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CoverMyOST\CoverMyOST.csproj">
-      <Project>{dbcfb4f4-3e66-459b-8ee0-394e2a5801c9}</Project>
-      <Name>CoverMyOST</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
