@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace CoverMyOST
 {
@@ -11,9 +12,17 @@ namespace CoverMyOST
             Files = new Dictionary<string, MusicFile>();
         }
 
-        public void LoadFile(string path)
+        public void AddFile(string path)
         {
-            Files.Add(path, new MusicFile(path));
+            string fullpath = Path.GetFullPath(path);
+            Files.Add(fullpath, new MusicFile(fullpath));
+        }
+
+        public void AddDirectory(string path, bool recursive = false)
+        {
+            SearchOption searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            foreach (string file in Directory.EnumerateFiles(path, "*", searchOption))
+                AddFile(file);
         }
     }
 }

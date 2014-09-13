@@ -1,36 +1,76 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using TagLib;
+using File = TagLib.File;
 
 namespace CoverMyOST.Test
 {
-    static public class ClientTest
+    public class ClientTest
     {
-        private const string TestPath = "Files/test.mp3";
+        static public readonly string TestDirectory = Path.GetFullPath("Files/");
+        static public readonly string TestPathA = Path.GetFullPath("Files/testA.mp3");
+        static public readonly string TestPathB = Path.GetFullPath("Files/testB.mp3");
+        static public readonly string TestPathC = Path.GetFullPath("Files/dir/testC.mp3");
 
-        static public void AssignCoverFromDataBase<TCoversGallery>(string query)
-            where TCoversGallery : ICoversGallery, new()
+        [Test]
+        public void AddFile()
+        {
+            // Process
+            var client = new CoverMyOSTClient();
+            client.AddFile(TestPathA);
+
+            // Test
+            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
+        }
+
+        [Test]
+        public void AddDirectory()
+        {
+            // Process
+            var client = new CoverMyOSTClient();
+            client.AddDirectory(TestDirectory);
+
+            // Test
+            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPathB));
+            Assert.IsFalse(client.Files.ContainsKey(TestPathC));
+        }
+
+        [Test]
+        public void AddDirectoryWithRecursivity()
+        {
+            // Process
+            var client = new CoverMyOSTClient();
+            client.AddDirectory(TestDirectory, true);
+
+            // Test
+            Assert.IsTrue(client.Files.ContainsKey(TestPathA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPathB));
+            Assert.IsTrue(client.Files.ContainsKey(TestPathC));
+        }
+
+        [Test]
+        public void EditAlbumTag()
         {
             // Prerequisites
-            File temp = File.Create(TestPath);
-            temp.Tag.Album = query;
+            File temp = File.Create(TestPathA);
+            temp.Tag.Album = "";
             temp.Save();
-            // End Prerequisites
 
+            // Process
             var client = new CoverMyOSTClient();
-            client.LoadFile(TestPath);
+            client.AddFile(TestPathA);
 
-            string albumName = client.Files[TestPath].Album;
-            ICoversGallery gallery = new TCoversGallery();
-            Dictionary<string, Image> cover = gallery.Search(albumName);
-
-            MusicFile file = client.Files[TestPath];
-            file.Cover = cover.Values.First();
+            const string name = "Insert an album name here";
+            MusicFile file = client.Files[TestPathA];
+            file.Album = name;
             file.Save();
 
-            Assert.True(true);
+            // Test
+            File result = File.Create(TestPathA);
+            Assert.AreEqual(result.Tag.Album, name);
         }
     }
 }

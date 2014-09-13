@@ -5,10 +5,9 @@ namespace CoverMyOST.Test
     class MyAnimeListTest
     {
         [Test]
-        public void AssignCoverFromMyAnimeList()
+        public void AssignCoverFromDataBase()
         {
-            const string animeTitle = "Naruto";
-            ClientTest.AssignCoverFromDataBase<MyAnimeListGallery>(animeTitle);
+            GalleryTestHelper.AssignCoverFromDataBase<MyAnimeListGallery>("Naruto");
         }
     }
 }
