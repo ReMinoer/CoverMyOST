@@ -6,12 +6,11 @@ using TagLib;
 
 namespace CoverMyOST.Test
 {
-    [TestFixture]
-    public class ClientTest
+    static public class ClientTest
     {
         private const string TestPath = "Files/test.mp3";
 
-        static private void AssignCoverFromDataBase<TCoversGallery>(string query)
+        static public void AssignCoverFromDataBase<TCoversGallery>(string query)
             where TCoversGallery : ICoversGallery, new()
         {
             // Prerequisites
@@ -32,13 +31,6 @@ namespace CoverMyOST.Test
             file.Save();
 
             Assert.True(true);
-        }
-
-        [Test]
-        public void AssignCoverFromMyAnimeList()
-        {
-            const string animeTitle = "Naruto";
-            AssignCoverFromDataBase<MyAnimeListGallery>(animeTitle);
         }
     }
 }
