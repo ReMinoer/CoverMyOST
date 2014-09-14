@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TagLib;
+using NUnit.Framework;
+using File = TagLib.File;
 
 namespace CoverMyOST.Test.Helpers
 {
@@ -17,15 +18,20 @@ namespace CoverMyOST.Test.Helpers
 
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(filePath);
+            client.ChangeDirectory(TestPaths.MusicDirectory);
 
             string albumName = client.Files[filePath].Album;
             ICoversGallery gallery = new TCoversGallery();
-            Dictionary<string, Bitmap> cover = gallery.Search(albumName);
+            Dictionary<string, Bitmap> covers = gallery.Search(albumName);
 
+            Bitmap cover = covers.Values.First();
             MusicFile file = client.Files[filePath];
-            file.Cover = cover.Values.First();
+            file.Cover = cover;
             file.Save();
+
+            // Test
+            var result = new MusicFile(filePath).Cover;
+            Assert.AreEqual(result.Size, cover.Size);
         }
     }
 }

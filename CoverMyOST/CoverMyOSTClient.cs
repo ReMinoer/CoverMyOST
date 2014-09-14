@@ -12,22 +12,23 @@ namespace CoverMyOST
         }
         private readonly Dictionary<string, MusicFile> _files;
 
+        public string WorkingDirectory { get; private set; }
+
         public CoverMyOSTClient()
         {
             _files = new Dictionary<string, MusicFile>();
+            WorkingDirectory = "";
         }
 
-        public void AddFile(string path)
+        public void ChangeDirectory(string path)
         {
-            string fullpath = Path.GetFullPath(path);
-            _files.Add(fullpath, new MusicFile(fullpath));
-        }
+            foreach (string file in Directory.EnumerateFiles(path))
+            {
+                string fullpath = Path.GetFullPath(file);
+                _files.Add(fullpath, new MusicFile(fullpath));
+            }
 
-        public void AddDirectory(string path, bool recursive = false)
-        {
-            SearchOption searchOption = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            foreach (string file in Directory.EnumerateFiles(path, "*", searchOption))
-                AddFile(file);
+            WorkingDirectory = path;
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using CoverMyOST.Test.Helpers;
 using NUnit.Framework;
 using TagLib;
@@ -11,35 +9,11 @@ namespace CoverMyOST.Test
     internal class ClientTest
     {
         [Test]
-        public void AddFile()
+        public void ChangeDirectory()
         {
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(TestPaths.MusicA);
-
-            // Test
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
-        }
-
-        [Test]
-        public void AddDirectory()
-        {
-            // Process
-            var client = new CoverMyOSTClient();
-            client.AddDirectory(TestPaths.MusicDirectory);
-
-            // Test
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
-            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicC));
-        }
-
-        [Test]
-        public void AddDirectoryWithRecursivity()
-        {
-            // Process
-            var client = new CoverMyOSTClient();
-            client.AddDirectory(TestPaths.MusicDirectory, true);
+            client.ChangeDirectory(TestPaths.MusicDirectory);
 
             // Test
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
@@ -57,7 +31,7 @@ namespace CoverMyOST.Test
 
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(TestPaths.MusicA);
+            client.ChangeDirectory(TestPaths.MusicDirectory);
 
             const string name = "Insert an album name here";
             client.Files[TestPaths.MusicA].Album = name;
@@ -78,7 +52,7 @@ namespace CoverMyOST.Test
 
             // Process
             var client = new CoverMyOSTClient();
-            client.AddFile(TestPaths.MusicB);
+            client.ChangeDirectory(TestPaths.MusicDirectory);
 
             var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
             client.Files[TestPaths.MusicB].Cover = cover;
@@ -86,16 +60,7 @@ namespace CoverMyOST.Test
 
             // Test
             var result = new MusicFile(TestPaths.MusicB).Cover;
-
-            var memoryStream = new MemoryStream();
-            result.Save(memoryStream, ImageFormat.Jpeg);
-            byte[] resultBytes = memoryStream.ToArray();
-
-            memoryStream = new MemoryStream();
-            result.Save(memoryStream, ImageFormat.Jpeg);
-            byte[] coverBytes = memoryStream.ToArray();
-
-            Assert.AreEqual(resultBytes, coverBytes);
+            Assert.AreEqual(result.Size, cover.Size);
         }
     }
 }

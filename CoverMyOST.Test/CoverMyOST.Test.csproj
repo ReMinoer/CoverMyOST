@@ -65,7 +65,7 @@
     <Content Include="Content\Music\musicB.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Music\dir\musicC.mp3">
+    <Content Include="Content\Music\musicC.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Music\musicA.mp3">
