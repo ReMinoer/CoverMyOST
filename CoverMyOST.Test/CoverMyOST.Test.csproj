@@ -44,10 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientTest.cs" />
-    <Compile Include="Helpers\GalleryTestHelper.cs" />
     <Compile Include="MyAnimeListTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\TestPaths.cs" />
+    <Compile Include="Content\TestPaths.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

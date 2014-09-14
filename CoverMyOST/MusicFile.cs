@@ -16,11 +16,21 @@ namespace CoverMyOST
             get
             {
                 IPicture picture = _file.Tag.Pictures.First(p => p.Type == PictureType.FrontCover);
+
+                if (picture == null)
+                    return null;
+
                 var memoryStream = new MemoryStream(picture.Data.Data);
                 return new Bitmap(Image.FromStream(memoryStream));
             }
             set
             {
+                if (value == null)
+                {
+                    _file.Tag.Pictures = new IPicture[0];
+                    return;
+                }
+
                 var memoryStream = new MemoryStream();
                 value.Save(memoryStream, ImageFormat.Jpeg);
 

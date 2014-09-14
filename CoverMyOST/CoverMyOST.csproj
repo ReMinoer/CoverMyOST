@@ -44,8 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoverMyOSTClient.cs" />
+    <Compile Include="GalleryCollection.cs" />
     <Compile Include="ICoversGallery.cs" />
-    <Compile Include="MyAnimeListGallery.cs" />
+    <Compile Include="Galleries\MyAnimeListGallery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MusicFile.cs" />
   </ItemGroup>

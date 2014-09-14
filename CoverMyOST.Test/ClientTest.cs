@@ -1,8 +1,7 @@
-﻿using System.Drawing;
-using CoverMyOST.Test.Helpers;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using CoverMyOST.Test.Content;
 using NUnit.Framework;
-using TagLib;
-using File = TagLib.File;
 
 namespace CoverMyOST.Test
 {
@@ -16,6 +15,7 @@ namespace CoverMyOST.Test
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
             // Test
+            Assert.AreEqual(client.WorkingDirectory, TestPaths.MusicDirectory);
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
@@ -25,20 +25,19 @@ namespace CoverMyOST.Test
         public void EditAlbumTag()
         {
             // Prerequisites
-            File temp = File.Create(TestPaths.MusicA);
-            temp.Tag.Album = "";
-            temp.Save();
+            string filePath = TestPaths.MusicA;
+            ResetFile(filePath);
 
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
             const string name = "Insert an album name here";
-            client.Files[TestPaths.MusicA].Album = name;
-            client.Files[TestPaths.MusicA].Save();
+            client.Files[filePath].Album = name;
+            client.Files[filePath].Save();
 
             // Test
-            var result = new MusicFile(TestPaths.MusicA);
+            var result = new MusicFile(filePath);
             Assert.AreEqual(result.Album, name);
         }
 
@@ -46,21 +45,93 @@ namespace CoverMyOST.Test
         public void EditCover()
         {
             // Prerequisites
-            File temp = File.Create(TestPaths.MusicB);
-            temp.Tag.Pictures = new IPicture[0];
-            temp.Save();
+            string filePath = TestPaths.MusicB;
+            ResetFile(filePath);
 
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
             var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
-            client.Files[TestPaths.MusicB].Cover = cover;
-            client.Files[TestPaths.MusicB].Save();
+            client.Files[filePath].Cover = cover;
+            client.Files[filePath].Save();
 
             // Test
-            var result = new MusicFile(TestPaths.MusicB).Cover;
-            Assert.AreEqual(result.Size, cover.Size);
+            var result = new MusicFile(filePath);
+            Assert.AreEqual(result.Cover.Size, cover.Size);
+        }
+
+        [Test]
+        public void SaveAll()
+        {
+            // Prerequisites
+            ResetFile(TestPaths.MusicA);
+            ResetFile(TestPaths.MusicB);
+            ResetFile(TestPaths.MusicC);
+
+            // Process
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+
+            const string albumA = "AlbumA";
+            const string albumB = "AlbumB";
+            const string albumC = "AlbumC";
+            client.Files[TestPaths.MusicA].Album = albumA;
+            client.Files[TestPaths.MusicB].Album = albumB;
+            client.Files[TestPaths.MusicC].Album = albumC;
+
+            client.SaveAll();
+
+            // Test
+            var resultA = new MusicFile(TestPaths.MusicA);
+            var resultB = new MusicFile(TestPaths.MusicB);
+            var resultC = new MusicFile(TestPaths.MusicC);
+            Assert.AreEqual(resultA.Album, albumA);
+            Assert.AreEqual(resultB.Album, albumB);
+            Assert.AreEqual(resultC.Album, albumC);
+        }
+
+        [Test]
+        public void SearchCover()
+        {
+            // Prerequisites
+            string filePath = TestPaths.MusicA;
+            ResetFile(filePath);
+            var temp = new MusicFile(filePath) { Album = "Death" };
+            temp.Save();
+
+            // Process
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+
+            Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
+
+            // Test
+            Assert.IsTrue(covers.Count > 0);
+        }
+
+        public static void SearchCoverInGallery<TCoversGallery>(string filePath, string query)
+            where TCoversGallery : ICoversGallery, new()
+        {
+            // Prerequisites
+            ResetFile(filePath);
+            var temp = new MusicFile(filePath) { Album = query };
+            temp.Save();
+
+            // Process
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+
+            Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
+
+            // Test
+            Assert.IsTrue(covers.Count > 0);
+        }
+
+        private static void ResetFile(string path)
+        {
+            var file = new MusicFile(path) {Album = "", Cover = null};
+            file.Save();
         }
     }
 }

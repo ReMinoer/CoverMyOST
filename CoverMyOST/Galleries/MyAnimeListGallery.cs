@@ -5,19 +5,22 @@ using System.Net;
 using MiniMAL;
 using MiniMAL.Anime;
 
-namespace CoverMyOST
+namespace CoverMyOST.Galleries
 {
     public class MyAnimeListGallery : ICoversGallery
     {
         private readonly MiniMALClient _miniMal = new MiniMALClient();
 
-        public MyAnimeListGallery()
+        private void Login()
         {
             _miniMal.Login("TryMiniMAL", "tryminimal");
         }
 
         public Dictionary<string, Bitmap> Search(string query)
         {
+            if (!_miniMal.IsConnected)
+                Login();
+
             var result = new Dictionary<string, Bitmap>();
 
             List<AnimeSearchEntry> search = _miniMal.SearchAnime(query.Split(' '));

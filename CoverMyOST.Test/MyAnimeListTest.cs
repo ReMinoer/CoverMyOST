@@ -1,4 +1,5 @@
-﻿using CoverMyOST.Test.Helpers;
+﻿using CoverMyOST.Galleries;
+using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
 namespace CoverMyOST.Test
@@ -6,9 +7,9 @@ namespace CoverMyOST.Test
     internal class MyAnimeListTest
     {
         [Test]
-        public void AssignCoverFromDataBase()
+        public void SearchCoverInGallery()
         {
-            GalleryTestHelper.AssignCoverFromDataBase<MyAnimeListGallery>(TestPaths.MusicA, "Naruto");
+            ClientTest.SearchCoverInGallery<MyAnimeListGallery>(TestPaths.MusicA, "Naruto");
         }
     }
 }
