@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using CoverMyOST.Test.Helpers;
 using NUnit.Framework;
 using TagLib;
 using File = TagLib.File;
@@ -59,9 +60,8 @@ namespace CoverMyOST.Test
             client.AddFile(TestPaths.MusicA);
 
             const string name = "Insert an album name here";
-            MusicFile file = client.Files[TestPaths.MusicA];
-            file.Album = name;
-            file.Save();
+            client.Files[TestPaths.MusicA].Album = name;
+            client.Files[TestPaths.MusicA].Save();
 
             // Test
             var result = new MusicFile(TestPaths.MusicA);
@@ -80,10 +80,9 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.AddFile(TestPaths.MusicB);
 
-            MusicFile file = client.Files[TestPaths.MusicB];
             var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
-            file.Cover = cover;
-            file.Save();
+            client.Files[TestPaths.MusicB].Cover = cover;
+            client.Files[TestPaths.MusicB].Save();
 
             // Test
             var result = new MusicFile(TestPaths.MusicB).Cover;

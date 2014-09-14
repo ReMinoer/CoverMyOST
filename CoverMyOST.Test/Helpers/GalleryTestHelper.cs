@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using TagLib;
 
-namespace CoverMyOST.Test
+namespace CoverMyOST.Test.Helpers
 {
     static internal class GalleryTestHelper
     {

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using CoverMyOST.Test.Helpers;
+using NUnit.Framework;
 
 namespace CoverMyOST.Test
 {

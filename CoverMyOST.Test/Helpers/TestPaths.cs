@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CoverMyOST.Test
+namespace CoverMyOST.Test.Helpers
 {
     static internal class TestPaths
     {
