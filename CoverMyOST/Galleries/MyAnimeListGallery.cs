@@ -11,11 +11,6 @@ namespace CoverMyOST.Galleries
     {
         private readonly MiniMALClient _miniMal = new MiniMALClient();
 
-        private void Login()
-        {
-            _miniMal.Login("TryMiniMAL", "tryminimal");
-        }
-
         public Dictionary<string, Bitmap> Search(string query)
         {
             if (!_miniMal.IsConnected)
@@ -39,6 +34,11 @@ namespace CoverMyOST.Galleries
             }
 
             return result;
+        }
+
+        private void Login()
+        {
+            _miniMal.Login("TryMiniMAL", "tryminimal");
         }
     }
 }
