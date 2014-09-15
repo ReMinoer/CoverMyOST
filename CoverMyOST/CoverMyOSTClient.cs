@@ -34,6 +34,11 @@ namespace CoverMyOST
             WorkingDirectory = path;
         }
 
+		public void AddLocalGallery(string path)
+		{
+			Galleries.AddLocalGallery(path);
+		}
+
         public void SaveAll()
         {
             foreach (MusicFile musicFile in _files.Values)
@@ -54,11 +59,26 @@ namespace CoverMyOST
         public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(string filePath)
             where TCoversGallery : ICoversGallery
         {
+			if (typeof(TCoversGallery) == typeof(LocalGallery))
+				return SearchLocalCover(filePath);
+			
             foreach (ICoversGallery gallery in Galleries)
                 if (gallery is TCoversGallery)
                     return gallery.Search(Files[filePath].Album);
 
             return null;
-        }
+		}
+
+		private Dictionary<string, Bitmap> SearchLocalCover(string filePath)
+		{
+			var result = new Dictionary<string, Bitmap>();
+
+			foreach (ICoversGallery gallery in Galleries)
+				if (gallery is LocalGallery)
+					foreach (var entry in gallery.Search(Files[filePath].Album))
+						result.Add(entry.Key, entry.Value);
+
+			return result;
+		}
     }
 }

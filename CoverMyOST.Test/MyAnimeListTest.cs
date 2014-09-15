@@ -7,9 +7,9 @@ namespace CoverMyOST.Test
     internal class MyAnimeListTest
     {
         [Test]
-        public void SearchCoverInGallery()
+		public void AssignCoverFromGallery()
         {
-            ClientTest.SearchCoverInGallery<MyAnimeListGallery>(TestPaths.MusicA, "Naruto");
+			ClientTest.AssignCoverFromGallery<MyAnimeListGallery>(TestPaths.MusicA, "Planetes");
         }
     }
 }

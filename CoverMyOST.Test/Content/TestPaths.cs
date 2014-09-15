@@ -11,7 +11,7 @@ namespace CoverMyOST.Test.Content
         static public readonly string MusicB = Path.GetFullPath(Path.Combine(MusicDirectory, "musicB.mp3"));
 		static public readonly string MusicC = Path.GetFullPath(Path.Combine(MusicDirectory, "musicC.mp3"));
 
-		static private readonly string CoverDirectory = Path.GetFullPath(Path.Combine(RootDirectory, "Covers/"));
+		static public readonly string CoverDirectory = Path.GetFullPath(Path.Combine(RootDirectory, "Covers/"));
         static public readonly string CoverA = Path.GetFullPath(Path.Combine(CoverDirectory, "coverA.jpg"));
     }
 }

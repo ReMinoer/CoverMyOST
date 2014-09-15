@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Drawing;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
@@ -108,27 +109,30 @@ namespace CoverMyOST.Test
 
             // Test
             Assert.IsTrue(covers.Count > 0);
-        }
+		}
 
-        public static void SearchCoverInGallery<TCoversGallery>(string filePath, string query)
-            where TCoversGallery : ICoversGallery, new()
-        {
-            // Prerequisites
-            ResetFile(filePath);
-            var temp = new MusicFile(filePath) { Album = query };
-            temp.Save();
+		public static void AssignCoverFromGallery<TCoversGallery>(string filePath, string query)
+			where TCoversGallery : ICoversGallery, new()
+		{
+			// Prerequisites
+			ResetFile(filePath);
+			var temp = new MusicFile(filePath) { Album = query };
+			temp.Save();
 
-            // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+			// Process
+			var client = new CoverMyOSTClient();
+			client.ChangeDirectory(TestPaths.MusicDirectory);
 
-            Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
+			Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
 
-            // Test
-            Assert.IsTrue(covers.Count > 0);
-        }
+			client.Files[filePath].Cover = covers.Values.First();
+			client.Files[filePath].Save();
 
-        private static void ResetFile(string path)
+			// Test
+			Assert.IsTrue(covers.Count > 0);
+		}
+
+		public static void ResetFile(string path)
         {
             var file = new MusicFile(path) {Album = "", Cover = null};
             file.Save();
