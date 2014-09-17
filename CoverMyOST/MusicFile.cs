@@ -48,12 +48,14 @@ namespace CoverMyOST
             }
         }
 
+		public string Path { get; private set; }
         public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
         private readonly File _file;
 
         public MusicFile(string path)
         {
             _file = File.Create(path);
+			Path = path;
         }
 
         public void Save()

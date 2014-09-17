@@ -104,12 +104,46 @@ namespace CoverMyOST.Test
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
+			client.Galleries.EnableAll();
 
             Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
 
             // Test
             Assert.IsTrue(covers.Count > 0);
         }
+			
+		[Test]
+		public void SearchCoverWithFilterOnGalleries()
+		{
+			// Prerequisites
+			string filePath = TestPaths.MusicB;
+			ResetFile(filePath);
+			var temp = new MusicFile(filePath) {Album = "cover"};
+			temp.Save();
+
+			// Process 1
+			var client = new CoverMyOSTClient();
+			client.ChangeDirectory(TestPaths.MusicDirectory);
+			client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
+			client.Galleries.AddLocalGallery(TestPaths.CoverDirectoryBis);
+
+			client.Galleries.DisableAll();
+			client.Galleries[TestPaths.CoverDirectory].Enable = true;
+
+			Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
+
+			// Test 1
+			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
+			Assert.IsFalse(covers.ContainsKey(TestPaths.CoverB));
+
+			// Process 2
+			client.Galleries.EnableAll();
+			covers = client.SearchCover(filePath);
+
+			// Test 2
+			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
+			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverB));
+		}
 
         static public void AssignCoverFromGallery<TCoversGallery>(string filePath, string query)
             where TCoversGallery : ICoversGallery, new()
@@ -123,7 +157,7 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-            Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
+			Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
 
             client.Files[filePath].Cover = covers.Values.First();
             client.Files[filePath].Save();

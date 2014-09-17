@@ -3,23 +3,25 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace CoverMyOST
+namespace CoverMyOST.Galleries
 {
-    public class LocalGallery : ICoversGallery
-    {
-        public string RootPath { get; private set; }
+	public class LocalGallery : ICoversGallery
+	{
+		public string Name { get; private set; }
+		public bool Enable { get; set; }
+
         private readonly string[] _imagePatterns = {"*.jpg", "*.png", "*.gif"};
 
         public LocalGallery(string path)
         {
-            RootPath = path;
+			Name = path;
         }
 
         public Dictionary<string, Bitmap> Search(string query)
         {
             IEnumerable<string> files =
                 _imagePatterns.AsParallel().
-                               SelectMany(imagePattern => Directory.EnumerateFiles(RootPath, imagePattern)).
+							   SelectMany(imagePattern => Directory.EnumerateFiles(Name, imagePattern)).
                                Where(file =>
                                {
                                    string filename = Path.GetFileNameWithoutExtension(file);

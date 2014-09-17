@@ -34,51 +34,32 @@ namespace CoverMyOST
             WorkingDirectory = path;
         }
 
-        public void AddLocalGallery(string path)
-        {
-            Galleries.AddLocalGallery(path);
-        }
-
         public void SaveAll()
         {
             foreach (MusicFile musicFile in _files.Values)
                 musicFile.Save();
-        }
+		}
 
-        public Dictionary<string, Bitmap> SearchCover(string filePath)
-        {
-            var result = new Dictionary<string, Bitmap>();
+		public Dictionary<string, Bitmap> SearchCover(string filePath)
+		{
+			return Galleries.SearchCover(Files[filePath].Album);
+		}
 
-            foreach (ICoversGallery gallery in Galleries)
-                foreach (var entry in gallery.Search(Files[filePath].Album))
-                    result.Add(entry.Key, entry.Value);
+		public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(string filePath)
+			where TCoversGallery : ICoversGallery
+		{
+			return Galleries.SearchCover<TCoversGallery>(Files[filePath].Album);
+		}
 
-            return result;
-        }
+		public Dictionary<string, Bitmap> SearchCover(MusicFile musicFile)
+		{
+			return SearchCover(musicFile.Path);
+		}
 
-        public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(string filePath)
-            where TCoversGallery : ICoversGallery
-        {
-            if (typeof(TCoversGallery) == typeof(LocalGallery))
-                return SearchLocalCover(filePath);
-
-            foreach (ICoversGallery gallery in Galleries)
-                if (gallery is TCoversGallery)
-                    return gallery.Search(Files[filePath].Album);
-
-            return null;
-        }
-
-        private Dictionary<string, Bitmap> SearchLocalCover(string filePath)
-        {
-            var result = new Dictionary<string, Bitmap>();
-
-            foreach (ICoversGallery gallery in Galleries)
-                if (gallery is LocalGallery)
-                    foreach (var entry in gallery.Search(Files[filePath].Album))
-                        result.Add(entry.Key, entry.Value);
-
-            return result;
-        }
+		public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(MusicFile musicFile)
+			where TCoversGallery : ICoversGallery
+		{
+			return SearchCover<TCoversGallery>(musicFile.Path);
+		}
     }
 }
