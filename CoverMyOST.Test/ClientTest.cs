@@ -30,16 +30,34 @@ namespace CoverMyOST.Test
 			ResetFile(TestPaths.MusicB);
 			ResetFile(TestPaths.MusicC);
 
-			var temp = new MusicFile(TestPaths.MusicA) {Album = "Death"};
+			var temp = new MusicFile(TestPaths.MusicA)
+			{
+				Album = "Death",
+				Cover = new Bitmap(Image.FromFile(TestPaths.CoverA))
+			};
 			temp.Save();
 
-			// Process
+			var temp2 = new MusicFile(TestPaths.MusicB)
+			{
+				Album = "Angel",
+			};
+			temp2.Save();
+
+			// Process 1
 			var client = new CoverMyOSTClient();
 			client.ChangeDirectory(TestPaths.MusicDirectory);
 
 			client.Filter = MusicFileFilter.NoAlbum;
 
-			// Test
+			// Test 1
+			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
+			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicB));
+			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+
+			// Process 2
+			client.Filter = MusicFileFilter.NoCover;
+
+			// Test 2
 			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
 			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
 			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));

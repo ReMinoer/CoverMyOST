@@ -14,11 +14,11 @@ namespace CoverMyOST
         public Bitmap Cover
         {
             get
-            {
-                IPicture picture = _file.Tag.Pictures.First(p => p.Type == PictureType.FrontCover);
+			{
+				if (!_file.Tag.Pictures.Any(p => p.Type == PictureType.FrontCover))
+					return null;
 
-                if (picture == null)
-                    return null;
+                IPicture picture = _file.Tag.Pictures.First(p => p.Type == PictureType.FrontCover);
 
                 var memoryStream = new MemoryStream(picture.Data.Data);
                 return new Bitmap(Image.FromStream(memoryStream));
