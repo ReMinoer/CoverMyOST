@@ -145,8 +145,8 @@ namespace CoverMyOST.Test
 			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverB));
 		}
 
-        static public void AssignCoverFromGallery<TCoversGallery>(string filePath, string query)
-            where TCoversGallery : ICoversGallery, new()
+		static public void AssignCoverFromOnlineGallery<TOnlineGallery>(string filePath, string query)
+			where TOnlineGallery : IOnlineGallery, new()
         {
             // Prerequisites
             ResetFile(filePath);
@@ -157,7 +157,7 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-			Dictionary<string, Bitmap> covers = client.SearchCover<TCoversGallery>(filePath);
+			Dictionary<string, Bitmap> covers = client.SearchCover<TOnlineGallery>(filePath);
 
             client.Files[filePath].Cover = covers.Values.First();
             client.Files[filePath].Save();

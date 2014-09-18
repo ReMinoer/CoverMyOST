@@ -4,10 +4,11 @@ using System.IO;
 using System.Net;
 using MiniMAL;
 using MiniMAL.Anime;
+using System.Threading.Tasks;
 
 namespace CoverMyOST.Galleries
 {
-    public class MyAnimeListGallery : ICoversGallery
+	public class MyAnimeListGallery : IOnlineGallery
 	{
 		public string Name { get { return "MyAnimeList"; } }
 		public bool Enable { get; set; }

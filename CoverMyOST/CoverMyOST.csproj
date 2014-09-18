@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
+    <Compile Include="IOnlineGallery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
