@@ -51,6 +51,7 @@
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
     <Compile Include="IOnlineGallery.cs" />
+    <Compile Include="MusicFileFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

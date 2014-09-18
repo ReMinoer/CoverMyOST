@@ -22,6 +22,29 @@ namespace CoverMyOST.Test
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
         }
 
+		[Test]
+		public void FilterFiles()
+		{
+			// Prerequisites
+			ResetFile(TestPaths.MusicA);
+			ResetFile(TestPaths.MusicB);
+			ResetFile(TestPaths.MusicC);
+
+			var temp = new MusicFile(TestPaths.MusicA) {Album = "Death"};
+			temp.Save();
+
+			// Process
+			var client = new CoverMyOSTClient();
+			client.ChangeDirectory(TestPaths.MusicDirectory);
+
+			client.Filter = MusicFileFilter.NoAlbum;
+
+			// Test
+			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
+			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
+			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+		}
+
         [Test]
         public void EditAlbumTag()
         {
