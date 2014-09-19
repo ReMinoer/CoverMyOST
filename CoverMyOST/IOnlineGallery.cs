@@ -1,10 +1,4 @@
-﻿using System;
-
-namespace CoverMyOST
+﻿namespace CoverMyOST
 {
-	public interface IOnlineGallery : ICoversGallery
-	{
-
-	}
+    public interface IOnlineGallery : ICoversGallery {}
 }
-

@@ -22,46 +22,43 @@ namespace CoverMyOST.Test
             Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
         }
 
-		[Test]
-		public void FilterFiles()
-		{
-			// Prerequisites
-			ResetFile(TestPaths.MusicA);
-			ResetFile(TestPaths.MusicB);
-			ResetFile(TestPaths.MusicC);
+        [Test]
+        public void FilterFiles()
+        {
+            // Prerequisites
+            ResetFile(TestPaths.MusicA);
+            ResetFile(TestPaths.MusicB);
+            ResetFile(TestPaths.MusicC);
 
-			var temp = new MusicFile(TestPaths.MusicA)
-			{
-				Album = "Death",
-				Cover = new Bitmap(Image.FromFile(TestPaths.CoverA))
-			};
-			temp.Save();
+            var temp = new MusicFile(TestPaths.MusicA)
+            {
+                Album = "Death",
+                Cover = new Bitmap(Image.FromFile(TestPaths.CoverA))
+            };
+            temp.Save();
 
-			var temp2 = new MusicFile(TestPaths.MusicB)
-			{
-				Album = "Angel",
-			};
-			temp2.Save();
+            var temp2 = new MusicFile(TestPaths.MusicB) {Album = "Angel",};
+            temp2.Save();
 
-			// Process 1
-			var client = new CoverMyOSTClient();
-			client.ChangeDirectory(TestPaths.MusicDirectory);
+            // Process 1
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
 
-			client.Filter = MusicFileFilter.NoAlbum;
+            client.Filter = MusicFileFilter.NoAlbum;
 
-			// Test 1
-			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
-			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicB));
-			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+            // Test 1
+            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
 
-			// Process 2
-			client.Filter = MusicFileFilter.NoCover;
+            // Process 2
+            client.Filter = MusicFileFilter.NoCover;
 
-			// Test 2
-			Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
-			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
-			Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
-		}
+            // Test 2
+            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+        }
 
         [Test]
         public void EditAlbumTag()
@@ -145,49 +142,49 @@ namespace CoverMyOST.Test
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
-			client.Galleries.EnableAll();
+            client.Galleries.EnableAll();
 
             Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
 
             // Test
             Assert.IsTrue(covers.Count > 0);
         }
-			
-		[Test]
-		public void SearchCoverWithFilterOnGalleries()
-		{
-			// Prerequisites
-			string filePath = TestPaths.MusicB;
-			ResetFile(filePath);
-			var temp = new MusicFile(filePath) {Album = "cover"};
-			temp.Save();
 
-			// Process 1
-			var client = new CoverMyOSTClient();
-			client.ChangeDirectory(TestPaths.MusicDirectory);
-			client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
-			client.Galleries.AddLocalGallery(TestPaths.CoverDirectoryBis);
+        [Test]
+        public void SearchCoverWithFilterOnGalleries()
+        {
+            // Prerequisites
+            string filePath = TestPaths.MusicB;
+            ResetFile(filePath);
+            var temp = new MusicFile(filePath) {Album = "cover"};
+            temp.Save();
 
-			client.Galleries.DisableAll();
-			client.Galleries[TestPaths.CoverDirectory].Enable = true;
+            // Process 1
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+            client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
+            client.Galleries.AddLocalGallery(TestPaths.CoverDirectoryBis);
 
-			Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
+            client.Galleries.DisableAll();
+            client.Galleries[TestPaths.CoverDirectory].Enable = true;
 
-			// Test 1
-			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
-			Assert.IsFalse(covers.ContainsKey(TestPaths.CoverB));
+            Dictionary<string, Bitmap> covers = client.SearchCover(filePath);
 
-			// Process 2
-			client.Galleries.EnableAll();
-			covers = client.SearchCover(filePath);
+            // Test 1
+            Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
+            Assert.IsFalse(covers.ContainsKey(TestPaths.CoverB));
 
-			// Test 2
-			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
-			Assert.IsTrue(covers.ContainsKey(TestPaths.CoverB));
-		}
+            // Process 2
+            client.Galleries.EnableAll();
+            covers = client.SearchCover(filePath);
 
-		static public void AssignCoverFromOnlineGallery<TOnlineGallery>(string filePath, string query)
-			where TOnlineGallery : IOnlineGallery, new()
+            // Test 2
+            Assert.IsTrue(covers.ContainsKey(TestPaths.CoverA));
+            Assert.IsTrue(covers.ContainsKey(TestPaths.CoverB));
+        }
+
+        static public void AssignCoverFromOnlineGallery<TOnlineGallery>(string filePath, string query)
+            where TOnlineGallery : IOnlineGallery, new()
         {
             // Prerequisites
             ResetFile(filePath);
@@ -198,7 +195,7 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-			Dictionary<string, Bitmap> covers = client.SearchCover<TOnlineGallery>(filePath);
+            Dictionary<string, Bitmap> covers = client.SearchCover<TOnlineGallery>(filePath);
 
             client.Files[filePath].Cover = covers.Values.First();
             client.Files[filePath].Save();

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using CoverMyOST.Test.Content;
 using CoverMyOST.Galleries;
+using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
 namespace CoverMyOST.Test
@@ -21,7 +21,7 @@ namespace CoverMyOST.Test
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
-			client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
+            client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
 
             Dictionary<string, Bitmap> covers = client.SearchCover<LocalGallery>(filePath);
 

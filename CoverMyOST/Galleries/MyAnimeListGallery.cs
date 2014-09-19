@@ -4,16 +4,14 @@ using System.IO;
 using System.Net;
 using MiniMAL;
 using MiniMAL.Anime;
-using System.Threading.Tasks;
 
 namespace CoverMyOST.Galleries
 {
-	public class MyAnimeListGallery : IOnlineGallery
-	{
-		public string Name { get { return "MyAnimeList"; } }
-		public bool Enable { get; set; }
-
-		private readonly MiniMALClient _miniMal = new MiniMALClient();
+    public class MyAnimeListGallery : IOnlineGallery
+    {
+        private readonly MiniMALClient _miniMal = new MiniMALClient();
+        public string Name { get { return "MyAnimeList"; } }
+        public bool Enable { get; set; }
 
         public Dictionary<string, Bitmap> Search(string query)
         {

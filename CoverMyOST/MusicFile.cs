@@ -14,9 +14,9 @@ namespace CoverMyOST
         public Bitmap Cover
         {
             get
-			{
-				if (!_file.Tag.Pictures.Any(p => p.Type == PictureType.FrontCover))
-					return null;
+            {
+                if (_file.Tag.Pictures.All(p => p.Type != PictureType.FrontCover))
+                    return null;
 
                 IPicture picture = _file.Tag.Pictures.First(p => p.Type == PictureType.FrontCover);
 
@@ -48,14 +48,14 @@ namespace CoverMyOST
             }
         }
 
-		public string Path { get; private set; }
+        public string Path { get; private set; }
         public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
         private readonly File _file;
 
         public MusicFile(string path)
         {
             _file = File.Create(path);
-			Path = path;
+            Path = path;
         }
 
         public void Save()
