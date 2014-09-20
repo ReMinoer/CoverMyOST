@@ -38,6 +38,12 @@ namespace CoverMyOST
             FilterFiles(MusicFileFilter.None);
         }
 
+        public CoverMyOSTClient(string workingDirectory)
+            : this()
+        {
+            ChangeDirectory(workingDirectory);
+        }
+
         public void ChangeDirectory(string path)
         {
             _allFiles.Clear();
@@ -86,13 +92,13 @@ namespace CoverMyOST
         }
 
         public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string filePath)
-            where TOnlineGallery : AbstractOnlineGallery
+            where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverOnline<TOnlineGallery>(_allFiles[filePath].Album);
         }
 
-        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(string filePath)
-            where TOnlineGallery : AbstractOnlineGallery
+        public CoverEntry SearchCoverCached<TOnlineGallery>(string filePath)
+            where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(_allFiles[filePath].Album);
         }
@@ -108,13 +114,13 @@ namespace CoverMyOST
         }
 
         public CoverSearchResult SearchCoverOnline<TOnlineGallery>(MusicFile musicFile)
-            where TOnlineGallery : AbstractOnlineGallery
+            where TOnlineGallery : OnlineGallery
         {
             return SearchCoverOnline<TOnlineGallery>(musicFile.Path);
         }
 
-        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile)
-            where TOnlineGallery : AbstractOnlineGallery
+        public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile)
+            where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
         }

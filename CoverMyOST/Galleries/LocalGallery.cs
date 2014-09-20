@@ -30,7 +30,7 @@ namespace CoverMyOST.Galleries
 
             var result = new CoverSearchResult();
             foreach (string file in files)
-                result.Add(new CoverSearchEntry(file, new Bitmap(Image.FromFile(file))));
+                result.Add(new CoverEntry(file, new Bitmap(Image.FromFile(file))));
             return result;
         }
     }

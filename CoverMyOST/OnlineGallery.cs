@@ -3,7 +3,7 @@ using System.IO;
 
 namespace CoverMyOST
 {
-    public abstract class AbstractOnlineGallery : ICoversGallery
+    public abstract class OnlineGallery : ICoversGallery
     {
         protected abstract string CacheDirectoryName { get; }
 
@@ -15,7 +15,7 @@ namespace CoverMyOST
         {
             if (CacheEnable)
             {
-                CoverSearchEntry entry = SearchInCache(query);
+                CoverEntry entry = SearchInCache(query);
                 if (entry != null)
                     return new CoverSearchResult(entry);
             }
@@ -25,13 +25,13 @@ namespace CoverMyOST
 
         public abstract CoverSearchResult SearchOnline(string query);
 
-        public CoverSearchEntry SearchInCache(string query)
+        public CoverEntry SearchInCache(string query)
         {
             string filename = Path.Combine(CacheDirectoryName + "/", query);
-            return !File.Exists(filename) ? null : new CoverSearchEntry(query, new Bitmap(filename), this);
+            return !File.Exists(filename) ? null : new CoverEntry(query, new Bitmap(filename), this);
         }
 
-        internal void AddCoverToCache(CoverSearchEntry entry, string name)
+        internal void AddCoverToCache(CoverEntry entry, string name)
         {
             if (!Directory.Exists(CacheDirectoryName))
                 Directory.CreateDirectory(CacheDirectoryName);
@@ -42,7 +42,8 @@ namespace CoverMyOST
 
         public void ClearCache()
         {
-            Directory.Delete(CacheDirectoryName, true);
+            if (Directory.Exists(CacheDirectoryName))
+                Directory.Delete(CacheDirectoryName, true);
         }
     }
 }

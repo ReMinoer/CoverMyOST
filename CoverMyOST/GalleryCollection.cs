@@ -34,7 +34,7 @@ namespace CoverMyOST
             return GetEnumerator();
         }
 
-        public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : AbstractOnlineGallery
+        public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : OnlineGallery
         {
             return (_list.First(gallery => gallery is TOnlineGallery) as TOnlineGallery);
         }
@@ -52,7 +52,7 @@ namespace CoverMyOST
 
             foreach (ICoversGallery gallery in _list)
                 if (gallery.Enable)
-                    foreach (CoverSearchEntry entry in gallery.Search(query))
+                    foreach (CoverEntry entry in gallery.Search(query))
                         result.Add(entry);
 
             return result;
@@ -63,8 +63,8 @@ namespace CoverMyOST
             var result = new CoverSearchResult();
 
             foreach (ICoversGallery gallery in _list)
-                if (gallery is AbstractOnlineGallery && gallery.Enable)
-                    result.Add((gallery as AbstractOnlineGallery).SearchInCache(query));
+                if (gallery is OnlineGallery && gallery.Enable)
+                    result.Add((gallery as OnlineGallery).SearchInCache(query));
 
             return result;
         }
@@ -82,7 +82,7 @@ namespace CoverMyOST
         }
 
         public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query)
-            where TOnlineGallery : AbstractOnlineGallery
+            where TOnlineGallery : OnlineGallery
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)
@@ -91,8 +91,8 @@ namespace CoverMyOST
             return null;
         }
 
-        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(string query)
-            where TOnlineGallery : AbstractOnlineGallery
+        public CoverEntry SearchCoverCached<TOnlineGallery>(string query)
+            where TOnlineGallery : OnlineGallery
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)
@@ -107,7 +107,7 @@ namespace CoverMyOST
 
             foreach (ICoversGallery gallery in Local)
                 if (gallery.Enable)
-                    foreach (CoverSearchEntry entry in gallery.Search(query))
+                    foreach (CoverEntry entry in gallery.Search(query))
                         result.Add(entry);
 
             return result;
@@ -116,8 +116,8 @@ namespace CoverMyOST
         public void ClearAllCache()
         {
             foreach (ICoversGallery gallery in _list)
-                if (gallery is AbstractOnlineGallery)
-                    (gallery as AbstractOnlineGallery).ClearCache();
+                if (gallery is OnlineGallery)
+                    (gallery as OnlineGallery).ClearCache();
         }
 
         public void EnableAll()

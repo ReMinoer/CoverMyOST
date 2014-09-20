@@ -7,7 +7,7 @@ using MiniMAL.Anime;
 
 namespace CoverMyOST.Galleries
 {
-    public class MyAnimeListGallery : AbstractOnlineGallery
+    public class MyAnimeListGallery : OnlineGallery
     {
         public override string Name { get { return "MyAnimeList"; } }
         protected override string CacheDirectoryName { get { return "myanimelist"; } }
@@ -31,7 +31,7 @@ namespace CoverMyOST.Galleries
                         continue;
 
                     var image = new Bitmap(Image.FromStream(stream));
-                    result.Add(new CoverSearchEntry(entry.Title, image, this));
+                    result.Add(new CoverEntry(entry.Title, image, this));
                 }
             }
 

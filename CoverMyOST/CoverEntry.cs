@@ -2,13 +2,13 @@
 
 namespace CoverMyOST
 {
-    public class CoverSearchEntry
+    public class CoverEntry
     {
         public string Name { get; private set; }
         public Bitmap Cover { get; private set; }
-        private readonly AbstractOnlineGallery _gallery;
+        private readonly OnlineGallery _gallery;
 
-        public CoverSearchEntry(string name, Bitmap cover, AbstractOnlineGallery gallery = null)
+        public CoverEntry(string name, Bitmap cover, OnlineGallery gallery = null)
         {
             Name = name;
             Cover = cover;

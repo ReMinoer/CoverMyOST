@@ -180,7 +180,7 @@ namespace CoverMyOST.Test
         }
 
         static public void AssignCoverOnline<TOnlineGallery>(string filePath, string query)
-            where TOnlineGallery : AbstractOnlineGallery
+            where TOnlineGallery : OnlineGallery
         {
             // Prerequisites
             var temp = ResetFile(filePath);
@@ -201,7 +201,7 @@ namespace CoverMyOST.Test
         }
 
         static public void AssignCoverCached<TOnlineGallery>(string filePath, string query)
-            where TOnlineGallery : AbstractOnlineGallery
+            where TOnlineGallery : OnlineGallery
         {
             // Prerequisites
             var temp = ResetFile(filePath);
@@ -218,7 +218,7 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-            CoverSearchEntry result = client.SearchCoverCached<TOnlineGallery>(filePath);
+            CoverEntry result = client.SearchCoverCached<TOnlineGallery>(filePath);
 
             client.Files[filePath].Cover = result.Cover;
             client.Files[filePath].Save();

@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace CoverMyOST
 {
-    public class CoverSearchResult : IEnumerable<CoverSearchEntry>
+    public class CoverSearchResult : IEnumerable<CoverEntry>
     {
-        public CoverSearchEntry this[string name] { get { return _list.First(cover => cover.Name == name); } }
+        public CoverEntry this[string name] { get { return _list.First(cover => cover.Name == name); } }
 
         public int Count { get { return _list.Count; } }
-        private readonly List<CoverSearchEntry> _list = new List<CoverSearchEntry>();
+        private readonly List<CoverEntry> _list = new List<CoverEntry>();
 
         public CoverSearchResult() {}
 
-        public CoverSearchResult(params CoverSearchEntry[] entries)
+        public CoverSearchResult(params CoverEntry[] entries)
         {
             _list.AddRange(entries);
         }
 
-        public IEnumerator<CoverSearchEntry> GetEnumerator()
+        public IEnumerator<CoverEntry> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
@@ -28,9 +28,9 @@ namespace CoverMyOST
             return GetEnumerator();
         }
 
-        public void Add(CoverSearchEntry coverSearchEntry)
+        public void Add(CoverEntry coverEntry)
         {
-            _list.Add(coverSearchEntry);
+            _list.Add(coverEntry);
         }
 
         public bool Contains(string name)

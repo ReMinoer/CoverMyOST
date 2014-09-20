@@ -40,8 +40,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractOnlineGallery.cs" />
-    <Compile Include="CoverSearchEntry.cs" />
+    <Compile Include="OnlineGallery.cs" />
+    <Compile Include="CoverEntry.cs" />
     <Compile Include="CoverMyOSTClient.cs" />
     <Compile Include="CoverSearchResult.cs" />
     <Compile Include="GalleryCollection.cs" />
