@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CoverMyOST.Galleries;
 
@@ -13,6 +14,8 @@ namespace CoverMyOST
 
         private readonly List<ICoversGallery> _list;
         private readonly List<LocalGallery> _local;
+
+        public const string CacheRoot = "cache/";
 
         public GalleryCollection()
         {
@@ -118,6 +121,9 @@ namespace CoverMyOST
             foreach (ICoversGallery gallery in _list)
                 if (gallery is OnlineGallery)
                     (gallery as OnlineGallery).ClearCache();
+
+            if (Directory.Exists(CacheRoot))
+                Directory.Delete(CacheRoot, true);
         }
 
         public void EnableAll()
