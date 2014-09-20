@@ -15,7 +15,7 @@ namespace CoverMyOST
         {
             if (CacheEnable)
             {
-                CoverEntry entry = SearchInCache(query);
+                CoverEntry entry = SearchCached(query);
                 if (entry != null)
                     return new CoverSearchResult(entry);
             }
@@ -25,7 +25,7 @@ namespace CoverMyOST
 
         public abstract CoverSearchResult SearchOnline(string query);
 
-        public CoverEntry SearchInCache(string query)
+        public CoverEntry SearchCached(string query)
         {
             string filename = Path.Combine(CacheDirectoryName + "/", query);
             return !File.Exists(filename) ? null : new CoverEntry(query, new Bitmap(filename), this);

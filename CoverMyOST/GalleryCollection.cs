@@ -64,7 +64,7 @@ namespace CoverMyOST
 
             foreach (ICoversGallery gallery in _list)
                 if (gallery is OnlineGallery && gallery.Enable)
-                    result.Add((gallery as OnlineGallery).SearchInCache(query));
+                    result.Add((gallery as OnlineGallery).SearchCached(query));
 
             return result;
         }
@@ -96,7 +96,7 @@ namespace CoverMyOST
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)
-                    return (gallery as TOnlineGallery).SearchInCache(query);
+                    return (gallery as TOnlineGallery).SearchCached(query);
 
             return null;
         }
