@@ -191,13 +191,14 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-            CoverSearchResult result = client.SearchCoverOnline<TOnlineGallery>(filePath);
+            CoverSearchResult searchResult = client.SearchCoverOnline<TOnlineGallery>(filePath);
 
-            client.Files[filePath].Cover = result.First().Cover;
+            client.Files[filePath].Cover = searchResult.First().Cover;
             client.Files[filePath].Save();
 
             // Test
-            Assert.IsTrue(result.Count > 0);
+            var resultFile = LoadFile(filePath);
+            Assert.AreEqual(searchResult.First().Cover.Size, resultFile.Cover.Size);
         }
 
         static public void AssignCoverCached<TOnlineGallery>(string filePath, string query)
@@ -218,10 +219,14 @@ namespace CoverMyOST.Test
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
 
-            CoverEntry result = client.SearchCoverCached<TOnlineGallery>(filePath);
+            CoverEntry entry = client.SearchCoverCached<TOnlineGallery>(filePath);
 
-            client.Files[filePath].Cover = result.Cover;
+            client.Files[filePath].Cover = entry.Cover;
             client.Files[filePath].Save();
+
+            // Test
+            var resultFile = LoadFile(filePath);
+            Assert.AreEqual(entry.Cover.Size, resultFile.Cover.Size);
         }
 
         static public MusicFile LoadFile(string path)
