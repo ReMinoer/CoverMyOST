@@ -12,8 +12,8 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicC;
-            ClientTest.ResetFile(filePath);
-            var temp = new MusicFile(filePath) {Album = "coverA"};
+            var temp = ClientTest.ResetFile(filePath);
+            temp.Album = "coverA";
             temp.Save();
 
             // Process

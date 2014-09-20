@@ -25,18 +25,15 @@ namespace CoverMyOST.Test
         public void FilterFiles()
         {
             // Prerequisites
-            ResetFile(TestPaths.MusicA);
-            ResetFile(TestPaths.MusicB);
+            var temp = ResetFile(TestPaths.MusicA);
+            var temp2 = ResetFile(TestPaths.MusicB);
             ResetFile(TestPaths.MusicC);
 
-            var temp = new MusicFile(TestPaths.MusicA)
-            {
-                Album = "Death",
-                Cover = new Bitmap(Image.FromFile(TestPaths.CoverA))
-            };
+            temp.Album = "Death";
+            temp.Cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
             temp.Save();
 
-            var temp2 = new MusicFile(TestPaths.MusicB) {Album = "Angel",};
+            temp2.Album = "Angel";
             temp2.Save();
 
             // Process 1
@@ -75,7 +72,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var result = new MusicFile(filePath);
+            var result = LoadFile(filePath);
             Assert.AreEqual(result.Album, name);
         }
 
@@ -95,7 +92,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var result = new MusicFile(filePath);
+            var result = LoadFile(filePath);
             Assert.AreEqual(result.Cover.Size, cover.Size);
         }
 
@@ -121,9 +118,9 @@ namespace CoverMyOST.Test
             client.SaveAll();
 
             // Test
-            var resultA = new MusicFile(TestPaths.MusicA);
-            var resultB = new MusicFile(TestPaths.MusicB);
-            var resultC = new MusicFile(TestPaths.MusicC);
+            var resultA = LoadFile(TestPaths.MusicA);
+            var resultB = LoadFile(TestPaths.MusicB);
+            var resultC = LoadFile(TestPaths.MusicC);
             Assert.AreEqual(resultA.Album, albumA);
             Assert.AreEqual(resultB.Album, albumB);
             Assert.AreEqual(resultC.Album, albumC);
@@ -134,8 +131,8 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicA;
-            ResetFile(filePath);
-            var temp = new MusicFile(filePath) {Album = "Death"};
+            var temp = ResetFile(filePath);
+            temp.Album = "Death";
             temp.Save();
 
             // Process
@@ -154,8 +151,8 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicB;
-            ResetFile(filePath);
-            var temp = new MusicFile(filePath) {Album = "cover"};
+            var temp = ResetFile(filePath);
+            temp.Album = "cover";
             temp.Save();
 
             // Process 1
@@ -186,8 +183,8 @@ namespace CoverMyOST.Test
             where TOnlineGallery : AbstractOnlineGallery
         {
             // Prerequisites
-            ResetFile(filePath);
-            var temp = new MusicFile(filePath) {Album = query};
+            var temp = ResetFile(filePath);
+            temp.Album = query;
             temp.Save();
 
             // Process
@@ -207,8 +204,8 @@ namespace CoverMyOST.Test
             where TOnlineGallery : AbstractOnlineGallery
         {
             // Prerequisites
-            ResetFile(filePath);
-            var temp = new MusicFile(filePath) {Album = query};
+            var temp = ResetFile(filePath);
+            temp.Album = query;
             temp.Save();
 
             var tempClient = new CoverMyOSTClient();
@@ -227,10 +224,22 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
         }
 
-        static public void ResetFile(string path)
+        static public MusicFile LoadFile(string path)
         {
-            var file = new MusicFile(path) {Album = "", Cover = null};
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+
+            return client.Files[path];
+        }
+
+        static public MusicFile ResetFile(string path)
+        {
+            MusicFile file = LoadFile(path);
+            file.Album = "";
+            file.Cover = null;
             file.Save();
+
+            return file;
         }
     }
 }

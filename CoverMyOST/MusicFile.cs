@@ -52,7 +52,7 @@ namespace CoverMyOST
         public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
         private readonly File _file;
 
-        public MusicFile(string path)
+        internal MusicFile(string path)
         {
             _file = File.Create(path);
             Path = path;
