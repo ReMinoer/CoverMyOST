@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using CoverMyOST.Galleries;
 
@@ -35,6 +34,11 @@ namespace CoverMyOST
             return GetEnumerator();
         }
 
+        public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : AbstractOnlineGallery
+        {
+            return (_list.First(gallery => gallery is TOnlineGallery) as TOnlineGallery);
+        }
+
         public void AddLocalGallery(string path)
         {
             var localGallery = new LocalGallery(path) {Enable = true};
@@ -42,20 +46,30 @@ namespace CoverMyOST
             _list.Add(localGallery);
         }
 
-        public Dictionary<string, Bitmap> SearchCover(string query)
+        public CoverSearchResult SearchCover(string query)
         {
-            var result = new Dictionary<string, Bitmap>();
+            var result = new CoverSearchResult();
 
             foreach (ICoversGallery gallery in _list)
                 if (gallery.Enable)
-                    foreach (var entry in gallery.Search(query))
-                        result.Add(entry.Key, entry.Value);
+                    foreach (CoverSearchEntry entry in gallery.Search(query))
+                        result.Add(entry);
 
             return result;
         }
 
-        public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(string query)
-            where TCoversGallery : ICoversGallery
+        public CoverSearchResult SearchCoverCached(string query)
+        {
+            var result = new CoverSearchResult();
+
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is AbstractOnlineGallery && gallery.Enable)
+                    result.Add((gallery as AbstractOnlineGallery).SearchInCache(query));
+
+            return result;
+        }
+
+        public CoverSearchResult SearchCover<TCoversGallery>(string query) where TCoversGallery : ICoversGallery
         {
             if (typeof(TCoversGallery) == typeof(LocalGallery))
                 return SearchLocalCover(query);
@@ -67,16 +81,43 @@ namespace CoverMyOST
             return null;
         }
 
-        private Dictionary<string, Bitmap> SearchLocalCover(string query)
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query)
+            where TOnlineGallery : AbstractOnlineGallery
         {
-            var result = new Dictionary<string, Bitmap>();
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is TOnlineGallery)
+                    return (gallery as TOnlineGallery).SearchOnline(query);
+
+            return null;
+        }
+
+        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(string query)
+            where TOnlineGallery : AbstractOnlineGallery
+        {
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is TOnlineGallery)
+                    return (gallery as TOnlineGallery).SearchInCache(query);
+
+            return null;
+        }
+
+        private CoverSearchResult SearchLocalCover(string query)
+        {
+            var result = new CoverSearchResult();
 
             foreach (ICoversGallery gallery in Local)
                 if (gallery.Enable)
-                    foreach (var entry in gallery.Search(query))
-                        result.Add(entry.Key, entry.Value);
+                    foreach (CoverSearchEntry entry in gallery.Search(query))
+                        result.Add(entry);
 
             return result;
+        }
+
+        public void ClearAllCache()
+        {
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is AbstractOnlineGallery)
+                    (gallery as AbstractOnlineGallery).ClearCache();
         }
 
         public void EnableAll()

@@ -40,14 +40,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractOnlineGallery.cs" />
+    <Compile Include="CoverSearchEntry.cs" />
     <Compile Include="CoverMyOSTClient.cs" />
+    <Compile Include="CoverSearchResult.cs" />
     <Compile Include="GalleryCollection.cs" />
     <Compile Include="ICoversGallery.cs" />
     <Compile Include="Galleries\MyAnimeListGallery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
-    <Compile Include="IOnlineGallery.cs" />
     <Compile Include="MusicFileFilter.cs" />
   </ItemGroup>
   <ItemGroup>

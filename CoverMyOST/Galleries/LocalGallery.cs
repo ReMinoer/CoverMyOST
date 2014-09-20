@@ -17,7 +17,7 @@ namespace CoverMyOST.Galleries
         public string Name { get; private set; }
         public bool Enable { get; set; }
 
-        public Dictionary<string, Bitmap> Search(string query)
+        public CoverSearchResult Search(string query)
         {
             IEnumerable<string> files =
                 _imagePatterns.AsParallel().
@@ -28,9 +28,9 @@ namespace CoverMyOST.Galleries
                                    return filename != null && filename.Contains(query);
                                });
 
-            var result = new Dictionary<string, Bitmap>();
+            var result = new CoverSearchResult();
             foreach (string file in files)
-                result.Add(file, new Bitmap(Image.FromFile(file)));
+                result.Add(new CoverSearchEntry(file, new Bitmap(Image.FromFile(file))));
             return result;
         }
     }

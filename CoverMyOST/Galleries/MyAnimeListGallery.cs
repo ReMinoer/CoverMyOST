@@ -7,18 +7,18 @@ using MiniMAL.Anime;
 
 namespace CoverMyOST.Galleries
 {
-    public class MyAnimeListGallery : IOnlineGallery
+    public class MyAnimeListGallery : AbstractOnlineGallery
     {
+        public override string Name { get { return "MyAnimeList"; } }
+        protected override string CacheDirectoryName { get { return "myanimelist"; } }
         private readonly MiniMALClient _miniMal = new MiniMALClient();
-        public string Name { get { return "MyAnimeList"; } }
-        public bool Enable { get; set; }
 
-        public Dictionary<string, Bitmap> Search(string query)
+        public override CoverSearchResult SearchOnline(string query)
         {
             if (!_miniMal.IsConnected)
                 Login();
 
-            var result = new Dictionary<string, Bitmap>();
+            var result = new CoverSearchResult();
 
             List<AnimeSearchEntry> search = _miniMal.SearchAnime(query.Split(' '));
             foreach (AnimeSearchEntry entry in search)
@@ -31,7 +31,7 @@ namespace CoverMyOST.Galleries
                         continue;
 
                     var image = new Bitmap(Image.FromStream(stream));
-                    result.Add(entry.Title, image);
+                    result.Add(new CoverSearchEntry(entry.Title, image, this));
                 }
             }
 

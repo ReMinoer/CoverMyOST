@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-
-namespace CoverMyOST
+﻿namespace CoverMyOST
 {
     // TODO : Async search
     public interface ICoversGallery
@@ -9,6 +6,6 @@ namespace CoverMyOST
         string Name { get; }
         bool Enable { get; set; }
 
-        Dictionary<string, Bitmap> Search(string query);
+        CoverSearchResult Search(string query);
     }
 }

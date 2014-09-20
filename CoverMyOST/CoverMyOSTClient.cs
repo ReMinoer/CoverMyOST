@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -76,26 +75,48 @@ namespace CoverMyOST
                 musicFile.Save();
         }
 
-        public Dictionary<string, Bitmap> SearchCover(string filePath)
+        public CoverSearchResult SearchCover(string filePath)
         {
             return Galleries.SearchCover(_allFiles[filePath].Album);
         }
 
-        public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(string filePath)
-            where TCoversGallery : ICoversGallery
+        public CoverSearchResult SearchCover<TCoversGallery>(string filePath) where TCoversGallery : ICoversGallery
         {
             return Galleries.SearchCover<TCoversGallery>(_allFiles[filePath].Album);
         }
 
-        public Dictionary<string, Bitmap> SearchCover(MusicFile musicFile)
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string filePath)
+            where TOnlineGallery : AbstractOnlineGallery
+        {
+            return Galleries.SearchCoverOnline<TOnlineGallery>(_allFiles[filePath].Album);
+        }
+
+        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(string filePath)
+            where TOnlineGallery : AbstractOnlineGallery
+        {
+            return Galleries.SearchCoverCached<TOnlineGallery>(_allFiles[filePath].Album);
+        }
+
+        public CoverSearchResult SearchCover(MusicFile musicFile)
         {
             return SearchCover(musicFile.Path);
         }
 
-        public Dictionary<string, Bitmap> SearchCover<TCoversGallery>(MusicFile musicFile)
-            where TCoversGallery : ICoversGallery
+        public CoverSearchResult SearchCover<TCoversGallery>(MusicFile musicFile) where TCoversGallery : ICoversGallery
         {
             return SearchCover<TCoversGallery>(musicFile.Path);
+        }
+
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(MusicFile musicFile)
+            where TOnlineGallery : AbstractOnlineGallery
+        {
+            return SearchCoverOnline<TOnlineGallery>(musicFile.Path);
+        }
+
+        public CoverSearchEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile)
+            where TOnlineGallery : AbstractOnlineGallery
+        {
+            return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
         }
     }
 }
