@@ -14,7 +14,7 @@ namespace CoverMyOST.Galleries
             Name = path;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public bool Enable { get; set; }
 
         public CoverSearchResult Search(string query)

@@ -38,6 +38,8 @@
     <Reference Include="taglib-sharp">
       <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OnlineGallery.cs" />
@@ -51,6 +53,13 @@
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
     <Compile Include="MusicFileFilter.cs" />
+    <Compile Include="Data\CoverMyOSTClientData.cs" />
+    <Compile Include="Data\GalleryCollectionData.cs" />
+    <Compile Include="Data\Exporter.cs" />
+    <Compile Include="Data\CoversGalleryData.cs" />
+    <Compile Include="Data\LocalGalleryData.cs" />
+    <Compile Include="Data\OnlineGalleryData.cs" />
+    <Compile Include="Data\IData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -76,4 +85,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>

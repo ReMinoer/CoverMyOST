@@ -158,8 +158,8 @@ namespace CoverMyOST.Test
             // Process 1
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
-            client.Galleries.AddLocalGallery(TestPaths.CoverDirectoryBis);
+            client.Galleries.AddLocal(TestPaths.CoverDirectory);
+            client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
 
             client.Galleries.DisableAll();
             client.Galleries[TestPaths.CoverDirectory].Enable = true;
@@ -178,6 +178,39 @@ namespace CoverMyOST.Test
             Assert.IsTrue(result.Contains(TestPaths.CoverA));
             Assert.IsTrue(result.Contains(TestPaths.CoverB));
         }
+
+		[Test]
+		public void UseConfigFile()
+		{
+			// Process
+			var client = new CoverMyOSTClient();
+			client.ChangeDirectory(TestPaths.MusicDirectory);
+			client.Filter = MusicFileFilter.NoCover;
+
+			client.Galleries.AddLocal(TestPaths.CoverDirectory);
+			client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
+
+			client.Galleries.MyAnimeList.Enable = false;
+			client.Galleries.MyAnimeList.CacheEnable = false;
+			client.Galleries.Local[0].Enable = false;
+
+			client.SaveConfiguration();
+
+			var newClient = new CoverMyOSTClient();
+			newClient.LoadConfiguration();
+
+			// Test
+			Assert.AreEqual(newClient.WorkingDirectory, TestPaths.MusicDirectory);
+			Assert.AreEqual(newClient.Filter, MusicFileFilter.NoCover);
+
+			Assert.AreEqual(newClient.Galleries.Local.Count, 2);
+			Assert.AreEqual(newClient.Galleries.Local[0].Name, TestPaths.CoverDirectory);
+			Assert.AreEqual(newClient.Galleries.Local[1].Name, TestPaths.CoverDirectoryBis);
+
+			Assert.IsFalse(newClient.Galleries.MyAnimeList.Enable);
+			Assert.IsFalse(newClient.Galleries.MyAnimeList.CacheEnable);
+			Assert.IsFalse(newClient.Galleries.Local[0].Enable);
+		}
 
         static public void AssignCoverOnline<TOnlineGallery>(string filePath, string query)
             where TOnlineGallery : OnlineGallery

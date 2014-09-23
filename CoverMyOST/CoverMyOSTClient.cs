@@ -2,10 +2,11 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using CoverMyOST.Data;
 
 namespace CoverMyOST
 {
-    public class CoverMyOSTClient
+	public class CoverMyOSTClient
     {
         public string WorkingDirectory { get; private set; }
         public GalleryCollection Galleries { get; private set; }
@@ -29,6 +30,11 @@ namespace CoverMyOST
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFile> _filteredFiles;
 
+		private const string ConfigFileName = "CoverMyOST.config";
+
+		private static Exporter<CoverMyOSTClient, CoverMyOSTClientData> _exporter
+		= new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+
         public CoverMyOSTClient()
         {
             WorkingDirectory = "";
@@ -43,6 +49,16 @@ namespace CoverMyOST
         {
             ChangeDirectory(workingDirectory);
         }
+
+		public void LoadConfiguration()
+		{
+			_exporter.LoadXML(this, ConfigFileName);
+		}
+
+		public void SaveConfiguration()
+		{
+			_exporter.SaveXML(this, ConfigFileName);
+		}
 
         public void ChangeDirectory(string path)
         {

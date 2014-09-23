@@ -38,6 +38,7 @@ namespace CoverMyOST.Galleries
             return result;
         }
 
+		// TODO : Create a special account for MyAnimeList
         private void Login()
         {
             _miniMal.Login("TryMiniMAL", "tryminimal");

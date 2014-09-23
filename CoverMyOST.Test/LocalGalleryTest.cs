@@ -19,7 +19,7 @@ namespace CoverMyOST.Test
             // Process
             var client = new CoverMyOSTClient();
             client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Galleries.AddLocalGallery(TestPaths.CoverDirectory);
+            client.Galleries.AddLocal(TestPaths.CoverDirectory);
 
             CoverSearchResult searchResult = client.SearchCover<LocalGallery>(filePath);
 

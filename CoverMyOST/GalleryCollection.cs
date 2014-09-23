@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CoverMyOST.Galleries;
+using System;
 
 namespace CoverMyOST
 {
     public class GalleryCollection : IEnumerable<ICoversGallery>
     {
+		public IReadOnlyList<ICoversGallery> List { get { return _list.AsReadOnly(); } }
+
         public IReadOnlyList<LocalGallery> Local { get { return _local.AsReadOnly(); } }
         public MyAnimeListGallery MyAnimeList { get; private set; }
+
         public ICoversGallery this[string name] { get { return _list.First(gallery => gallery.Name == name); } }
 
         private readonly List<ICoversGallery> _list;
@@ -40,14 +44,26 @@ namespace CoverMyOST
         public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : OnlineGallery
         {
             return (_list.First(gallery => gallery is TOnlineGallery) as TOnlineGallery);
-        }
+		}
 
-        public void AddLocalGallery(string path)
+		public void AddLocal(LocalGallery localGallery)
+		{
+			_local.Add(localGallery);
+			_list.Add(localGallery);
+		}
+
+        public void AddLocal(string path)
         {
-            var localGallery = new LocalGallery(path) {Enable = true};
-            _local.Add(localGallery);
-            _list.Add(localGallery);
-        }
+			AddLocal(new LocalGallery(path) {Enable = true});
+		}
+
+		public void ClearLocal()
+		{
+			foreach (LocalGallery localGallery in _local)
+				_list.Remove(localGallery);
+
+			_local.Clear();
+		}
 
         public CoverSearchResult SearchCover(string query)
         {
