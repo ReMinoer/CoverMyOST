@@ -6,7 +6,7 @@ namespace CoverMyOST.Data
 	public class Exporter<T>
 		where T : new()
 	{
-		public T LoadXML(string path)
+		public T LoadXml(string path)
 		{
 			StreamReader streamReader = new StreamReader(path);
 			XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -15,7 +15,7 @@ namespace CoverMyOST.Data
 			return obj;
 		}
 
-		public void SaveXML(T obj, string path)
+		public void SaveXml(T obj, string path)
 		{
 			StreamWriter streamWriter = new StreamWriter(path);
 			XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -27,7 +27,7 @@ namespace CoverMyOST.Data
 	public class Exporter<T,TData>
 		where TData : IData<T>, new()
 	{
-		public void LoadXML(T obj, string path)
+		public void LoadXml(T obj, string path)
 		{
 			StreamReader streamReader = new StreamReader(path);
 			XmlSerializer serializer = new XmlSerializer(typeof(TData));
@@ -38,7 +38,7 @@ namespace CoverMyOST.Data
 			streamReader.Close();
 		}
 
-		public void SaveXML(T obj, string path)
+		public void SaveXml(T obj, string path)
 		{
 			StreamWriter streamWriter = new StreamWriter(path);
 			XmlSerializer serializer = new XmlSerializer(typeof(TData));

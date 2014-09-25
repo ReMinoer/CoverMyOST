@@ -32,7 +32,7 @@ namespace CoverMyOST
 
 		private const string ConfigFileName = "CoverMyOST.config";
 
-		private static Exporter<CoverMyOSTClient, CoverMyOSTClientData> _exporter
+		private static Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter
 		= new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
 
         public CoverMyOSTClient()
@@ -52,12 +52,12 @@ namespace CoverMyOST
 
 		public void LoadConfiguration()
 		{
-			_exporter.LoadXML(this, ConfigFileName);
+			Exporter.LoadXml(this, ConfigFileName);
 		}
 
 		public void SaveConfiguration()
 		{
-			_exporter.SaveXML(this, ConfigFileName);
+			Exporter.SaveXml(this, ConfigFileName);
 		}
 
         public void ChangeDirectory(string path)
