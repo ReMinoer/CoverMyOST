@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CoverMyOST
 {
@@ -18,18 +19,28 @@ namespace CoverMyOST
         }
 
         public CoverSearchResult Search(string query)
-        {
-            if (CacheEnable)
-            {
-                CoverEntry entry = SearchCached(query);
-                if (entry != null)
-                    return new CoverSearchResult(entry);
-            }
+		{
+			return SearchAsync(query).Result;
+		}
 
-            return SearchOnline(query);
-        }
+		public async Task<CoverSearchResult> SearchAsync(string query)
+		{
+			if (CacheEnable)
+			{
+				CoverEntry entry = SearchCached(query);
+				if (entry != null)
+					return new CoverSearchResult(entry);
+			}
 
-        public abstract CoverSearchResult SearchOnline(string query);
+			return await SearchOnlineAsync(query);
+		}
+
+		public CoverSearchResult SearchOnline(string query)
+		{
+			return SearchOnlineAsync(query).Result;
+		}
+
+		public abstract Task<CoverSearchResult> SearchOnlineAsync(string query);
 
         public CoverEntry SearchCached(string query)
         {

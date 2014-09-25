@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using MiniMAL;
 using MiniMAL.Anime;
+using System.Threading.Tasks;
 
 namespace CoverMyOST.Galleries
 {
@@ -13,26 +14,26 @@ namespace CoverMyOST.Galleries
         protected override string CacheDirectoryName { get { return "myanimelist"; } }
         private readonly MiniMALClient _miniMal = new MiniMALClient();
 
-        public override CoverSearchResult SearchOnline(string query)
+		public async override Task<CoverSearchResult> SearchOnlineAsync(string query)
         {
             if (!_miniMal.IsConnected)
                 Login();
 
             var result = new CoverSearchResult();
 
-            List<AnimeSearchEntry> search = _miniMal.SearchAnime(query.Split(' '));
+			List<AnimeSearchEntry> search = await _miniMal.SearchAnimeAsync(query.Split(' '));
             foreach (AnimeSearchEntry entry in search)
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
-                using (var httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse())
-                using (Stream stream = httpWebReponse.GetResponseStream())
-                {
-                    if (stream == null)
-                        continue;
+				using (var httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse())
+	                using (Stream stream = httpWebReponse.GetResponseStream())
+	                {
+	                    if (stream == null)
+	                        continue;
 
-                    var image = new Bitmap(Image.FromStream(stream));
-                    result.Add(new CoverEntry(entry.Title, image, this));
-                }
+	                    var image = new Bitmap(Image.FromStream(stream));
+	                    result.Add(new CoverEntry(entry.Title, image, this));
+	                }
             }
 
             return result;

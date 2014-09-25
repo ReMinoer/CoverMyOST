@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CoverMyOST.Galleries;
 using System;
+using System.Threading.Tasks;
 
 namespace CoverMyOST
 {
@@ -67,48 +68,72 @@ namespace CoverMyOST
 
         public CoverSearchResult SearchCover(string query)
         {
-            var result = new CoverSearchResult();
+			return SearchCoverAsync(query).Result;
+		}
 
-            foreach (ICoversGallery gallery in _list)
-                if (gallery.Enable)
-                    foreach (CoverEntry entry in gallery.Search(query))
-                        result.Add(entry);
+		public async Task<CoverSearchResult> SearchCoverAsync(string query)
+		{
+			var result = new CoverSearchResult();
 
-            return result;
-        }
+			foreach (ICoversGallery gallery in _list)
+				if (gallery.Enable)
+				{
+					CoverSearchResult search = (gallery is OnlineGallery)
+						? await (gallery as OnlineGallery).SearchAsync(query)
+						: gallery.Search(query);
 
-        public CoverSearchResult SearchCoverCached(string query)
+					foreach (CoverEntry entry in search)
+						result.Add(entry);
+				}
+
+			return result;
+		}
+
+        public CoverSearchResult SearchCover<TCoversGallery>(string query)
+			where TCoversGallery : ICoversGallery
         {
-            var result = new CoverSearchResult();
+			return SearchCoverAsync(query).Result;
+		}
 
-            foreach (ICoversGallery gallery in _list)
-                if (gallery is OnlineGallery && gallery.Enable)
-                    result.Add((gallery as OnlineGallery).SearchCached(query));
+		public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(string query)
+			where TCoversGallery : ICoversGallery
+		{
+			if (typeof(TCoversGallery) == typeof(LocalGallery))
+				return SearchLocalCover(query);
 
-            return result;
-        }
+			foreach (ICoversGallery gallery in _list)
+				if (gallery is TCoversGallery)
+					return await (gallery as OnlineGallery).SearchAsync(query);
 
-        public CoverSearchResult SearchCover<TCoversGallery>(string query) where TCoversGallery : ICoversGallery
-        {
-            if (typeof(TCoversGallery) == typeof(LocalGallery))
-                return SearchLocalCover(query);
+			return null;
+		}
 
-            foreach (ICoversGallery gallery in _list)
-                if (gallery is TCoversGallery)
-                    return gallery.Search(query);
+		public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query)
+			where TOnlineGallery : OnlineGallery
+		{
+			return SearchCoverOnlineAsync<TOnlineGallery>(query).Result;
+		}
 
-            return null;
-        }
-
-        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query)
+		public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(string query)
             where TOnlineGallery : OnlineGallery
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)
-                    return (gallery as TOnlineGallery).SearchOnline(query);
+					return await (gallery as TOnlineGallery).SearchOnlineAsync(query);
 
             return null;
-        }
+		}
+
+		public CoverSearchResult SearchCoverCached(string query)
+		{
+			var result = new CoverSearchResult();
+
+			foreach (ICoversGallery gallery in _list)
+				if (gallery is OnlineGallery && gallery.Enable)
+					result.Add((gallery as OnlineGallery).SearchCached(query));
+
+			return result;
+		}
 
         public CoverEntry SearchCoverCached<TOnlineGallery>(string query)
             where TOnlineGallery : OnlineGallery

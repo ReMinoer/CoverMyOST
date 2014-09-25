@@ -245,7 +245,7 @@ namespace CoverMyOST.Test
             var tempClient = new CoverMyOSTClient();
             tempClient.Galleries.ClearAllCache();
 
-            CoverSearchResult tempCover = tempClient.Galleries.SearchCoverOnline<TOnlineGallery>(query);
+			CoverSearchResult tempCover = tempClient.Galleries.SearchCoverOnline<TOnlineGallery>(query);
             tempCover.First().AddToGalleryCache(query);
 
             // Process
