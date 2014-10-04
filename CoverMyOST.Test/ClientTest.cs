@@ -25,8 +25,8 @@ namespace CoverMyOST.Test
         public void FilterFiles()
         {
             // Prerequisites
-            var temp = ResetFile(TestPaths.MusicA);
-            var temp2 = ResetFile(TestPaths.MusicB);
+            MusicFile temp = ResetFile(TestPaths.MusicA);
+            MusicFile temp2 = ResetFile(TestPaths.MusicB);
             ResetFile(TestPaths.MusicC);
 
             temp.Album = "Death";
@@ -72,7 +72,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var result = LoadFile(filePath);
+            MusicFile result = LoadFile(filePath);
             Assert.AreEqual(result.Album, name);
         }
 
@@ -92,7 +92,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var result = LoadFile(filePath);
+            MusicFile result = LoadFile(filePath);
             Assert.AreEqual(result.Cover.Size, cover.Size);
         }
 
@@ -118,9 +118,9 @@ namespace CoverMyOST.Test
             client.SaveAll();
 
             // Test
-            var resultA = LoadFile(TestPaths.MusicA);
-            var resultB = LoadFile(TestPaths.MusicB);
-            var resultC = LoadFile(TestPaths.MusicC);
+            MusicFile resultA = LoadFile(TestPaths.MusicA);
+            MusicFile resultB = LoadFile(TestPaths.MusicB);
+            MusicFile resultC = LoadFile(TestPaths.MusicC);
             Assert.AreEqual(resultA.Album, albumA);
             Assert.AreEqual(resultB.Album, albumB);
             Assert.AreEqual(resultC.Album, albumC);
@@ -131,7 +131,7 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicA;
-            var temp = ResetFile(filePath);
+            MusicFile temp = ResetFile(filePath);
             temp.Album = "Death";
             temp.Save();
 
@@ -151,7 +151,7 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicB;
-            var temp = ResetFile(filePath);
+            MusicFile temp = ResetFile(filePath);
             temp.Album = "cover";
             temp.Save();
 
@@ -179,44 +179,44 @@ namespace CoverMyOST.Test
             Assert.IsTrue(result.Contains(TestPaths.CoverB));
         }
 
-		[Test]
-		public void UseConfigFile()
-		{
-			// Process
-			var client = new CoverMyOSTClient();
-			client.ChangeDirectory(TestPaths.MusicDirectory);
-			client.Filter = MusicFileFilter.NoCover;
+        [Test]
+        public void UseConfigFile()
+        {
+            // Process
+            var client = new CoverMyOSTClient();
+            client.ChangeDirectory(TestPaths.MusicDirectory);
+            client.Filter = MusicFileFilter.NoCover;
 
-			client.Galleries.AddLocal(TestPaths.CoverDirectory);
-			client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
+            client.Galleries.AddLocal(TestPaths.CoverDirectory);
+            client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
 
-			client.Galleries.MyAnimeList.Enable = false;
-			client.Galleries.MyAnimeList.CacheEnable = false;
-			client.Galleries.Local[0].Enable = false;
+            client.Galleries.MyAnimeList.Enable = false;
+            client.Galleries.MyAnimeList.CacheEnable = false;
+            client.Galleries.Local[0].Enable = false;
 
-			client.SaveConfiguration();
+            client.SaveConfiguration();
 
-			var newClient = new CoverMyOSTClient();
-			newClient.LoadConfiguration();
+            var newClient = new CoverMyOSTClient();
+            newClient.LoadConfiguration();
 
-			// Test
-			Assert.AreEqual(newClient.WorkingDirectory, TestPaths.MusicDirectory);
-			Assert.AreEqual(newClient.Filter, MusicFileFilter.NoCover);
+            // Test
+            Assert.AreEqual(newClient.WorkingDirectory, TestPaths.MusicDirectory);
+            Assert.AreEqual(newClient.Filter, MusicFileFilter.NoCover);
 
-			Assert.AreEqual(newClient.Galleries.Local.Count, 2);
-			Assert.AreEqual(newClient.Galleries.Local[0].Name, TestPaths.CoverDirectory);
-			Assert.AreEqual(newClient.Galleries.Local[1].Name, TestPaths.CoverDirectoryBis);
+            Assert.AreEqual(newClient.Galleries.Local.Count, 2);
+            Assert.AreEqual(newClient.Galleries.Local[0].Name, TestPaths.CoverDirectory);
+            Assert.AreEqual(newClient.Galleries.Local[1].Name, TestPaths.CoverDirectoryBis);
 
-			Assert.IsFalse(newClient.Galleries.MyAnimeList.Enable);
-			Assert.IsFalse(newClient.Galleries.MyAnimeList.CacheEnable);
-			Assert.IsFalse(newClient.Galleries.Local[0].Enable);
-		}
+            Assert.IsFalse(newClient.Galleries.MyAnimeList.Enable);
+            Assert.IsFalse(newClient.Galleries.MyAnimeList.CacheEnable);
+            Assert.IsFalse(newClient.Galleries.Local[0].Enable);
+        }
 
         static public void AssignCoverOnline<TOnlineGallery>(string filePath, string query)
             where TOnlineGallery : OnlineGallery
         {
             // Prerequisites
-            var temp = ResetFile(filePath);
+            MusicFile temp = ResetFile(filePath);
             temp.Album = query;
             temp.Save();
 
@@ -230,7 +230,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var resultFile = LoadFile(filePath);
+            MusicFile resultFile = LoadFile(filePath);
             Assert.AreEqual(searchResult.First().Cover.Size, resultFile.Cover.Size);
         }
 
@@ -238,14 +238,14 @@ namespace CoverMyOST.Test
             where TOnlineGallery : OnlineGallery
         {
             // Prerequisites
-            var temp = ResetFile(filePath);
+            MusicFile temp = ResetFile(filePath);
             temp.Album = query;
             temp.Save();
 
             var tempClient = new CoverMyOSTClient();
             tempClient.Galleries.ClearAllCache();
 
-			CoverSearchResult tempCover = tempClient.Galleries.SearchCoverOnline<TOnlineGallery>(query);
+            CoverSearchResult tempCover = tempClient.Galleries.SearchCoverOnline<TOnlineGallery>(query);
             tempCover.First().AddToGalleryCache(query);
 
             // Process
@@ -258,7 +258,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var resultFile = LoadFile(filePath);
+            MusicFile resultFile = LoadFile(filePath);
             Assert.AreEqual(entry.Cover.Size, resultFile.Cover.Size);
         }
 

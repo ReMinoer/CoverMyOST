@@ -8,8 +8,6 @@ namespace CoverMyOST
     public abstract class OnlineGallery : ICoversGallery
     {
         public bool CacheEnable { get; set; }
-        public abstract string Name { get; }
-        public bool Enable { get; set; }
 
         protected abstract string CacheDirectoryName { get; }
 
@@ -17,30 +15,32 @@ namespace CoverMyOST
         {
             get { return Path.Combine(GalleryCollection.CacheRoot, CacheDirectoryName + "/"); }
         }
+        public abstract string Name { get; }
+        public bool Enable { get; set; }
 
         public CoverSearchResult Search(string query)
-		{
-			return SearchAsync(query).Result;
-		}
+        {
+            return SearchAsync(query).Result;
+        }
 
-		public async Task<CoverSearchResult> SearchAsync(string query)
-		{
-			if (CacheEnable)
-			{
-				CoverEntry entry = SearchCached(query);
-				if (entry != null)
-					return new CoverSearchResult(entry);
-			}
+        public async Task<CoverSearchResult> SearchAsync(string query)
+        {
+            if (CacheEnable)
+            {
+                CoverEntry entry = SearchCached(query);
+                if (entry != null)
+                    return new CoverSearchResult(entry);
+            }
 
-			return await SearchOnlineAsync(query);
-		}
+            return await SearchOnlineAsync(query);
+        }
 
-		public CoverSearchResult SearchOnline(string query)
-		{
-			return SearchOnlineAsync(query).Result;
-		}
+        public CoverSearchResult SearchOnline(string query)
+        {
+            return SearchOnlineAsync(query).Result;
+        }
 
-		public abstract Task<CoverSearchResult> SearchOnlineAsync(string query);
+        public abstract Task<CoverSearchResult> SearchOnlineAsync(string query);
 
         public CoverEntry SearchCached(string query)
         {

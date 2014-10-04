@@ -12,7 +12,7 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicC;
-            var temp = ClientTest.ResetFile(filePath);
+            MusicFile temp = ClientTest.ResetFile(filePath);
             temp.Album = "coverA";
             temp.Save();
 
@@ -27,7 +27,7 @@ namespace CoverMyOST.Test
             client.Files[filePath].Save();
 
             // Test
-            var resultFile = ClientTest.LoadFile(filePath);
+            MusicFile resultFile = ClientTest.LoadFile(filePath);
             Assert.AreEqual(searchResult.First().Cover.Size, resultFile.Cover.Size);
         }
     }

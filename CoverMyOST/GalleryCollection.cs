@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoverMyOST.Galleries;
-using System;
 using System.Threading.Tasks;
+using CoverMyOST.Galleries;
 
 namespace CoverMyOST
 {
     public class GalleryCollection : IEnumerable<ICoversGallery>
     {
-		public IReadOnlyList<ICoversGallery> List { get { return _list.AsReadOnly(); } }
+        public IReadOnlyList<ICoversGallery> List { get { return _list.AsReadOnly(); } }
 
         public IReadOnlyList<LocalGallery> Local { get { return _local.AsReadOnly(); } }
         public MyAnimeListGallery MyAnimeList { get; private set; }
@@ -45,98 +44,95 @@ namespace CoverMyOST
         public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : OnlineGallery
         {
             return (_list.First(gallery => gallery is TOnlineGallery) as TOnlineGallery);
-		}
+        }
 
-		public void AddLocal(LocalGallery localGallery)
-		{
-			_local.Add(localGallery);
-			_list.Add(localGallery);
-		}
+        public void AddLocal(LocalGallery localGallery)
+        {
+            _local.Add(localGallery);
+            _list.Add(localGallery);
+        }
 
         public void AddLocal(string path)
         {
-			AddLocal(new LocalGallery(path) {Enable = true});
-		}
+            AddLocal(new LocalGallery(path) {Enable = true});
+        }
 
-		public void ClearLocal()
-		{
-			foreach (LocalGallery localGallery in _local)
-				_list.Remove(localGallery);
+        public void ClearLocal()
+        {
+            foreach (LocalGallery localGallery in _local)
+                _list.Remove(localGallery);
 
-			_local.Clear();
-		}
+            _local.Clear();
+        }
 
         public CoverSearchResult SearchCover(string query)
         {
-			return SearchCoverAsync(query).Result;
-		}
+            return SearchCoverAsync(query).Result;
+        }
 
-		public async Task<CoverSearchResult> SearchCoverAsync(string query)
-		{
-			var result = new CoverSearchResult();
-
-			foreach (ICoversGallery gallery in _list)
-				if (gallery.Enable)
-				{
-					CoverSearchResult search = (gallery is OnlineGallery)
-						? await (gallery as OnlineGallery).SearchAsync(query)
-						: gallery.Search(query);
-
-					foreach (CoverEntry entry in search)
-						result.Add(entry);
-				}
-
-			return result;
-		}
-
-        public CoverSearchResult SearchCover<TCoversGallery>(string query)
-			where TCoversGallery : ICoversGallery
+        public async Task<CoverSearchResult> SearchCoverAsync(string query)
         {
-			return SearchCoverAsync(query).Result;
-		}
+            var result = new CoverSearchResult();
 
-		public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(string query)
-			where TCoversGallery : ICoversGallery
-		{
-			if (typeof(TCoversGallery) == typeof(LocalGallery))
-				return SearchLocalCover(query);
+            foreach (ICoversGallery gallery in _list)
+                if (gallery.Enable)
+                {
+                    CoverSearchResult search = (gallery is OnlineGallery)
+                                                   ? await (gallery as OnlineGallery).SearchAsync(query)
+                                                   : gallery.Search(query);
 
-			foreach (ICoversGallery gallery in _list)
-				if (gallery is TCoversGallery)
-					return await (gallery as OnlineGallery).SearchAsync(query);
+                    foreach (CoverEntry entry in search)
+                        result.Add(entry);
+                }
 
-			return null;
-		}
+            return result;
+        }
 
-		public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query)
-			where TOnlineGallery : OnlineGallery
-		{
-			return SearchCoverOnlineAsync<TOnlineGallery>(query).Result;
-		}
+        public CoverSearchResult SearchCover<TCoversGallery>(string query) where TCoversGallery : ICoversGallery
+        {
+            return SearchCoverAsync<TCoversGallery>(query).Result;
+        }
 
-		public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(string query)
+        public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(string query)
+            where TCoversGallery : ICoversGallery
+        {
+            if (typeof(TCoversGallery) == typeof(LocalGallery))
+                return SearchLocalCover(query);
+
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is TCoversGallery)
+                    return await ((OnlineGallery)gallery).SearchAsync(query);
+
+            return null;
+        }
+
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string query) where TOnlineGallery : OnlineGallery
+        {
+            return SearchCoverOnlineAsync<TOnlineGallery>(query).Result;
+        }
+
+        public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(string query)
             where TOnlineGallery : OnlineGallery
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)
-					return await (gallery as TOnlineGallery).SearchOnlineAsync(query);
+                    return await (gallery as TOnlineGallery).SearchOnlineAsync(query);
 
             return null;
-		}
+        }
 
-		public CoverSearchResult SearchCoverCached(string query)
-		{
-			var result = new CoverSearchResult();
+        public CoverSearchResult SearchCoverCached(string query)
+        {
+            var result = new CoverSearchResult();
 
-			foreach (ICoversGallery gallery in _list)
-				if (gallery is OnlineGallery && gallery.Enable)
-					result.Add((gallery as OnlineGallery).SearchCached(query));
+            foreach (ICoversGallery gallery in _list)
+                if (gallery is OnlineGallery && gallery.Enable)
+                    result.Add((gallery as OnlineGallery).SearchCached(query));
 
-			return result;
-		}
+            return result;
+        }
 
-        public CoverEntry SearchCoverCached<TOnlineGallery>(string query)
-            where TOnlineGallery : OnlineGallery
+        public CoverEntry SearchCoverCached<TOnlineGallery>(string query) where TOnlineGallery : OnlineGallery
         {
             foreach (ICoversGallery gallery in _list)
                 if (gallery is TOnlineGallery)

@@ -2,12 +2,12 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using CoverMyOST.Data;
 using System.Threading.Tasks;
+using CoverMyOST.Data;
 
 namespace CoverMyOST
 {
-	public class CoverMyOSTClient
+    public class CoverMyOSTClient
     {
         public string WorkingDirectory { get; private set; }
         public GalleryCollection Galleries { get; private set; }
@@ -31,10 +31,10 @@ namespace CoverMyOST
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFile> _filteredFiles;
 
-		private const string ConfigFileName = "CoverMyOST.config";
+        private const string ConfigFileName = "CoverMyOST.config";
 
-		private static Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter
-		= new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+        static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
+            new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
 
         public CoverMyOSTClient()
         {
@@ -45,21 +45,15 @@ namespace CoverMyOST
             FilterFiles(MusicFileFilter.None);
         }
 
-        public CoverMyOSTClient(string workingDirectory)
-            : this()
+        public void LoadConfiguration()
         {
-            ChangeDirectory(workingDirectory);
+            Exporter.LoadXml(this, ConfigFileName);
         }
 
-		public void LoadConfiguration()
-		{
-			Exporter.LoadXml(this, ConfigFileName);
-		}
-
-		public void SaveConfiguration()
-		{
-			Exporter.SaveXml(this, ConfigFileName);
-		}
+        public void SaveConfiguration()
+        {
+            Exporter.SaveXml(this, ConfigFileName);
+        }
 
         public void ChangeDirectory(string path)
         {
@@ -100,82 +94,77 @@ namespace CoverMyOST
 
         public CoverSearchResult SearchCover(string filePath)
         {
-			return SearchCoverAsync(filePath).Result;
-		}
+            return SearchCoverAsync(filePath).Result;
+        }
 
-		public CoverSearchResult SearchCover(MusicFile musicFile)
-		{
-			return SearchCoverAsync(musicFile).Result;
-		}
-
-		public async Task<CoverSearchResult> SearchCoverAsync(string filePath)
-		{
-			return await Galleries.SearchCoverAsync(_allFiles[filePath].Album);
-		}
-
-		public async Task<CoverSearchResult> SearchCoverAsync(MusicFile musicFile)
-		{
-			return await SearchCoverAsync(musicFile.Path);
-		}
-
-        public CoverSearchResult SearchCover<TCoversGallery>(string filePath)
-			where TCoversGallery : ICoversGallery
+        public CoverSearchResult SearchCover(MusicFile musicFile)
         {
-			return SearchCoverAsync<TCoversGallery>(filePath).Result;
-		}
+            return SearchCoverAsync(musicFile).Result;
+        }
 
-		public CoverSearchResult SearchCover<TCoversGallery>(MusicFile musicFile)
-			where TCoversGallery : ICoversGallery
-		{
-			return SearchCoverAsync<TCoversGallery>(musicFile).Result;
-		}
+        public async Task<CoverSearchResult> SearchCoverAsync(string filePath)
+        {
+            return await Galleries.SearchCoverAsync(_allFiles[filePath].Album);
+        }
 
-		public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(string filePath)
-			where TCoversGallery : ICoversGallery
-		{
-			return await Galleries.SearchCoverAsync<TCoversGallery>(_allFiles[filePath].Album);
-		}
+        public async Task<CoverSearchResult> SearchCoverAsync(MusicFile musicFile)
+        {
+            return await SearchCoverAsync(musicFile.Path);
+        }
 
-		public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(MusicFile musicFile)
-			where TCoversGallery : ICoversGallery
-		{
-			return await SearchCoverAsync<TCoversGallery>(musicFile.Path);
-		}
+        public CoverSearchResult SearchCover<TCoversGallery>(string filePath) where TCoversGallery : ICoversGallery
+        {
+            return SearchCoverAsync<TCoversGallery>(filePath).Result;
+        }
 
-        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string filePath)
+        public CoverSearchResult SearchCover<TCoversGallery>(MusicFile musicFile) where TCoversGallery : ICoversGallery
+        {
+            return SearchCoverAsync<TCoversGallery>(musicFile).Result;
+        }
+
+        public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(string filePath)
+            where TCoversGallery : ICoversGallery
+        {
+            return await Galleries.SearchCoverAsync<TCoversGallery>(_allFiles[filePath].Album);
+        }
+
+        public async Task<CoverSearchResult> SearchCoverAsync<TCoversGallery>(MusicFile musicFile)
+            where TCoversGallery : ICoversGallery
+        {
+            return await SearchCoverAsync<TCoversGallery>(musicFile.Path);
+        }
+
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(string filePath) where TOnlineGallery : OnlineGallery
+        {
+            return SearchCoverOnlineAsync<TOnlineGallery>(filePath).Result;
+        }
+
+        public CoverSearchResult SearchCoverOnline<TOnlineGallery>(MusicFile musicFile)
             where TOnlineGallery : OnlineGallery
         {
-			return SearchCoverOnlineAsync<TOnlineGallery>(filePath).Result;
-		}
+            return SearchCoverOnlineAsync<TOnlineGallery>(musicFile).Result;
+        }
 
-		public CoverSearchResult SearchCoverOnline<TOnlineGallery>(MusicFile musicFile)
-			where TOnlineGallery : OnlineGallery
-		{
-			return SearchCoverOnlineAsync<TOnlineGallery>(musicFile).Result;
-		}
-
-		public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(string filePath)
-			where TOnlineGallery : OnlineGallery
-		{
-			return await Galleries.SearchCoverOnlineAsync<TOnlineGallery>(_allFiles[filePath].Album);
-		}
-
-		public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(MusicFile musicFile)
-			where TOnlineGallery : OnlineGallery
-		{
-			return await SearchCoverOnlineAsync<TOnlineGallery>(musicFile.Path);
-		}
-
-        public CoverEntry SearchCoverCached<TOnlineGallery>(string filePath)
+        public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(string filePath)
             where TOnlineGallery : OnlineGallery
+        {
+            return await Galleries.SearchCoverOnlineAsync<TOnlineGallery>(_allFiles[filePath].Album);
+        }
+
+        public async Task<CoverSearchResult> SearchCoverOnlineAsync<TOnlineGallery>(MusicFile musicFile)
+            where TOnlineGallery : OnlineGallery
+        {
+            return await SearchCoverOnlineAsync<TOnlineGallery>(musicFile.Path);
+        }
+
+        public CoverEntry SearchCoverCached<TOnlineGallery>(string filePath) where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(_allFiles[filePath].Album);
         }
 
-        public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile)
-            where TOnlineGallery : OnlineGallery
+        public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile) where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
-		}
+        }
     }
 }

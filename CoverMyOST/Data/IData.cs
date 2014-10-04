@@ -1,13 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
-
-namespace CoverMyOST
+﻿namespace CoverMyOST.Data
 {
-	public interface IData<T>
-	{
-		void SetData(T obj);
-		void SetObject(T obj);
-	}
+    public interface IData<in T>
+    {
+        void SetData(T obj);
+        void SetObject(T obj);
+    }
 }
-
