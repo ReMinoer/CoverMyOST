@@ -13,7 +13,7 @@ namespace CoverMyOST
             Name = name;
             Cover = cover;
             _gallery = gallery;
-        }
+		}
 
         public void AddToGalleryCache(string name)
         {
