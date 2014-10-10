@@ -49,7 +49,7 @@ namespace CoverMyOST
         }
 
         public string Path { get; private set; }
-        public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
+	public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
         private readonly File _file;
 
         internal MusicFile(string path)
