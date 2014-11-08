@@ -43,7 +43,6 @@
             this.Cover = new System.Windows.Forms.DataGridViewImageColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Edit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -93,6 +92,7 @@
             // saveAllButton
             // 
             this.saveAllButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.saveAllButton.Enabled = false;
             this.saveAllButton.Image = ((System.Drawing.Image)(resources.GetObject("saveAllButton.Image")));
             this.saveAllButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveAllButton.Name = "saveAllButton";
@@ -138,19 +138,18 @@
             // 
             this.gridView.AllowUserToAddRows = false;
             this.gridView.AllowUserToDeleteRows = false;
+            this.gridView.AllowUserToResizeRows = false;
             this.gridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Cover,
             this.File,
-            this.Album,
-            this.Edit});
+            this.Album});
             this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridView.Location = new System.Drawing.Point(0, 25);
             this.gridView.Name = "gridView";
-            this.gridView.ReadOnly = true;
-            this.gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.gridView.Size = new System.Drawing.Size(717, 336);
             this.gridView.TabIndex = 3;
             // 
@@ -163,6 +162,7 @@
             // 
             // File
             // 
+            this.File.FillWeight = 150F;
             this.File.HeaderText = "File";
             this.File.Name = "File";
             this.File.ReadOnly = true;
@@ -171,13 +171,6 @@
             // 
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
-            this.Album.ReadOnly = true;
-            // 
-            // Edit
-            // 
-            this.Edit.HeaderText = "Edit";
-            this.Edit.Name = "Edit";
-            this.Edit.ReadOnly = true;
             // 
             // MainView
             // 
@@ -215,7 +208,6 @@
         private System.Windows.Forms.DataGridViewImageColumn Cover;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
-        private System.Windows.Forms.DataGridViewButtonColumn Edit;
     }
 }
 

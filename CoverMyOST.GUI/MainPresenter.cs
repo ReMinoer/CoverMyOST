@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -25,9 +26,30 @@ namespace CoverMyOST.GUI
             _view.SaveAllButton.Click += SaveAllButtonOnClick;
             _view.FilterComboBox.SelectedIndexChanged += FilterComboBoxOnSelectedIndexChanged;
 
+            _view.GridView.CellEndEdit += GridViewOnCellEndEdit;
+
             _view.ClosingProgram += ViewOnClosing;
 
             RefreshGrid();
+        }
+
+        private void GridViewOnCellEndEdit(object sender, DataGridViewCellEventArgs eventArgs)
+        {
+            DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
+
+            switch (eventArgs.ColumnIndex)
+            {
+                case 2:
+                    string name = Path.Combine(_client.WorkingDirectory, (string)row.Cells[1].Value);
+
+                    if (_client.Files[name].Album != (string)row.Cells[2].Value)
+                    {
+                        _client.Files[name].Album = (string)row.Cells[2].Value;
+                        row.Cells[2].Style.ForeColor = Color.Red;
+                        OnModification(sender, eventArgs);
+                    }
+                    break;
+            }
         }
 
         private void RefreshGrid()
@@ -59,7 +81,13 @@ namespace CoverMyOST.GUI
         private void SaveAllButtonOnClick(object sender, EventArgs eventArgs)
         {
             _client.SaveAll();
+
+            foreach (DataGridViewRow row in _view.GridView.Rows)
+                row.Cells[2].Style.ForeColor = Color.Black;
+
             _isSaved = true;
+            _view.SaveAllButton.Enabled = false;
+
             _view.StatusStripLabel = @"Save completed.";
         }
 
@@ -79,6 +107,12 @@ namespace CoverMyOST.GUI
             }
 
             RefreshGrid();
+        }
+
+        private void OnModification(object sender, EventArgs eventArgs)
+        {
+            _isSaved = false;
+            _view.SaveAllButton.Enabled = true;
         }
 
         private void ViewOnClosing(object sender, CancelEventArgs cancelEventArgs)
