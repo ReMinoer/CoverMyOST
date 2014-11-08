@@ -20,6 +20,7 @@ namespace CoverMyOST.GUI
         public ToolStripButton SaveAllButton { get { return saveAllButton; } }
         public ToolStripComboBox FilterComboBox { get { return filterComboBox; } }
         public ToolStripButton GalleryManagerButton { get { return galleryManagerButton; } }
+        public ToolStripButton CoversButton { get { return coversButton; } }
 
         public DataGridView GridView { get { return gridView; } }
 
@@ -34,6 +35,7 @@ namespace CoverMyOST.GUI
         ToolStripButton SaveAllButton { get; }
         ToolStripComboBox FilterComboBox { get; }
         ToolStripButton GalleryManagerButton { get; }
+        ToolStripButton CoversButton { get; }
 
         DataGridView GridView { get; }
 

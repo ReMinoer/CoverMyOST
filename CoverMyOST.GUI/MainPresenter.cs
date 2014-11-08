@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using CoverMyOST.GUI.Dialogs;
 
 namespace CoverMyOST.GUI
 {
@@ -25,6 +26,8 @@ namespace CoverMyOST.GUI
             _view.OpenButton.Click += OpenButtonOnClick;
             _view.SaveAllButton.Click += SaveAllButtonOnClick;
             _view.FilterComboBox.SelectedIndexChanged += FilterComboBoxOnSelectedIndexChanged;
+            _view.GalleryManagerButton.Click += GalleryManagerButtonOnClick;
+            _view.CoversButton.Click += CoversButtonOnClick;
 
             _view.GridView.CellEndEdit += GridViewOnCellEndEdit;
 
@@ -107,6 +110,14 @@ namespace CoverMyOST.GUI
             }
 
             RefreshGrid();
+        }
+
+        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) {}
+
+        private void CoversButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            var coverSearchView = new CoverSearchView(_client);
+            coverSearchView.ShowDialog();
         }
 
         private void OnModification(object sender, EventArgs eventArgs)

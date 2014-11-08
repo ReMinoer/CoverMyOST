@@ -43,6 +43,8 @@
             this.Cover = new System.Windows.Forms.DataGridViewImageColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.coversButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -73,7 +75,9 @@
             this.filterLabel,
             this.filterComboBox,
             this.toolStripSeparator2,
-            this.galleryManagerButton});
+            this.galleryManagerButton,
+            this.toolStripSeparator3,
+            this.coversButton});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(717, 25);
@@ -172,6 +176,20 @@
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // coversButton
+            // 
+            this.coversButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.coversButton.Image = ((System.Drawing.Image)(resources.GetObject("coversButton.Image")));
+            this.coversButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.coversButton.Name = "coversButton";
+            this.coversButton.Size = new System.Drawing.Size(56, 22);
+            this.coversButton.Text = "Covers...";
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,6 +226,8 @@
         private System.Windows.Forms.DataGridViewImageColumn Cover;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton coversButton;
     }
 }
 
