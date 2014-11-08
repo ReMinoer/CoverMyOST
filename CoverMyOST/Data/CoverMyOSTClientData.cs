@@ -1,3 +1,5 @@
+using System;
+
 namespace CoverMyOST.Data
 {
     public class CoverMyOSTClientData : IData<CoverMyOSTClient>
@@ -22,7 +24,11 @@ namespace CoverMyOST.Data
 
         public void SetObject(CoverMyOSTClient obj)
         {
-            obj.ChangeDirectory(WorkingDirectory);
+            try
+            {
+                obj.ChangeDirectory(WorkingDirectory);
+            }
+            catch (ArgumentException) {}
             obj.Filter = Filter;
             GalleriesData.SetObject(obj.Galleries);
         }

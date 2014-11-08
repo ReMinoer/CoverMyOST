@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CoverMyOST.Data;
+using TagLib;
+using File = System.IO.File;
 
 namespace CoverMyOST
 {
@@ -11,6 +14,11 @@ namespace CoverMyOST
     {
         public string WorkingDirectory { get; private set; }
         public GalleryCollection Galleries { get; private set; }
+
+        public IReadOnlyDictionary<string, MusicFile> AllFiles
+        {
+            get { return new ReadOnlyDictionary<string, MusicFile>(_allFiles); }
+        }
 
         public IReadOnlyDictionary<string, MusicFile> Files
         {
@@ -31,7 +39,7 @@ namespace CoverMyOST
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFile> _filteredFiles;
 
-        private const string ConfigFileName = "CoverMyOST.config";
+        private const string ConfigFileName = "CoverMyOSTconfig.xml";
 
         static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
             new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
@@ -47,7 +55,8 @@ namespace CoverMyOST
 
         public void LoadConfiguration()
         {
-            Exporter.LoadXml(this, ConfigFileName);
+            if (File.Exists(ConfigFileName))
+                Exporter.LoadXml(this, ConfigFileName);
         }
 
         public void SaveConfiguration()
@@ -57,12 +66,20 @@ namespace CoverMyOST
 
         public void ChangeDirectory(string path)
         {
+            if (!Directory.Exists(path))
+                throw new ArgumentException("Directory specify does not exist.");
+
             _allFiles.Clear();
 
             foreach (string file in Directory.EnumerateFiles(path))
             {
                 string fullpath = Path.GetFullPath(file);
-                _allFiles.Add(fullpath, new MusicFile(fullpath));
+                try
+                {
+                    var musicFile = new MusicFile(fullpath);
+                    _allFiles.Add(fullpath, musicFile);
+                }
+                catch (UnsupportedFormatException) {}
             }
 
             FilterFiles(MusicFileFilter.None);

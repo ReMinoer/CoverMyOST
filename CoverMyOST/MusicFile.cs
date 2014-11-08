@@ -49,11 +49,16 @@ namespace CoverMyOST
         }
 
         public string Path { get; private set; }
-	public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
+        public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
         private readonly File _file;
+        private readonly string[] _musicExtensions = {".mp3", ".wma", ".flac", ".ogg"};
 
         internal MusicFile(string path)
         {
+            string extension = System.IO.Path.GetExtension(path);
+            if (extension == null || !_musicExtensions.Contains(extension.ToLower()))
+                throw new UnsupportedFormatException();
+
             _file = File.Create(path);
             Path = path;
         }

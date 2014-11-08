@@ -1,3 +1,4 @@
+using CoverMyOST.Annotations;
 using CoverMyOST.Galleries;
 
 namespace CoverMyOST.Data
@@ -5,6 +6,9 @@ namespace CoverMyOST.Data
     public class LocalGalleryData : CoversGalleryData<LocalGallery>
     {
         public override string Name { get; set; }
+
+        [UsedImplicitly]
+        public LocalGalleryData() {}
 
         public LocalGalleryData(LocalGallery obj)
         {

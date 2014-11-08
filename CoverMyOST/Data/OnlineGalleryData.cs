@@ -1,9 +1,14 @@
+using CoverMyOST.Annotations;
+
 namespace CoverMyOST.Data
 {
     public class OnlineGalleryData : CoversGalleryData<OnlineGallery>
     {
         public override string Name { get; set; }
         public bool CacheEnable { get; set; }
+
+        [UsedImplicitly]
+        public OnlineGalleryData() {}
 
         public OnlineGalleryData(OnlineGallery obj)
         {
