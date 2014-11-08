@@ -42,6 +42,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MusicFileEntry.cs" />
     <Compile Include="OnlineGallery.cs" />
     <Compile Include="CoverEntry.cs" />
     <Compile Include="CoverMyOSTClient.cs" />

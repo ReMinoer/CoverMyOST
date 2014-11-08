@@ -39,12 +39,13 @@
             this.filterComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.galleryManagerButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.coversButton = new System.Windows.Forms.ToolStripButton();
             this.gridView = new System.Windows.Forms.DataGridView();
+            this.Selected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Cover = new System.Windows.Forms.DataGridViewImageColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.coversButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -138,6 +139,20 @@
             this.galleryManagerButton.Size = new System.Drawing.Size(97, 22);
             this.galleryManagerButton.Text = "Gallery Manager";
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // coversButton
+            // 
+            this.coversButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.coversButton.Image = ((System.Drawing.Image)(resources.GetObject("coversButton.Image")));
+            this.coversButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.coversButton.Name = "coversButton";
+            this.coversButton.Size = new System.Drawing.Size(56, 22);
+            this.coversButton.Text = "Covers...";
+            // 
             // gridView
             // 
             this.gridView.AllowUserToAddRows = false;
@@ -147,6 +162,7 @@
             this.gridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Selected,
             this.Cover,
             this.File,
             this.Album});
@@ -156,6 +172,12 @@
             this.gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.gridView.Size = new System.Drawing.Size(717, 336);
             this.gridView.TabIndex = 3;
+            // 
+            // Selected
+            // 
+            this.Selected.FillWeight = 10F;
+            this.Selected.HeaderText = "";
+            this.Selected.Name = "Selected";
             // 
             // Cover
             // 
@@ -175,20 +197,6 @@
             // 
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // coversButton
-            // 
-            this.coversButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.coversButton.Image = ((System.Drawing.Image)(resources.GetObject("coversButton.Image")));
-            this.coversButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.coversButton.Name = "coversButton";
-            this.coversButton.Size = new System.Drawing.Size(56, 22);
-            this.coversButton.Text = "Covers...";
             // 
             // MainView
             // 
@@ -223,11 +231,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.DataGridView gridView;
         private System.Windows.Forms.ToolStripStatusLabel statusStripLabel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton coversButton;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Selected;
         private System.Windows.Forms.DataGridViewImageColumn Cover;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton coversButton;
     }
 }
 

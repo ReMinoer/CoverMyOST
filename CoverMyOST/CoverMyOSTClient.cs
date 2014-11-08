@@ -15,14 +15,24 @@ namespace CoverMyOST
         public string WorkingDirectory { get; private set; }
         public GalleryCollection Galleries { get; private set; }
 
-        public IReadOnlyDictionary<string, MusicFile> AllFiles
+        public IReadOnlyDictionary<string, MusicFileEntry> AllFiles
         {
-            get { return new ReadOnlyDictionary<string, MusicFile>(_allFiles); }
+            get { return new ReadOnlyDictionary<string, MusicFileEntry>(_allFiles); }
         }
 
-        public IReadOnlyDictionary<string, MusicFile> Files
+        public IReadOnlyDictionary<string, MusicFileEntry> AllSelectedFiles
         {
-            get { return new ReadOnlyDictionary<string, MusicFile>(_filteredFiles); }
+            get
+            {
+                return
+                    new ReadOnlyDictionary<string, MusicFileEntry>(
+                        _allFiles.Where(x => x.Value.Selected).ToDictionary(x => x.Key, x => x.Value));
+            }
+        }
+
+        public IReadOnlyDictionary<string, MusicFileEntry> Files
+        {
+            get { return new ReadOnlyDictionary<string, MusicFileEntry>(_filteredFiles); }
         }
 
         public MusicFileFilter Filter
@@ -35,9 +45,9 @@ namespace CoverMyOST
             }
         }
 
-        private readonly Dictionary<string, MusicFile> _allFiles;
+        private readonly Dictionary<string, MusicFileEntry> _allFiles;
         private MusicFileFilter _filter;
-        private Dictionary<string, MusicFile> _filteredFiles;
+        private Dictionary<string, MusicFileEntry> _filteredFiles;
 
         private const string ConfigFileName = "CoverMyOSTconfig.xml";
 
@@ -49,7 +59,7 @@ namespace CoverMyOST
             WorkingDirectory = "";
             Galleries = new GalleryCollection();
 
-            _allFiles = new Dictionary<string, MusicFile>();
+            _allFiles = new Dictionary<string, MusicFileEntry>();
             FilterFiles(MusicFileFilter.None);
         }
 
@@ -76,7 +86,7 @@ namespace CoverMyOST
                 string fullpath = Path.GetFullPath(file);
                 try
                 {
-                    var musicFile = new MusicFile(fullpath);
+                    var musicFile = new MusicFileEntry(fullpath);
                     _allFiles.Add(fullpath, musicFile);
                 }
                 catch (UnsupportedFormatException) {}
@@ -105,7 +115,7 @@ namespace CoverMyOST
 
         public void SaveAll()
         {
-            foreach (MusicFile musicFile in _allFiles.Values)
+            foreach (MusicFileEntry musicFile in _allFiles.Values)
                 musicFile.Save();
         }
 

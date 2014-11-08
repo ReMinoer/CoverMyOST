@@ -24,7 +24,7 @@ namespace CoverMyOST.GUI
 
         public DataGridView GridView { get { return gridView; } }
 
-        public string StatusStripLabel { get { return statusStripLabel.Text; } set { statusStripLabel.Text = value; } }
+        public string StatusStripLabel { set { statusStripLabel.Text = value; } }
 
         public event CancelEventHandler ClosingProgram { add { Closing += value; } remove { Closing -= value; } }
     }
@@ -39,7 +39,7 @@ namespace CoverMyOST.GUI
 
         DataGridView GridView { get; }
 
-        string StatusStripLabel { get; set; }
+        string StatusStripLabel { set; }
 
         event CancelEventHandler ClosingProgram;
     }
