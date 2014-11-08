@@ -117,19 +117,7 @@ namespace CoverMyOST.GUI
 
         private void FilterComboBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
-            switch (_view.FilterComboBox.SelectedIndex)
-            {
-                case 0:
-                    _client.Filter = MusicFileFilter.None;
-                    break;
-                case 1:
-                    _client.Filter = MusicFileFilter.NoAlbum;
-                    break;
-                case 2:
-                    _client.Filter = MusicFileFilter.NoCover;
-                    break;
-            }
-
+            _client.Filter = (MusicFileFilter)_view.FilterComboBox.SelectedIndex;
             ShowCountsInStatusStrip();
             RefreshGrid();
         }
@@ -140,6 +128,7 @@ namespace CoverMyOST.GUI
         {
             var coverSearchView = new CoverSearchView(_client);
             coverSearchView.ShowDialog();
+            RefreshGrid();
         }
 
         private void OnModification()

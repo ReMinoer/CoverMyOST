@@ -18,7 +18,7 @@ namespace CoverMyOST.GUI.Dialogs
 
         public ListView ListView { get { return listView; } }
 
-        public Label TitleLabel { get { return titleLabel; } }
+        public Label FileLabel { get { return fileLabel; } }
         public Label AlbumLabel { get { return albumLabel; } }
 
         public PictureBox CoverPreview { get { return coverPreview; } }
@@ -27,13 +27,21 @@ namespace CoverMyOST.GUI.Dialogs
         public Button NextButton { get { return nextButton; } }
 
         public BackgroundWorker BackgroundWorker { get { return backgroundWorker; } }
+
+        public ToolStripProgressBar SearchProgressBar { get { return searchProgressBar; } }
+        public ToolStripStatusLabel StatusLabel { get { return statusLabel; } }
+
+        public void CloseDialog()
+        {
+            Close();
+        }
     }
 
     public interface ICoverSearchView
     {
         ListView ListView { get; }
 
-        Label TitleLabel { get; }
+        Label FileLabel { get; }
         Label AlbumLabel { get; }
 
         PictureBox CoverPreview { get; }
@@ -42,5 +50,10 @@ namespace CoverMyOST.GUI.Dialogs
         Button NextButton { get; }
 
         BackgroundWorker BackgroundWorker { get; }
+
+        ToolStripProgressBar SearchProgressBar { get; }
+        ToolStripStatusLabel StatusLabel { get; }
+
+        void CloseDialog();
     }
 }

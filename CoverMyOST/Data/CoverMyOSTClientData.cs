@@ -5,7 +5,6 @@ namespace CoverMyOST.Data
     public class CoverMyOSTClientData : IData<CoverMyOSTClient>
     {
         public string WorkingDirectory { get; set; }
-        public MusicFileFilter Filter { get; set; }
         public GalleryCollectionData GalleriesData { get; set; }
 
         public CoverMyOSTClientData() {}
@@ -18,7 +17,6 @@ namespace CoverMyOST.Data
         public void SetData(CoverMyOSTClient obj)
         {
             WorkingDirectory = obj.WorkingDirectory;
-            Filter = obj.Filter;
             GalleriesData = new GalleryCollectionData(obj.Galleries);
         }
 
@@ -29,7 +27,6 @@ namespace CoverMyOST.Data
                 obj.ChangeDirectory(WorkingDirectory);
             }
             catch (ArgumentException) {}
-            obj.Filter = Filter;
             GalleriesData.SetObject(obj.Galleries);
         }
     }

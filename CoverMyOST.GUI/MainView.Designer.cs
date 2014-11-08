@@ -159,7 +159,6 @@
             this.gridView.AllowUserToDeleteRows = false;
             this.gridView.AllowUserToResizeRows = false;
             this.gridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.gridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.gridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Selected,
@@ -169,32 +168,40 @@
             this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridView.Location = new System.Drawing.Point(0, 25);
             this.gridView.Name = "gridView";
+            this.gridView.RowHeadersVisible = false;
+            this.gridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.gridView.RowTemplate.Height = 40;
             this.gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.gridView.Size = new System.Drawing.Size(717, 336);
             this.gridView.TabIndex = 3;
             // 
             // Selected
             // 
-            this.Selected.FillWeight = 10F;
+            this.Selected.FillWeight = 6.817649F;
             this.Selected.HeaderText = "";
             this.Selected.Name = "Selected";
             // 
             // Cover
             // 
+            this.Cover.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Cover.FillWeight = 182.7411F;
             this.Cover.HeaderText = "Cover";
+            this.Cover.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Stretch;
             this.Cover.Name = "Cover";
             this.Cover.ReadOnly = true;
             this.Cover.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Cover.Width = 40;
             // 
             // File
             // 
-            this.File.FillWeight = 150F;
+            this.File.FillWeight = 102.2647F;
             this.File.HeaderText = "File";
             this.File.Name = "File";
             this.File.ReadOnly = true;
             // 
             // Album
             // 
+            this.Album.FillWeight = 68.17649F;
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
             // 

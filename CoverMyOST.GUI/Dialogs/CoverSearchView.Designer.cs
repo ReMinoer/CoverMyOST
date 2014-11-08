@@ -29,16 +29,20 @@
         private void InitializeComponent()
         {
             this.listView = new System.Windows.Forms.ListView();
+            this.imageColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.coverPreview = new System.Windows.Forms.PictureBox();
             this.groupBox = new System.Windows.Forms.GroupBox();
             this.nextButton = new System.Windows.Forms.Button();
-            this.titleLabel = new System.Windows.Forms.Label();
+            this.fileLabel = new System.Windows.Forms.Label();
             this.albumLabel = new System.Windows.Forms.Label();
             this.countLabel = new System.Windows.Forms.Label();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.imageColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.searchProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.coverPreview)).BeginInit();
             this.groupBox.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView
@@ -49,17 +53,25 @@
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.imageColumn});
             this.listView.Location = new System.Drawing.Point(12, 12);
+            this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(157, 303);
+            this.listView.Size = new System.Drawing.Size(157, 309);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.List;
             // 
+            // imageColumn
+            // 
+            this.imageColumn.Text = "Image";
+            this.imageColumn.Width = -1;
+            // 
             // coverPreview
             // 
+            this.coverPreview.BackColor = System.Drawing.Color.White;
             this.coverPreview.Location = new System.Drawing.Point(6, 19);
             this.coverPreview.Name = "coverPreview";
             this.coverPreview.Size = new System.Drawing.Size(200, 200);
+            this.coverPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.coverPreview.TabIndex = 1;
             this.coverPreview.TabStop = false;
             // 
@@ -81,20 +93,20 @@
             this.nextButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.nextButton.Location = new System.Drawing.Point(246, 280);
             this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(141, 35);
+            this.nextButton.Size = new System.Drawing.Size(141, 41);
             this.nextButton.TabIndex = 3;
-            this.nextButton.Text = "Next";
+            this.nextButton.Text = "Next file";
             this.nextButton.UseVisualStyleBackColor = true;
             // 
-            // titleLabel
+            // fileLabel
             // 
-            this.titleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.titleLabel.AutoSize = true;
-            this.titleLabel.Location = new System.Drawing.Point(175, 9);
-            this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(36, 13);
-            this.titleLabel.TabIndex = 4;
-            this.titleLabel.Text = "Title : ";
+            this.fileLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileLabel.AutoSize = true;
+            this.fileLabel.Location = new System.Drawing.Point(175, 9);
+            this.fileLabel.Name = "fileLabel";
+            this.fileLabel.Size = new System.Drawing.Size(32, 13);
+            this.fileLabel.TabIndex = 4;
+            this.fileLabel.Text = "File : ";
             // 
             // albumLabel
             // 
@@ -110,24 +122,54 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(178, 291);
+            this.countLabel.Location = new System.Drawing.Point(178, 294);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(48, 13);
             this.countLabel.TabIndex = 6;
             this.countLabel.Text = "100/100";
             // 
-            // imageColumn
+            // backgroundWorker
             // 
-            this.imageColumn.Text = "Image";
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.searchProgressBar,
+            this.statusLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 335);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(399, 22);
+            this.statusStrip1.TabIndex = 7;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // searchProgressBar
+            // 
+            this.searchProgressBar.Name = "searchProgressBar";
+            this.searchProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.searchProgressBar.Step = 1;
+            this.searchProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.searchProgressBar.Value = 20;
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.AutoSize = false;
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(251, 17);
+            this.statusLabel.Spring = true;
+            this.statusLabel.Text = "Search...";
+            this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CoverSearchView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 327);
+            this.ClientSize = new System.Drawing.Size(399, 357);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.albumLabel);
-            this.Controls.Add(this.titleLabel);
+            this.Controls.Add(this.fileLabel);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this.listView);
@@ -136,6 +178,8 @@
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this.coverPreview)).EndInit();
             this.groupBox.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,11 +191,14 @@
         private System.Windows.Forms.PictureBox coverPreview;
         private System.Windows.Forms.GroupBox groupBox;
         private System.Windows.Forms.Button nextButton;
-        private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Label fileLabel;
         private System.Windows.Forms.Label albumLabel;
         private System.Windows.Forms.Label countLabel;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.ColumnHeader imageColumn;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripProgressBar searchProgressBar;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
 
     }
 }

@@ -6,6 +6,8 @@ namespace CoverMyOST
     {
         public string Name { get; private set; }
         public Bitmap Cover { get; private set; }
+        public string GalleryName { get { return _gallery.Name; } }
+
         private readonly OnlineGallery _gallery;
 
         public CoverEntry(string name, Bitmap cover, OnlineGallery gallery = null)
