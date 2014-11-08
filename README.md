@@ -1,4 +1,4 @@
 CoverMyOST
 ==========
 
-Assign album cover to anime soundtracks.
+Assign album cover to soundtracks.
