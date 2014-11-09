@@ -45,7 +45,18 @@ namespace CoverMyOST
         public CoverEntry SearchCached(string query)
         {
             string filename = Path.Combine(CacheDirectory, query + ".png");
-            return !File.Exists(filename) ? null : new CoverEntry(query, new Bitmap(filename), this);
+
+            if (!File.Exists(filename))
+                return null;
+
+            var ms = new MemoryStream();
+            using (var fs = new FileStream(filename, FileMode.Open))
+            {
+                var buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                ms.Write(buffer, 0, buffer.Length);
+            }
+            return new CoverEntry(query, new Bitmap(ms), this);
         }
 
         internal void AddCoverToCache(CoverEntry entry, string name)

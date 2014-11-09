@@ -81,7 +81,7 @@ namespace CoverMyOST.GUI.Dialogs
             {
                 CoverEntry entry = _searchResult.ElementAt(_lastSelection - 1);
                 _currentFile.Cover = entry.Cover;
-                entry.AddToGalleryCache(_currentFile.Album + "a");
+                entry.AddToGalleryCache(_currentFile.Album);
             }
         }
 
