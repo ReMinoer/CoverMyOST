@@ -125,10 +125,6 @@
             // filterComboBox
             // 
             this.filterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.filterComboBox.Items.AddRange(new object[] {
-            "None",
-            "No album",
-            "No cover"});
             this.filterComboBox.Name = "filterComboBox";
             this.filterComboBox.Size = new System.Drawing.Size(121, 25);
             // 

@@ -105,9 +105,16 @@ namespace CoverMyOST
                 case MusicFileFilter.None:
                     _filteredFiles = _allFiles;
                     break;
+                case MusicFileFilter.AlbumSpecified:
+                    _filteredFiles = _allFiles.Where(e => !string.IsNullOrEmpty(e.Value.Album)).
+                                               ToDictionary(e => e.Key, e => e.Value);
+                    break;
                 case MusicFileFilter.NoAlbum:
                     _filteredFiles = _allFiles.Where(e => string.IsNullOrEmpty(e.Value.Album)).
                                                ToDictionary(e => e.Key, e => e.Value);
+                    break;
+                case MusicFileFilter.CoverSpecified:
+                    _filteredFiles = _allFiles.Where(e => e.Value.Cover != null).ToDictionary(e => e.Key, e => e.Value);
                     break;
                 case MusicFileFilter.NoCover:
                     _filteredFiles = _allFiles.Where(e => e.Value.Cover == null).ToDictionary(e => e.Key, e => e.Value);

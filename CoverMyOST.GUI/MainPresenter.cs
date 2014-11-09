@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CoverMyOST.GUI.Dialogs;
 
@@ -21,6 +22,8 @@ namespace CoverMyOST.GUI
             _client = new CoverMyOSTClient();
             _client.LoadConfiguration();
 
+            foreach (string name in Enum.GetNames(typeof(MusicFileFilter)))
+                _view.FilterComboBox.Items.Add(Regex.Replace(name, "([a-z])([A-Z])", "$1 $2"));
             _view.FilterComboBox.SelectedIndex = 0;
 
             _view.OpenButton.Click += OpenButtonOnClick;
@@ -110,6 +113,7 @@ namespace CoverMyOST.GUI
                 _view.StatusStripLabel = @"Load completed.";
 
                 _view.FilterComboBox.SelectedIndex = 0;
+                _client.StopMusic();
                 _client.SaveConfiguration();
                 RefreshGrid();
             }

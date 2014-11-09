@@ -3,7 +3,9 @@ namespace CoverMyOST
     public enum MusicFileFilter
     {
         None = 0,
-        NoAlbum = 1,
-        NoCover = 2
+        AlbumSpecified = 1,
+        NoAlbum = 2,
+        CoverSpecified = 3,
+        NoCover = 4
     }
 }
