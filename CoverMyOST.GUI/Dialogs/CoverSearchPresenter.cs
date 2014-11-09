@@ -13,6 +13,7 @@ namespace CoverMyOST.GUI.Dialogs
 
         private MusicFile _currentFile;
         private int _fileIndex;
+        private bool _playSong;
 
         private int _lastSelection;
         private CoverSearchResult _searchResult;
@@ -23,7 +24,8 @@ namespace CoverMyOST.GUI.Dialogs
             _client = client;
 
             _view.ListView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
-            _view.NextButton.Click += NextButtonOnClick;
+            _view.PlayButton.Click += PlayButtonOnClick;
+            _view.ApplyButton.Click += ApplyButtonOnClick;
 
             _view.BackgroundWorker.DoWork += BackgroundWorkerOnDoWork;
             _view.BackgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
@@ -32,22 +34,39 @@ namespace CoverMyOST.GUI.Dialogs
             InitializeDialog();
         }
 
+        private void PlayButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            _playSong = !_playSong;
+
+            if (_playSong)
+            {
+                _client.PlayMusic(_currentFile.Path);
+                _view.PlayButton.Text = @"Stop";
+            }
+            else
+            {
+                _client.StopMusic();
+                _view.PlayButton.Text = @"Play";
+            }
+        }
+
         private void InitializeDialog()
         {
             _searchResult = new CoverSearchResult();
-
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
-
-            _view.FileLabel.Text = @"File : " + Path.GetFileName(_currentFile.Path);
-            _view.AlbumLabel.Text = @"Album : " + _currentFile.Album;
 
             _view.ListView.Items.Clear();
             _view.ListView.Items.Add("*Actual cover*");
             _view.ListView.Items[0].Selected = true;
 
+            _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
+            _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
+            _view.AlbumTextBox.Text = _currentFile.Album;
+
             _view.CoverPreview.Image = _currentFile.Cover;
 
-            _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
+            if (_playSong)
+                _client.PlayMusic(_currentFile.Path);
 
             _view.BackgroundWorker.RunWorkerAsync();
         }
@@ -60,7 +79,7 @@ namespace CoverMyOST.GUI.Dialogs
             _lastSelection = e.ItemIndex;
         }
 
-        private void NextButtonOnClick(object sender, EventArgs eventArgs)
+        private void ApplyButtonOnClick(object sender, EventArgs eventArgs)
         {
             _view.BackgroundWorker.CancelAsync();
 

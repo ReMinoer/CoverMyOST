@@ -69,13 +69,14 @@ namespace CoverMyOST.GUI
             _view.GridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
             DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
-            string path = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
+            var name = (string)row.Cells["File"].Value;
+            string path = Path.Combine(_client.WorkingDirectory, name);
 
             switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
             {
                 case "Song":
                     _client.PlayMusic(path);
-                    _view.StatusStripLabel = @"Now playing : " + (string)row.Cells["File"].Value;
+                    _view.StatusStripLabel = @"Now playing : " + name;
                     break;
             }
         }
@@ -150,6 +151,8 @@ namespace CoverMyOST.GUI
 
         private void CoversButtonOnClick(object sender, EventArgs eventArgs)
         {
+            _client.StopMusic();
+
             var coverSearchView = new CoverSearchView(_client);
             coverSearchView.ShowDialog();
             RefreshGrid();

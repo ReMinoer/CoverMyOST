@@ -18,13 +18,14 @@ namespace CoverMyOST.GUI.Dialogs
 
         public ListView ListView { get { return listView; } }
 
-        public Label FileLabel { get { return fileLabel; } }
-        public Label AlbumLabel { get { return albumLabel; } }
+        public Label CountLabel { get { return countLabel; } }
+        public TextBox FileTextBox { get { return fileTextBox; } }
+        public TextBox AlbumTextBox { get { return albumTextBox; } }
 
         public PictureBox CoverPreview { get { return coverPreview; } }
 
-        public Label CountLabel { get { return countLabel; } }
-        public Button NextButton { get { return nextButton; } }
+        public Button PlayButton { get { return playButton; } }
+        public Button ApplyButton { get { return applyButton; } }
 
         public BackgroundWorker BackgroundWorker { get { return backgroundWorker; } }
 
@@ -39,15 +40,16 @@ namespace CoverMyOST.GUI.Dialogs
 
     public interface ICoverSearchView
     {
-        ListView ListView { get; }
+        Label CountLabel { get; }
+        TextBox FileTextBox { get; }
+        TextBox AlbumTextBox { get; }
 
-        Label FileLabel { get; }
-        Label AlbumLabel { get; }
+        ListView ListView { get; }
 
         PictureBox CoverPreview { get; }
 
-        Label CountLabel { get; }
-        Button NextButton { get; }
+        Button PlayButton { get; }
+        Button ApplyButton { get; }
 
         BackgroundWorker BackgroundWorker { get; }
 
