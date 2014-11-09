@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Media;
 using CoverMyOST.GUI.Dialogs;
-using Color = System.Drawing.Color;
 
 namespace CoverMyOST.GUI
 {
@@ -13,7 +12,6 @@ namespace CoverMyOST.GUI
         private readonly CoverMyOSTClient _client;
         private readonly IMainView _view;
 
-        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
         private bool _isSaved = true;
 
         public MainPresenter(IMainView view)
@@ -44,18 +42,18 @@ namespace CoverMyOST.GUI
         private void GridViewOnCellValueChanged(object sender, DataGridViewCellEventArgs eventArgs)
         {
             DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
-            string name = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
+            string path = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
 
             switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
             {
                 case "Selected":
-                    _client.Files[name].Selected = (bool)row.Cells["Selected"].Value;
+                    _client.Files[path].Selected = (bool)row.Cells["Selected"].Value;
                     ShowCountsInStatusStrip();
                     break;
                 case "Album":
-                    if (_client.Files[name].Album != (string)row.Cells["Album"].Value)
+                    if (_client.Files[path].Album != (string)row.Cells["Album"].Value)
                     {
-                        _client.Files[name].Album = (string)row.Cells["Album"].Value;
+                        _client.Files[path].Album = (string)row.Cells["Album"].Value;
                         row.Cells["Album"].Style.ForeColor = Color.Red;
                         OnModification();
                     }
@@ -68,13 +66,12 @@ namespace CoverMyOST.GUI
             _view.GridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
             DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
-            string name = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
+            string path = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
 
             switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
             {
                 case "Song":
-                    _mediaPlayer.Open(new Uri(name));
-                    _mediaPlayer.Play();
+                    _client.PlayMusic(path);
                     _view.StatusStripLabel = @"Now playing : " + (string)row.Cells["File"].Value;
                     break;
             }
@@ -139,11 +136,11 @@ namespace CoverMyOST.GUI
             RefreshGrid();
         }
 
-        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) { }
+        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) {}
 
         private void StopButtonOnClick(object sender, EventArgs eventArgs)
         {
-            _mediaPlayer.Stop();
+            _client.StopMusic();
             ShowCountsInStatusStrip();
         }
 

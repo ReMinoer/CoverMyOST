@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using CoverMyOST.Data;
 using TagLib;
 using File = System.IO.File;
@@ -46,6 +47,7 @@ namespace CoverMyOST
         }
 
         private readonly Dictionary<string, MusicFileEntry> _allFiles;
+        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFileEntry> _filteredFiles;
 
@@ -192,6 +194,17 @@ namespace CoverMyOST
         public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile) where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
+        }
+
+        public void PlayMusic(string path)
+        {
+            _mediaPlayer.Open(new Uri(path));
+            _mediaPlayer.Play();
+        }
+
+        public void StopMusic()
+        {
+            _mediaPlayer.Stop();
         }
     }
 }
