@@ -39,6 +39,8 @@
             this.filterComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.galleryManagerButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.stopButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.coversButton = new System.Windows.Forms.ToolStripButton();
             this.gridView = new System.Windows.Forms.DataGridView();
@@ -46,6 +48,7 @@
             this.Cover = new System.Windows.Forms.DataGridViewImageColumn();
             this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Song = new System.Windows.Forms.DataGridViewButtonColumn();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -64,8 +67,10 @@
             // statusStripLabel
             // 
             this.statusStripLabel.Name = "statusStripLabel";
-            this.statusStripLabel.Size = new System.Drawing.Size(59, 17);
+            this.statusStripLabel.Size = new System.Drawing.Size(702, 17);
+            this.statusStripLabel.Spring = true;
             this.statusStripLabel.Text = "Loading...";
+            this.statusStripLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toolStrip
             // 
@@ -77,6 +82,8 @@
             this.filterComboBox,
             this.toolStripSeparator2,
             this.galleryManagerButton,
+            this.toolStripSeparator4,
+            this.stopButton,
             this.toolStripSeparator3,
             this.coversButton});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
@@ -139,6 +146,19 @@
             this.galleryManagerButton.Size = new System.Drawing.Size(97, 22);
             this.galleryManagerButton.Text = "Gallery Manager";
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // stopButton
+            // 
+            this.stopButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.stopButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(70, 22);
+            this.stopButton.Text = "Stop music";
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -164,7 +184,8 @@
             this.Selected,
             this.Cover,
             this.File,
-            this.Album});
+            this.Album,
+            this.Song});
             this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridView.Location = new System.Drawing.Point(0, 25);
             this.gridView.Name = "gridView";
@@ -205,6 +226,12 @@
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
             // 
+            // Song
+            // 
+            this.Song.FillWeight = 50F;
+            this.Song.HeaderText = "Song";
+            this.Song.Name = "Song";
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -244,6 +271,9 @@
         private System.Windows.Forms.DataGridViewImageColumn Cover;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
+        private System.Windows.Forms.DataGridViewButtonColumn Song;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton stopButton;
     }
 }
 

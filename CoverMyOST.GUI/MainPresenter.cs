@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Media;
 using CoverMyOST.GUI.Dialogs;
+using Color = System.Drawing.Color;
 
 namespace CoverMyOST.GUI
 {
@@ -12,6 +13,7 @@ namespace CoverMyOST.GUI
         private readonly CoverMyOSTClient _client;
         private readonly IMainView _view;
 
+        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
         private bool _isSaved = true;
 
         public MainPresenter(IMainView view)
@@ -27,6 +29,7 @@ namespace CoverMyOST.GUI
             _view.SaveAllButton.Click += SaveAllButtonOnClick;
             _view.FilterComboBox.SelectedIndexChanged += FilterComboBoxOnSelectedIndexChanged;
             _view.GalleryManagerButton.Click += GalleryManagerButtonOnClick;
+            _view.StopButton.Click += StopButtonOnClick;
             _view.CoversButton.Click += CoversButtonOnClick;
 
             _view.GridView.CellContentClick += GridViewOnCellContentClick;
@@ -60,9 +63,21 @@ namespace CoverMyOST.GUI
             }
         }
 
-        private void GridViewOnCellContentClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
+        private void GridViewOnCellContentClick(object sender, DataGridViewCellEventArgs eventArgs)
         {
             _view.GridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
+            DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
+            string name = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
+
+            switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
+            {
+                case "Song":
+                    _mediaPlayer.Open(new Uri(name));
+                    _mediaPlayer.Play();
+                    _view.StatusStripLabel = @"Now playing : " + (string)row.Cells["File"].Value;
+                    break;
+            }
         }
 
         private void GridViewOnCellMouseUp(object sender, DataGridViewCellMouseEventArgs eventArgs)
@@ -83,7 +98,7 @@ namespace CoverMyOST.GUI
 
             foreach (MusicFileEntry musicFile in _client.Files.Values)
                 _view.GridView.Rows.Add(musicFile.Selected, musicFile.Cover, Path.GetFileName(musicFile.Path),
-                    musicFile.Album);
+                    musicFile.Album, "Play");
 
             ShowCountsInStatusStrip();
         }
@@ -98,6 +113,7 @@ namespace CoverMyOST.GUI
                 _view.StatusStripLabel = @"Load completed.";
 
                 _view.FilterComboBox.SelectedIndex = 0;
+                _client.SaveConfiguration();
                 RefreshGrid();
             }
         }
@@ -105,6 +121,7 @@ namespace CoverMyOST.GUI
         private void SaveAllButtonOnClick(object sender, EventArgs eventArgs)
         {
             _client.SaveAll();
+            _client.SaveConfiguration();
 
             foreach (DataGridViewRow row in _view.GridView.Rows)
                 row.Cells["Album"].Style.ForeColor = Color.Black;
@@ -122,7 +139,13 @@ namespace CoverMyOST.GUI
             RefreshGrid();
         }
 
-        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) {}
+        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) { }
+
+        private void StopButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            _mediaPlayer.Stop();
+            ShowCountsInStatusStrip();
+        }
 
         private void CoversButtonOnClick(object sender, EventArgs eventArgs)
         {
