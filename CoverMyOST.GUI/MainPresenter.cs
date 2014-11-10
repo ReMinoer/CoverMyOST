@@ -156,6 +156,7 @@ namespace CoverMyOST.GUI
             var coverSearchView = new CoverSearchView(_client);
             coverSearchView.ShowDialog();
             RefreshGrid();
+			OnModification();
         }
 
         private void OnModification()
