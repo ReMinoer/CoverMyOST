@@ -47,14 +47,17 @@ namespace CoverMyOST
         }
 
         private readonly Dictionary<string, MusicFileEntry> _allFiles;
-        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFileEntry> _filteredFiles;
 
         private const string ConfigFileName = "CoverMyOSTconfig.xml";
 
         static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
-            new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+			new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+
+		#if WINDOWS
+		private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
+		#endif
 
         public CoverMyOSTClient()
         {
@@ -204,14 +207,18 @@ namespace CoverMyOST
         }
 
         public void PlayMusic(string path)
-        {
+		{
+			#if WINDOWS
             _mediaPlayer.Open(new Uri(path));
-            _mediaPlayer.Play();
+			_mediaPlayer.Play();
+			#endif
         }
 
         public void StopMusic()
-        {
+		{
+			#if WINDOWS
             _mediaPlayer.Stop();
+			#endif
         }
     }
 }
