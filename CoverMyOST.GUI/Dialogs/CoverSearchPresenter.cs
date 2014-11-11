@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace CoverMyOST.GUI.Dialogs
 {
+    // TODO : fix album name edit
     internal class CoverSearchPresenter
     {
         private readonly CoverMyOSTClient _client;
@@ -24,6 +25,8 @@ namespace CoverMyOST.GUI.Dialogs
             _client = client;
 
             _view.ListView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
+            _view.AlbumTextBox.TextChanged += AlbumTextBoxOnTextChanged;
+
             _view.PlayButton.Click += PlayButtonOnClick;
             _view.ApplyButton.Click += ApplyButtonOnClick;
 
@@ -31,7 +34,57 @@ namespace CoverMyOST.GUI.Dialogs
             _view.BackgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
             _view.BackgroundWorker.RunWorkerCompleted += BackgroundWorkerOnRunWorkerCompleted;
 
+            _view.ClosingDialog += ViewOnClosingDialog;
+
             InitializeDialog();
+        }
+
+        private void InitializeDialog()
+        {
+            _searchResult = new CoverSearchResult();
+            _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
+
+            _view.BackgroundWorker.RunWorkerAsync();
+
+            _view.ListView.Items.Clear();
+            _view.ListView.Items.Add("*Actual cover*");
+            _view.ListView.Items[0].Selected = true;
+
+            _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
+            _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
+            _view.AlbumTextBox.Text = _currentFile.Album;
+
+            _view.CoverPreview.Image = _currentFile.Cover;
+
+            if (_playSong)
+                _client.PlayMusic(_currentFile.Path);
+        }
+
+        private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            _view.CoverPreview.Image = e.ItemIndex == 0
+                                           ? _currentFile.Cover
+                                           : _searchResult.ElementAt(e.ItemIndex - 1).Cover;
+            _lastSelection = e.ItemIndex;
+        }
+
+        private void AlbumTextBoxOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            _currentFile.Album = _view.AlbumTextBox.Text;
+
+            if (!CancelSearch())
+                return;
+
+            _searchResult = new CoverSearchResult();
+            _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
+
+            _view.BackgroundWorker.RunWorkerAsync();
+
+            _view.ListView.Items.Clear();
+            _view.ListView.Items.Add("*Actual cover*");
+            _view.ListView.Items[0].Selected = true;
+
+            _view.CoverPreview.Image = _currentFile.Cover;
         }
 
         private void PlayButtonOnClick(object sender, EventArgs eventArgs)
@@ -50,48 +103,27 @@ namespace CoverMyOST.GUI.Dialogs
             }
         }
 
-        private void InitializeDialog()
-        {
-            _searchResult = new CoverSearchResult();
-            _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
-
-            _view.ListView.Items.Clear();
-            _view.ListView.Items.Add("*Actual cover*");
-            _view.ListView.Items[0].Selected = true;
-
-            _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
-            _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
-            _view.AlbumTextBox.Text = _currentFile.Album;
-
-            _view.CoverPreview.Image = _currentFile.Cover;
-
-            if (_playSong)
-                _client.PlayMusic(_currentFile.Path);
-
-            _view.BackgroundWorker.RunWorkerAsync();
-        }
-
-        private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            _view.CoverPreview.Image = e.ItemIndex == 0
-                                           ? _currentFile.Cover
-                                           : _searchResult.ElementAt(e.ItemIndex - 1).Cover;
-            _lastSelection = e.ItemIndex;
-        }
-
         private void ApplyButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            if (!CancelSearch())
+                return;
+
+            ApplyCover();
+            if (NextImage())
+                InitializeDialog();
+        }
+
+        private bool CancelSearch()
         {
             _view.BackgroundWorker.CancelAsync();
 
             if (_view.BackgroundWorker.IsBusy)
             {
                 _view.StatusLabel.Text = @"Waiting end of search...";
-                return;
+                return false;
             }
 
-            ApplyCover();
-            if (NextImage())
-                InitializeDialog();
+            return true;
         }
 
         private void ApplyCover()
@@ -113,6 +145,11 @@ namespace CoverMyOST.GUI.Dialogs
                 return false;
             }
             return true;
+        }
+
+        private void ViewOnClosingDialog(object sender, CancelEventArgs cancelEventArgs)
+        {
+            _client.StopMusic();
         }
 
         private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using CoverMyOST.Annotations;
 
@@ -32,6 +33,12 @@ namespace CoverMyOST.GUI.Dialogs
         public ToolStripProgressBar SearchProgressBar { get { return searchProgressBar; } }
         public ToolStripStatusLabel StatusLabel { get { return statusLabel; } }
 
+        public event CancelEventHandler ClosingDialog
+        {
+            add { Closing += value; }
+            remove { Closing += value; }
+        }
+
         public void CloseDialog()
         {
             Close();
@@ -56,6 +63,7 @@ namespace CoverMyOST.GUI.Dialogs
         ToolStripProgressBar SearchProgressBar { get; }
         ToolStripStatusLabel StatusLabel { get; }
 
+        event CancelEventHandler ClosingDialog;
         void CloseDialog();
     }
 }
