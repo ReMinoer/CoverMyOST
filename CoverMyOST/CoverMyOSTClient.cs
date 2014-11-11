@@ -55,9 +55,7 @@ namespace CoverMyOST
         static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
 			new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
 
-		#if WINDOWS
 		private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
-		#endif
 
         public CoverMyOSTClient()
         {
@@ -208,17 +206,13 @@ namespace CoverMyOST
 
         public void PlayMusic(string path)
 		{
-			#if WINDOWS
             _mediaPlayer.Open(new Uri(path));
 			_mediaPlayer.Play();
-			#endif
         }
 
         public void StopMusic()
 		{
-			#if WINDOWS
             _mediaPlayer.Stop();
-			#endif
         }
     }
 }
