@@ -4,10 +4,14 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using CoverMyOST.Data;
 using TagLib;
 using File = System.IO.File;
+#if !MONO
+using System.Windows.Media;
+#else
+using System.Diagnostics;
+#endif
 
 namespace CoverMyOST
 {
@@ -53,9 +57,13 @@ namespace CoverMyOST
         private const string ConfigFileName = "CoverMyOSTconfig.xml";
 
         static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
-			new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+            new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
 
-		private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
+#if !MONO
+        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
+#else
+        private Process _musicProcess;
+#endif
 
         public CoverMyOSTClient()
         {
@@ -79,6 +87,8 @@ namespace CoverMyOST
 
         public void ChangeDirectory(string path)
         {
+            StopMusic();
+
             if (!Directory.Exists(path))
                 throw new ArgumentException("Directory specify does not exist.");
 
@@ -125,8 +135,17 @@ namespace CoverMyOST
 
         public void SaveAll()
         {
+            StopMusic();
+
             foreach (MusicFileEntry musicFile in _allFiles.Values)
-                musicFile.Save();
+                try
+                {
+                    musicFile.Save();
+                }
+                catch (IOException)
+                {
+                    musicFile.Save();
+                }
         }
 
         public CoverSearchResult SearchCover(string filePath)
@@ -205,14 +224,24 @@ namespace CoverMyOST
         }
 
         public void PlayMusic(string path)
-		{
+        {
+#if !MONO
             _mediaPlayer.Open(new Uri(path));
-			_mediaPlayer.Play();
+            _mediaPlayer.Play();
+#else
+            _musicProcess = Process.Start(path);
+#endif
         }
 
         public void StopMusic()
-		{
+        {
+#if !MONO
             _mediaPlayer.Stop();
+            _mediaPlayer.Close();
+#else
+            if (_musicProcess != null && !_musicProcess.HasExited)
+                _musicProcess.Kill();
+#endif
         }
     }
 }

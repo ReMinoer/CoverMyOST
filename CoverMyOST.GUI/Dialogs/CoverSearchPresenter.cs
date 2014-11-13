@@ -14,9 +14,9 @@ namespace CoverMyOST.GUI.Dialogs
 
         private MusicFile _currentFile;
         private int _fileIndex;
-        private bool _playSong;
 
         private int _lastSelection;
+        private bool _playSong;
         private CoverSearchResult _searchResult;
 
         public CoverSearchPresenter(ICoverSearchView view, CoverMyOSTClient client)

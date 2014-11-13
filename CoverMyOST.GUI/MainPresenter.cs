@@ -151,12 +151,12 @@ namespace CoverMyOST.GUI
 
         private void CoversButtonOnClick(object sender, EventArgs eventArgs)
         {
-			_client.StopMusic();
+            _client.StopMusic();
 
             var coverSearchView = new CoverSearchView(_client);
             coverSearchView.ShowDialog();
             RefreshGrid();
-			OnModification();
+            OnModification();
         }
 
         private void OnModification()
@@ -170,7 +170,7 @@ namespace CoverMyOST.GUI
             _view.StatusStripLabel = string.Format("{0} entries, {1} selected, {2} displayed", _client.AllFiles.Count,
                 _client.AllSelectedFiles.Count, _client.Files.Count);
 
-			_view.CoversButton.Enabled = _client.AllSelectedFiles.Count != 0;
+            _view.CoversButton.Enabled = _client.AllSelectedFiles.Count != 0;
         }
 
         private void ViewOnClosing(object sender, CancelEventArgs cancelEventArgs)
