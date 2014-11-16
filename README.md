@@ -1,4 +1,4 @@
 CoverMyOST
 ==========
 
-Assign album cover to soundtracks.
+Assign pictures from local and online galleries as album cover to your soundtracks.
