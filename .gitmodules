@@ -1,3 +1,6 @@
 [submodule "External/MiniMAL"]
 	path = External/MiniMAL
 	url = https://github.com/ReMinoer/MiniMAL.git
+[submodule "External/Diese"]
+	path = External/Diese
+	url = https://github.com/ReMinoer/Diese.git

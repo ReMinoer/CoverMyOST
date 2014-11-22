@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CoverMyOST.Data;
+using Diese.Serialization;
 using TagLib;
 using File = System.IO.File;
 #if !MONO
@@ -56,8 +57,8 @@ namespace CoverMyOST
 
         private const string ConfigFileName = "CoverMyOSTconfig.xml";
 
-        static private readonly Exporter<CoverMyOSTClient, CoverMyOSTClientData> Exporter =
-            new Exporter<CoverMyOSTClient, CoverMyOSTClientData>();
+        static private readonly XmlSerializer<CoverMyOSTClient, CoverMyOSTClientModel> Exporter =
+            new XmlSerializer<CoverMyOSTClient, CoverMyOSTClientModel>();
 
 #if !MONO
         private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
@@ -77,12 +78,12 @@ namespace CoverMyOST
         public void LoadConfiguration()
         {
             if (File.Exists(ConfigFileName))
-                Exporter.LoadXml(this, ConfigFileName);
+                Exporter.Load(this, ConfigFileName);
         }
 
         public void SaveConfiguration()
         {
-            Exporter.SaveXml(this, ConfigFileName);
+            Exporter.Save(this, ConfigFileName);
         }
 
         public void ChangeDirectory(string path)
