@@ -59,9 +59,9 @@ namespace CoverMyOST.GUI.Dialogs
 
         ToolStripProgressBar SearchProgressBar { get; }
         ToolStripStatusLabel StatusLabel { get; }
+        Control ActiveControl { set; }
 
         event CancelEventHandler ClosingDialog;
         void CloseDialog();
-        Control ActiveControl { set; }
     }
 }

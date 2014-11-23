@@ -9,22 +9,17 @@ namespace CoverMyOST.GUI.Dialogs
     // TODO : fix album name edit
     internal class CoverSearchPresenter
     {
-        private enum SearchStatus
-        {
-            Init, Search, Wait, Cancel
-        }
-
         private readonly CoverMyOSTClient _client;
         private readonly ICoverSearchView _view;
 
         private MusicFile _currentFile;
         private int _fileIndex;
 
-        private SearchStatus _status;
-        private CoverSearchResult _searchResult;
         private int _lastSelection;
 
         private bool _playSong;
+        private CoverSearchResult _searchResult;
+        private SearchStatus _status;
 
         public CoverSearchPresenter(ICoverSearchView view, CoverMyOSTClient client)
         {
@@ -58,7 +53,7 @@ namespace CoverMyOST.GUI.Dialogs
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
 
             _view.ListView.Items.Clear();
-            var defaultGroup = _view.ListView.Groups.Add("Default", "Default");
+            ListViewGroup defaultGroup = _view.ListView.Groups.Add("Default", "Default");
             _view.ListView.Groups.Add("Cached", "Cached");
 
             _view.ListView.Items.Add(new ListViewItem("*No cover*", defaultGroup));
@@ -154,7 +149,6 @@ namespace CoverMyOST.GUI.Dialogs
         private void AlbumTextBoxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             if (keyEventArgs.KeyCode == Keys.Enter)
-            {
                 if (_currentFile.Album != _view.AlbumTextBox.Text)
                 {
                     _currentFile.Album = _view.AlbumTextBox.Text;
@@ -169,7 +163,6 @@ namespace CoverMyOST.GUI.Dialogs
                             break;
                     }
                 }
-            }
         }
 
         private void AlbumTextBoxOnLeave(object sender, EventArgs eventArgs)
@@ -314,10 +307,9 @@ namespace CoverMyOST.GUI.Dialogs
             foreach (CoverEntry entry in searchProgress.SearchResult)
             {
                 _searchResult.Add(entry);
-                if (searchProgress.Cached)
-                    _view.ListView.Items.Add(new ListViewItem(entry.GalleryName, _view.ListView.Groups["Cached"]));
-                else
-                    _view.ListView.Items.Add(new ListViewItem(entry.Name, group));
+                _view.ListView.Items.Add(searchProgress.Cached
+                                             ? new ListViewItem(entry.GalleryName, _view.ListView.Groups["Cached"])
+                                             : new ListViewItem(entry.Name, group));
             }
 
             _view.ListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -361,6 +353,14 @@ namespace CoverMyOST.GUI.Dialogs
             public CoverSearchResult SearchResult { get; set; }
             public string GalleryName { get; set; }
             public bool Cached { get; set; }
+        }
+
+        private enum SearchStatus
+        {
+            Init,
+            Search,
+            Wait,
+            Cancel
         }
     }
 }

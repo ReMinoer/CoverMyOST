@@ -10,6 +10,7 @@ using TagLib;
 using File = System.IO.File;
 #if !MONO
 using System.Windows.Media;
+
 #else
 using System.Diagnostics;
 #endif
