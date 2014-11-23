@@ -31,7 +31,6 @@
             this.listView = new System.Windows.Forms.ListView();
             this.imageColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.coverPreview = new System.Windows.Forms.PictureBox();
-            this.groupBox = new System.Windows.Forms.GroupBox();
             this.applyButton = new System.Windows.Forms.Button();
             this.countLabel = new System.Windows.Forms.Label();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -42,9 +41,11 @@
             this.fileTextBox = new System.Windows.Forms.TextBox();
             this.albumTextBox = new System.Windows.Forms.TextBox();
             this.playButton = new System.Windows.Forms.Button();
+            this.groupBox = new System.Windows.Forms.GroupBox();
+            this.coverNameLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.coverPreview)).BeginInit();
-            this.groupBox.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.groupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView
@@ -57,7 +58,7 @@
             this.listView.Location = new System.Drawing.Point(12, 12);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(160, 326);
+            this.listView.Size = new System.Drawing.Size(160, 366);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.List;
@@ -77,23 +78,10 @@
             this.coverPreview.TabIndex = 1;
             this.coverPreview.TabStop = false;
             // 
-            // groupBox
-            // 
-            this.groupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox.Controls.Add(this.coverPreview);
-            this.groupBox.Location = new System.Drawing.Point(178, 64);
-            this.groupBox.Name = "groupBox";
-            this.groupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupBox.Size = new System.Drawing.Size(212, 227);
-            this.groupBox.TabIndex = 2;
-            this.groupBox.TabStop = false;
-            this.groupBox.Text = "Preview";
-            // 
             // applyButton
             // 
             this.applyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.applyButton.Location = new System.Drawing.Point(249, 297);
+            this.applyButton.Location = new System.Drawing.Point(249, 337);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(141, 41);
             this.applyButton.TabIndex = 3;
@@ -120,7 +108,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.searchProgressBar,
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 347);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 387);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(399, 22);
             this.statusStrip1.TabIndex = 7;
@@ -173,18 +161,45 @@
             // playButton
             // 
             this.playButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.playButton.Location = new System.Drawing.Point(178, 297);
+            this.playButton.Location = new System.Drawing.Point(178, 337);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(65, 41);
             this.playButton.TabIndex = 10;
             this.playButton.Text = "Play";
             this.playButton.UseVisualStyleBackColor = true;
             // 
+            // groupBox
+            // 
+            this.groupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox.Controls.Add(this.coverPreview);
+            this.groupBox.Location = new System.Drawing.Point(178, 103);
+            this.groupBox.Name = "groupBox";
+            this.groupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.groupBox.Size = new System.Drawing.Size(212, 228);
+            this.groupBox.TabIndex = 2;
+            this.groupBox.TabStop = false;
+            this.groupBox.Text = "Preview";
+            // 
+            // coverNameLabel
+            // 
+            this.coverNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.coverNameLabel.AutoEllipsis = true;
+            this.coverNameLabel.AutoSize = true;
+            this.coverNameLabel.Location = new System.Drawing.Point(181, 74);
+            this.coverNameLabel.MaximumSize = new System.Drawing.Size(210, 15);
+            this.coverNameLabel.Name = "coverNameLabel";
+            this.coverNameLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.coverNameLabel.Size = new System.Drawing.Size(64, 13);
+            this.coverNameLabel.TabIndex = 11;
+            this.coverNameLabel.Text = "Cover name";
+            // 
             // CoverSearchView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 369);
+            this.ClientSize = new System.Drawing.Size(399, 409);
+            this.Controls.Add(this.coverNameLabel);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.albumTextBox);
             this.Controls.Add(this.fileTextBox);
@@ -194,13 +209,13 @@
             this.Controls.Add(this.applyButton);
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this.listView);
-            this.MinimumSize = new System.Drawing.Size(415, 407);
+            this.MinimumSize = new System.Drawing.Size(415, 447);
             this.Name = "CoverSearchView";
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this.coverPreview)).EndInit();
-            this.groupBox.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.groupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,7 +225,6 @@
 
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.PictureBox coverPreview;
-        private System.Windows.Forms.GroupBox groupBox;
         private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Label countLabel;
         private System.Windows.Forms.ColumnHeader imageColumn;
@@ -222,6 +236,8 @@
         private System.Windows.Forms.TextBox fileTextBox;
         private System.Windows.Forms.TextBox albumTextBox;
         private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.GroupBox groupBox;
+        private System.Windows.Forms.Label coverNameLabel;
 
     }
 }

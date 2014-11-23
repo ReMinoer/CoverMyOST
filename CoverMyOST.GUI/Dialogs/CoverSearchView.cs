@@ -22,6 +22,7 @@ namespace CoverMyOST.GUI.Dialogs
         public TextBox FileTextBox { get { return fileTextBox; } }
         public TextBox AlbumTextBox { get { return albumTextBox; } }
 
+        public Label CoverNameLabel { get { return coverNameLabel; } }
         public PictureBox CoverPreview { get { return coverPreview; } }
 
         public Button PlayButton { get { return playButton; } }
@@ -48,6 +49,7 @@ namespace CoverMyOST.GUI.Dialogs
 
         ListView ListView { get; }
 
+        Label CoverNameLabel { get; }
         PictureBox CoverPreview { get; }
 
         Button PlayButton { get; }
@@ -60,5 +62,6 @@ namespace CoverMyOST.GUI.Dialogs
 
         event CancelEventHandler ClosingDialog;
         void CloseDialog();
+        Control ActiveControl { set; }
     }
 }

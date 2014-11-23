@@ -33,8 +33,10 @@ namespace CoverMyOST.GUI.Dialogs
             _fileIndex = 0;
 
             _view.ListView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
+
             _view.AlbumTextBox.KeyDown += AlbumTextBoxOnKeyDown;
             _view.AlbumTextBox.Leave += AlbumTextBoxOnLeave;
+            _view.AlbumTextBox.GotFocus += AlbumTextBoxOnGotFocus;
 
             _view.PlayButton.Click += PlayButtonOnClick;
             _view.ApplyButton.Click += ApplyButtonOnClick;
@@ -56,9 +58,12 @@ namespace CoverMyOST.GUI.Dialogs
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
 
             _view.ListView.Items.Clear();
+            _view.ListView.Items.Add("*No cover*");
             _view.ListView.Items.Add("*Actual cover*");
-            _view.ListView.Items[0].Selected = true;
-            _lastSelection = 0;
+
+            _view.CoverNameLabel.Text = @"*Actual cover*";
+            _view.ListView.Items[1].Selected = true;
+            _lastSelection = 1;
 
             _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
             _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
@@ -69,7 +74,7 @@ namespace CoverMyOST.GUI.Dialogs
             _view.BackgroundWorker.RunWorkerAsync();
 
             Enabled(true);
-            _view.AlbumTextBox.Focus();
+            _view.ActiveControl = _view.AlbumTextBox;
             _view.AlbumTextBox.SelectionStart = 0;
             _view.AlbumTextBox.SelectionLength = _view.AlbumTextBox.TextLength;
 
@@ -122,9 +127,22 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            _view.CoverPreview.Image = e.ItemIndex == 0
-                                           ? _currentFile.Cover
-                                           : _searchResult.ElementAt(e.ItemIndex - 1).Cover;
+            switch (e.ItemIndex)
+            {
+                case 0:
+                    _view.CoverPreview.Image = null;
+                    _view.CoverNameLabel.Text = @"*No cover*";
+                    break;
+                case 1:
+                    _view.CoverPreview.Image = _currentFile.Cover;
+                    _view.CoverNameLabel.Text = @"*Actual cover*";
+                    break;
+                default:
+                    _view.CoverPreview.Image = _searchResult.ElementAt(e.ItemIndex - 2).Cover;
+                    _view.CoverNameLabel.Text = _searchResult.ElementAt(e.ItemIndex - 2).Name;
+                    break;
+            }
+
             _lastSelection = e.ItemIndex;
         }
 
@@ -154,6 +172,12 @@ namespace CoverMyOST.GUI.Dialogs
             _view.AlbumTextBox.Text = _currentFile.Album;
         }
 
+        private void AlbumTextBoxOnGotFocus(object sender, EventArgs eventArgs)
+        {
+            _view.AlbumTextBox.SelectionStart = 0;
+            _view.AlbumTextBox.SelectionLength = _view.AlbumTextBox.TextLength;
+        }
+
         private void CancelSearch()
         {
             _view.BackgroundWorker.CancelAsync();
@@ -166,9 +190,11 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ApplyCover()
         {
-            if (_view.CoverPreview.Image != null && _lastSelection != 0)
+            if (_lastSelection == 0)
+                _currentFile.Cover = null;
+            else if (_lastSelection != 1)
             {
-                CoverEntry entry = _searchResult.ElementAt(_lastSelection - 1);
+                CoverEntry entry = _searchResult.ElementAt(_lastSelection - 2);
                 _currentFile.Cover = entry.Cover;
                 entry.AddToGalleryCache(_currentFile.Album);
             }
