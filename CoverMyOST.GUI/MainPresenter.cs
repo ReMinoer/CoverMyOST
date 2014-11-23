@@ -125,6 +125,8 @@ namespace CoverMyOST.GUI
 
         private void SaveAllButtonOnClick(object sender, EventArgs eventArgs)
         {
+            _view.Enabled = false;
+
             _client.SaveAll();
             _client.SaveConfiguration();
 
@@ -134,6 +136,7 @@ namespace CoverMyOST.GUI
             _isSaved = true;
             _view.SaveAllButton.Enabled = false;
 
+            _view.Enabled = true;
             _view.StatusStripLabel = @"Save completed.";
         }
 
@@ -187,10 +190,12 @@ namespace CoverMyOST.GUI
             switch (MessageBox.Show(msg, title, MessageBoxButtons.YesNoCancel))
             {
                 case DialogResult.Yes:
+                    _view.Enabled = false;
                     _client.SaveAll();
                     _client.SaveConfiguration();
                     break;
                 case DialogResult.No:
+                    _view.Enabled = false;
                     _client.SaveConfiguration();
                     break;
                 case DialogResult.Cancel:

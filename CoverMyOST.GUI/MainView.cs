@@ -43,6 +43,7 @@ namespace CoverMyOST.GUI
 
         string StatusStripLabel { set; }
 
+        bool Enabled { set; }
         event CancelEventHandler ClosingProgram;
     }
 }
