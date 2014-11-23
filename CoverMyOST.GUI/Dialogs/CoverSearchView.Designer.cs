@@ -131,7 +131,7 @@
             // 
             this.statusLabel.AutoSize = false;
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(282, 17);
+            this.statusLabel.Size = new System.Drawing.Size(421, 17);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "Search...";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

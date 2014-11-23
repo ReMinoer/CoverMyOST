@@ -6,20 +6,20 @@ using System.Windows.Forms;
 
 namespace CoverMyOST.GUI.Dialogs
 {
-    // TODO : fix album name edit
     internal class CoverSearchPresenter
     {
         private readonly CoverMyOSTClient _client;
         private readonly ICoverSearchView _view;
 
+        private SearchStatus _status;
+
         private MusicFile _currentFile;
         private int _fileIndex;
-
         private int _lastSelection;
 
         private bool _playSong;
         private CoverSearchResult _searchResult;
-        private SearchStatus _status;
+        private string _currentGallery;
 
         public CoverSearchPresenter(ICoverSearchView view, CoverMyOSTClient client)
         {
@@ -145,7 +145,8 @@ namespace CoverMyOST.GUI.Dialogs
                     break;
                 default:
                     _view.CoverPreview.Image = _searchResult.ElementAt(e.ItemIndex - 2).Cover;
-                    _view.CoverNameLabel.Text = string.Format("[{0}] {1}", _view.ListView.Items[e.ItemIndex].Group.Name, _searchResult.ElementAt(e.ItemIndex - 2).Name);
+                    _view.CoverNameLabel.Text = string.Format("[{0}] {1}", _view.ListView.Items[e.ItemIndex].Group.Name,
+                        _searchResult.ElementAt(e.ItemIndex - 2).Name);
                     break;
             }
 
@@ -304,7 +305,8 @@ namespace CoverMyOST.GUI.Dialogs
             var searchProgress = ((SearchProgress)e.UserState);
 
             _view.SearchProgressBar.Value = e.ProgressPercentage;
-            _view.StatusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
+            _currentGallery = searchProgress.GalleryName;
+            _view.StatusLabel.Text = string.Format("Search in {0}...", _currentGallery);
 
             bool firstCached = false;
             ListViewGroup group = null;
@@ -344,7 +346,14 @@ namespace CoverMyOST.GUI.Dialogs
             if (e.Error != null)
             {
                 _view.SearchProgressBar.Value = 0;
-                _view.StatusLabel.Text = (@"Error: " + e.Error.Message);
+
+                string errorMessage;
+                if (e.Error is AggregateException)
+                    errorMessage = (e.Error as AggregateException).InnerExceptions[0].Message;
+                else
+                    errorMessage = e.Error.Message;
+
+                _view.StatusLabel.Text = string.Format("{0} - Error: {1}", _currentGallery, errorMessage);
             }
             else
             {
