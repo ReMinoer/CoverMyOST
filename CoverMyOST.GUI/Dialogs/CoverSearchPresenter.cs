@@ -53,6 +53,8 @@ namespace CoverMyOST.GUI.Dialogs
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
 
             _view.ListView.Items.Clear();
+            _view.ListView.Groups.Clear();
+
             ListViewGroup defaultGroup = _view.ListView.Groups.Add("Default", "Default");
             _view.ListView.Groups.Add("Cached", "Cached");
 
@@ -62,8 +64,6 @@ namespace CoverMyOST.GUI.Dialogs
             _view.ListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
 
             _view.CoverNameLabel.Text = @"*Actual cover*";
-            _view.ListView.Items[1].Selected = true;
-            _lastSelection = 1;
 
             _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
             _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
@@ -79,6 +79,9 @@ namespace CoverMyOST.GUI.Dialogs
             _view.AlbumTextBox.SelectionLength = _view.AlbumTextBox.TextLength;
 
             _status = SearchStatus.Search;
+
+            _view.ListView.Items[1].Selected = true;
+            _lastSelection = 1;
 
             if (_playSong)
                 _client.PlayMusic(_currentFile.Path);
@@ -127,6 +130,9 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (_status == SearchStatus.Init)
+                return;
+
             switch (e.ItemIndex)
             {
                 case 0:
@@ -139,7 +145,7 @@ namespace CoverMyOST.GUI.Dialogs
                     break;
                 default:
                     _view.CoverPreview.Image = _searchResult.ElementAt(e.ItemIndex - 2).Cover;
-                    _view.CoverNameLabel.Text = _searchResult.ElementAt(e.ItemIndex - 2).Name;
+                    _view.CoverNameLabel.Text = string.Format("[{0}] {1}", _view.ListView.Items[e.ItemIndex].Group.Name, _searchResult.ElementAt(e.ItemIndex - 2).Name);
                     break;
             }
 
