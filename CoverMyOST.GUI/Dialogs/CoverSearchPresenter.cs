@@ -58,8 +58,13 @@ namespace CoverMyOST.GUI.Dialogs
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
 
             _view.ListView.Items.Clear();
-            _view.ListView.Items.Add("*No cover*");
-            _view.ListView.Items.Add("*Actual cover*");
+            var defaultGroup = _view.ListView.Groups.Add("Default", "Default");
+            _view.ListView.Groups.Add("Cached", "Cached");
+
+            _view.ListView.Items.Add(new ListViewItem("*No cover*", defaultGroup));
+            _view.ListView.Items.Add(new ListViewItem("*Actual cover*", defaultGroup));
+
+            _view.ListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
 
             _view.CoverNameLabel.Text = @"*Actual cover*";
             _view.ListView.Items[1].Selected = true;
@@ -302,13 +307,20 @@ namespace CoverMyOST.GUI.Dialogs
             _view.SearchProgressBar.Value = e.ProgressPercentage;
             _view.StatusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
 
+            ListViewGroup group = null;
+            if (!searchProgress.Cached)
+                group = _view.ListView.Groups.Add(searchProgress.GalleryName, searchProgress.GalleryName);
+
             foreach (CoverEntry entry in searchProgress.SearchResult)
             {
                 _searchResult.Add(entry);
-                _view.ListView.Items.Add(searchProgress.Cached
-                                             ? string.Format("cache - {0}", entry.GalleryName)
-                                             : string.Format("{0} - {1}", entry.Name, entry.GalleryName));
+                if (searchProgress.Cached)
+                    _view.ListView.Items.Add(new ListViewItem(entry.GalleryName, _view.ListView.Groups["Cached"]));
+                else
+                    _view.ListView.Items.Add(new ListViewItem(entry.Name, group));
             }
+
+            _view.ListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         private void BackgroundWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

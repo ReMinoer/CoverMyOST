@@ -55,18 +55,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.imageColumn});
+            this.listView.FullRowSelect = true;
+            this.listView.GridLines = true;
+            this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listView.HideSelection = false;
+            this.listView.LabelWrap = false;
             this.listView.Location = new System.Drawing.Point(12, 12);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(160, 366);
+            this.listView.Size = new System.Drawing.Size(299, 366);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
-            this.listView.View = System.Windows.Forms.View.List;
+            this.listView.View = System.Windows.Forms.View.Details;
             // 
             // imageColumn
             // 
             this.imageColumn.Text = "Image";
-            this.imageColumn.Width = -1;
+            this.imageColumn.Width = 25;
             // 
             // coverPreview
             // 
@@ -81,7 +86,7 @@
             // applyButton
             // 
             this.applyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.applyButton.Location = new System.Drawing.Point(249, 337);
+            this.applyButton.Location = new System.Drawing.Point(388, 337);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(141, 41);
             this.applyButton.TabIndex = 3;
@@ -92,7 +97,7 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(178, 15);
+            this.countLabel.Location = new System.Drawing.Point(317, 15);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(48, 13);
             this.countLabel.TabIndex = 6;
@@ -110,7 +115,7 @@
             this.statusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 387);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(399, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(538, 22);
             this.statusStrip1.TabIndex = 7;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -135,7 +140,7 @@
             // 
             this.albumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.albumLabel.AutoSize = true;
-            this.albumLabel.Location = new System.Drawing.Point(178, 41);
+            this.albumLabel.Location = new System.Drawing.Point(317, 41);
             this.albumLabel.Name = "albumLabel";
             this.albumLabel.Size = new System.Drawing.Size(45, 13);
             this.albumLabel.TabIndex = 5;
@@ -144,7 +149,7 @@
             // fileTextBox
             // 
             this.fileTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.fileTextBox.Location = new System.Drawing.Point(232, 12);
+            this.fileTextBox.Location = new System.Drawing.Point(371, 12);
             this.fileTextBox.Name = "fileTextBox";
             this.fileTextBox.ReadOnly = true;
             this.fileTextBox.Size = new System.Drawing.Size(158, 20);
@@ -153,7 +158,7 @@
             // albumTextBox
             // 
             this.albumTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.albumTextBox.Location = new System.Drawing.Point(232, 38);
+            this.albumTextBox.Location = new System.Drawing.Point(371, 38);
             this.albumTextBox.Name = "albumTextBox";
             this.albumTextBox.Size = new System.Drawing.Size(158, 20);
             this.albumTextBox.TabIndex = 9;
@@ -161,7 +166,7 @@
             // playButton
             // 
             this.playButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.playButton.Location = new System.Drawing.Point(178, 337);
+            this.playButton.Location = new System.Drawing.Point(317, 337);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(65, 41);
             this.playButton.TabIndex = 10;
@@ -170,10 +175,9 @@
             // 
             // groupBox
             // 
-            this.groupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox.Controls.Add(this.coverPreview);
-            this.groupBox.Location = new System.Drawing.Point(178, 103);
+            this.groupBox.Location = new System.Drawing.Point(317, 103);
             this.groupBox.Name = "groupBox";
             this.groupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.groupBox.Size = new System.Drawing.Size(212, 228);
@@ -186,7 +190,7 @@
             this.coverNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.coverNameLabel.AutoEllipsis = true;
             this.coverNameLabel.AutoSize = true;
-            this.coverNameLabel.Location = new System.Drawing.Point(181, 74);
+            this.coverNameLabel.Location = new System.Drawing.Point(320, 74);
             this.coverNameLabel.MaximumSize = new System.Drawing.Size(210, 15);
             this.coverNameLabel.Name = "coverNameLabel";
             this.coverNameLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -198,7 +202,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 409);
+            this.ClientSize = new System.Drawing.Size(538, 409);
             this.Controls.Add(this.coverNameLabel);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.albumTextBox);
@@ -209,7 +213,7 @@
             this.Controls.Add(this.applyButton);
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this.listView);
-            this.MinimumSize = new System.Drawing.Size(415, 447);
+            this.MinimumSize = new System.Drawing.Size(554, 447);
             this.Name = "CoverSearchView";
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this.coverPreview)).EndInit();
