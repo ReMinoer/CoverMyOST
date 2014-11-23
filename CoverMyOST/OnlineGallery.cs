@@ -73,5 +73,7 @@ namespace CoverMyOST
             if (Directory.Exists(CacheDirectory))
                 Directory.Delete(CacheDirectory, true);
         }
+
+        public abstract void CancelSearch();
     }
 }

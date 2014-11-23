@@ -39,6 +39,11 @@ namespace CoverMyOST.Galleries
             return result;
         }
 
+        public override void CancelSearch()
+        {
+            _miniMal.CancelCurrentRequest();
+        }
+
         // TODO : Create a special account for MyAnimeList
         private void Login()
         {

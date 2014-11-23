@@ -9,23 +9,32 @@ namespace CoverMyOST.GUI.Dialogs
     // TODO : fix album name edit
     internal class CoverSearchPresenter
     {
+        private enum SearchStatus
+        {
+            Init, Search, Wait, Cancel
+        }
+
         private readonly CoverMyOSTClient _client;
         private readonly ICoverSearchView _view;
 
         private MusicFile _currentFile;
         private int _fileIndex;
 
-        private int _lastSelection;
-        private bool _playSong;
+        private SearchStatus _status;
         private CoverSearchResult _searchResult;
+        private int _lastSelection;
+
+        private bool _playSong;
 
         public CoverSearchPresenter(ICoverSearchView view, CoverMyOSTClient client)
         {
             _view = view;
             _client = client;
+            _fileIndex = 0;
 
             _view.ListView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
-            _view.AlbumTextBox.TextChanged += AlbumTextBoxOnTextChanged;
+            _view.AlbumTextBox.KeyDown += AlbumTextBoxOnKeyDown;
+            _view.AlbumTextBox.Leave += AlbumTextBoxOnLeave;
 
             _view.PlayButton.Click += PlayButtonOnClick;
             _view.ApplyButton.Click += ApplyButtonOnClick;
@@ -41,14 +50,15 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void InitializeDialog()
         {
+            _status = SearchStatus.Init;
+
             _searchResult = new CoverSearchResult();
             _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
-
-            _view.BackgroundWorker.RunWorkerAsync();
 
             _view.ListView.Items.Clear();
             _view.ListView.Items.Add("*Actual cover*");
             _view.ListView.Items[0].Selected = true;
+            _lastSelection = 0;
 
             _view.CountLabel.Text = (_fileIndex + 1) + @"/" + _client.AllSelectedFiles.Count;
             _view.FileTextBox.Text = Path.GetFileName(_currentFile.Path);
@@ -56,35 +66,25 @@ namespace CoverMyOST.GUI.Dialogs
 
             _view.CoverPreview.Image = _currentFile.Cover;
 
+            _view.BackgroundWorker.RunWorkerAsync();
+
+            Enabled(true);
+            _view.AlbumTextBox.Focus();
+            _view.AlbumTextBox.SelectionStart = 0;
+            _view.AlbumTextBox.SelectionLength = _view.AlbumTextBox.TextLength;
+
+            _status = SearchStatus.Search;
+
             if (_playSong)
                 _client.PlayMusic(_currentFile.Path);
         }
 
-        private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void Enabled(bool state)
         {
-            _view.CoverPreview.Image = e.ItemIndex == 0
-                                           ? _currentFile.Cover
-                                           : _searchResult.ElementAt(e.ItemIndex - 1).Cover;
-            _lastSelection = e.ItemIndex;
-        }
-
-        private void AlbumTextBoxOnTextChanged(object sender, EventArgs eventArgs)
-        {
-            _currentFile.Album = _view.AlbumTextBox.Text;
-
-            if (!CancelSearch())
-                return;
-
-            _searchResult = new CoverSearchResult();
-            _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
-
-            _view.BackgroundWorker.RunWorkerAsync();
-
-            _view.ListView.Items.Clear();
-            _view.ListView.Items.Add("*Actual cover*");
-            _view.ListView.Items[0].Selected = true;
-
-            _view.CoverPreview.Image = _currentFile.Cover;
+            _view.ListView.Enabled = state;
+            _view.AlbumTextBox.Enabled = state;
+            _view.ApplyButton.Enabled = state;
+            _view.PlayButton.Enabled = state;
         }
 
         private void PlayButtonOnClick(object sender, EventArgs eventArgs)
@@ -105,25 +105,63 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ApplyButtonOnClick(object sender, EventArgs eventArgs)
         {
-            if (!CancelSearch())
-                return;
-
-            ApplyCover();
-            if (NextImage())
-                InitializeDialog();
+            switch (_status)
+            {
+                case SearchStatus.Search:
+                    CancelSearch();
+                    ApplyCover();
+                    NextImage();
+                    break;
+                case SearchStatus.Wait:
+                    ApplyCover();
+                    if (NextImage())
+                        InitializeDialog();
+                    break;
+            }
         }
 
-        private bool CancelSearch()
+        private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            _view.CoverPreview.Image = e.ItemIndex == 0
+                                           ? _currentFile.Cover
+                                           : _searchResult.ElementAt(e.ItemIndex - 1).Cover;
+            _lastSelection = e.ItemIndex;
+        }
+
+        private void AlbumTextBoxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
+        {
+            if (keyEventArgs.KeyCode == Keys.Enter)
+            {
+                if (_currentFile.Album != _view.AlbumTextBox.Text)
+                {
+                    _currentFile.Album = _view.AlbumTextBox.Text;
+
+                    switch (_status)
+                    {
+                        case SearchStatus.Search:
+                            CancelSearch();
+                            break;
+                        case SearchStatus.Wait:
+                            InitializeDialog();
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void AlbumTextBoxOnLeave(object sender, EventArgs eventArgs)
+        {
+            _view.AlbumTextBox.Text = _currentFile.Album;
+        }
+
+        private void CancelSearch()
         {
             _view.BackgroundWorker.CancelAsync();
 
-            if (_view.BackgroundWorker.IsBusy)
-            {
-                _view.StatusLabel.Text = @"Waiting end of search...";
-                return false;
-            }
+            Enabled(false);
+            _status = SearchStatus.Cancel;
 
-            return true;
+            _view.StatusLabel.Text = @"Waiting end of search...";
         }
 
         private void ApplyCover()
@@ -145,11 +183,6 @@ namespace CoverMyOST.GUI.Dialogs
                 return false;
             }
             return true;
-        }
-
-        private void ViewOnClosingDialog(object sender, CancelEventArgs cancelEventArgs)
-        {
-            _client.StopMusic();
         }
 
         private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)
@@ -210,6 +243,8 @@ namespace CoverMyOST.GUI.Dialogs
             {
                 if (worker.CancellationPending)
                 {
+                    if (gallery is OnlineGallery)
+                        (gallery as OnlineGallery).CancelSearch();
                     e.Cancel = true;
                     break;
                 }
@@ -229,6 +264,9 @@ namespace CoverMyOST.GUI.Dialogs
                     countProgress++;
                 }
             }
+
+            if (worker.CancellationPending)
+                e.Cancel = true;
         }
 
         private void BackgroundWorkerOnProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -251,18 +289,33 @@ namespace CoverMyOST.GUI.Dialogs
         {
             if (e.Cancelled)
             {
-                _view.StatusLabel.Text = @"Canceled.";
-                ApplyCover();
-                if (NextImage())
-                    InitializeDialog();
+                InitializeDialog();
+                return;
             }
-            else if (e.Error != null)
+
+            if (e.Error != null)
+            {
+                _view.SearchProgressBar.Value = 0;
                 _view.StatusLabel.Text = (@"Error: " + e.Error.Message);
+            }
             else
             {
                 _view.SearchProgressBar.Value = 100;
                 _view.StatusLabel.Text = @"Search completed.";
             }
+
+            if (_status == SearchStatus.Cancel)
+            {
+                Enabled(true);
+                InitializeDialog();
+            }
+            _status = SearchStatus.Wait;
+        }
+
+        private void ViewOnClosingDialog(object sender, CancelEventArgs cancelEventArgs)
+        {
+            CancelSearch();
+            _client.StopMusic();
         }
 
         private struct SearchProgress
