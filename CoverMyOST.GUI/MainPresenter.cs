@@ -8,6 +8,9 @@ using CoverMyOST.GUI.Dialogs;
 
 namespace CoverMyOST.GUI
 {
+    // TODO : Create the dialog for galleries options
+    // TODO : Fix save conditions & signs of edition
+    // TODO : Update button state for stop music
     public class MainPresenter
     {
         private readonly CoverMyOSTClient _client;

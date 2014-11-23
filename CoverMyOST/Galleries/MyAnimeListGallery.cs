@@ -8,6 +8,9 @@ using MiniMAL.Anime;
 
 namespace CoverMyOST.Galleries
 {
+    // TODO : Fix cancelable request for MyAnimeList
+    // TODO : Create an understandable error when no results
+    // TODO : Create a special account for MyAnimeList
     public class MyAnimeListGallery : OnlineGallery
     {
         public override string Name { get { return "MyAnimeList"; } }
@@ -44,7 +47,6 @@ namespace CoverMyOST.Galleries
             _miniMal.CancelCurrentRequest();
         }
 
-        // TODO : Create a special account for MyAnimeList
         private void Login()
         {
             _miniMal.Login("TryMiniMAL", "tryminimal");
