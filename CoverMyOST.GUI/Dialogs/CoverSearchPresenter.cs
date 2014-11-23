@@ -300,16 +300,28 @@ namespace CoverMyOST.GUI.Dialogs
             _view.SearchProgressBar.Value = e.ProgressPercentage;
             _view.StatusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
 
+            bool firstCached = false;
             ListViewGroup group = null;
+
             if (!searchProgress.Cached)
                 group = _view.ListView.Groups.Add(searchProgress.GalleryName, searchProgress.GalleryName);
 
             foreach (CoverEntry entry in searchProgress.SearchResult)
             {
                 _searchResult.Add(entry);
+
+                if (searchProgress.Cached && _view.ListView.Groups["Cached"].Items.Count == 0)
+                    firstCached = true;
+
                 _view.ListView.Items.Add(searchProgress.Cached
                                              ? new ListViewItem(entry.GalleryName, _view.ListView.Groups["Cached"])
                                              : new ListViewItem(entry.Name, group));
+            }
+
+            if (firstCached)
+            {
+                _view.ListView.Items[2].Selected = true;
+                _lastSelection = 2;
             }
 
             _view.ListView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
