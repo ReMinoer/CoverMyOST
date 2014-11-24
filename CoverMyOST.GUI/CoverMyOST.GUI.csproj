@@ -86,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoverMyOST\CoverMyOST.csproj">
-      <Project>{dbcfb4f4-3e66-459b-8ee0-394e2a5801c9}</Project>
+      <Project>{DBCFB4F4-3E66-459B-8EE0-394E2A5801C9}</Project>
       <Name>CoverMyOST</Name>
     </ProjectReference>
   </ItemGroup>

@@ -48,6 +48,10 @@ namespace CoverMyOST.GUI
         private void GridViewOnCellValueChanged(object sender, DataGridViewCellEventArgs eventArgs)
         {
             DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
+
+			if (row.Cells["File"].Value == null)
+				return;
+
             string path = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
 
             switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
