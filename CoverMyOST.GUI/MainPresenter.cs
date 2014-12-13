@@ -151,7 +151,11 @@ namespace CoverMyOST.GUI
             RefreshGrid();
         }
 
-        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs) {}
+        private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs)
+        {
+            var galleryManagerView = new GalleryManagerView(_client);
+            galleryManagerView.ShowDialog();
+        }
 
         private void StopButtonOnClick(object sender, EventArgs eventArgs)
         {
