@@ -42,7 +42,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dialogs\CoverSearchPresenter.cs" />
+    <Compile Include="Dialogs\CoverSearchModel.cs" />
+    <Compile Include="Dialogs\CoverSearchUi.cs" />
     <Compile Include="Dialogs\CoverSearchView.cs">
       <SubType>Form</SubType>
     </Compile>
