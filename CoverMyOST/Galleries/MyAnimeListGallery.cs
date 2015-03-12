@@ -13,9 +13,17 @@ namespace CoverMyOST.Galleries
     // TODO : Create a special account for MyAnimeList
     public class MyAnimeListGallery : OnlineGallery
     {
-        public override string Name { get { return "MyAnimeList"; } }
-        protected override string CacheDirectoryName { get { return "myanimelist"; } }
         private readonly MiniMALClient _miniMal = new MiniMALClient();
+
+        public override string Name
+        {
+            get { return "MyAnimeList"; }
+        }
+
+        protected override string CacheDirectoryName
+        {
+            get { return "myanimelist"; }
+        }
 
         public override async Task<CoverSearchResult> SearchOnlineAsync(string query)
         {

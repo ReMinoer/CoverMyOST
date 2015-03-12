@@ -108,8 +108,8 @@ namespace CoverMyOST.GUI.Dialogs
                     firstCached = true;
 
                 _listView.Items.Add(searchProgress.Cached
-                                        ? new ListViewItem(entry.GalleryName, _listView.Groups["Cached"])
-                                        : new ListViewItem(entry.Name, group));
+                    ? new ListViewItem(entry.GalleryName, _listView.Groups["Cached"])
+                    : new ListViewItem(entry.Name, group));
             }
 
             if (firstCached)

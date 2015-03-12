@@ -5,8 +5,7 @@ namespace CoverMyOST.GUI.Dialogs
 {
     public partial class GalleryManagerView : Form, IGalleryManagerView
     {
-        [UsedImplicitly]
-        private GalleryManagerPresenter _presenter;
+        [UsedImplicitly] private GalleryManagerPresenter _presenter;
 
         public GalleryManagerView(CoverMyOSTClient client)
         {
@@ -18,6 +17,5 @@ namespace CoverMyOST.GUI.Dialogs
 
     public interface IGalleryManagerView
     {
-        
     }
 }

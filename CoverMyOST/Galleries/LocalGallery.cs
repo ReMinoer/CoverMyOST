@@ -8,25 +8,24 @@ namespace CoverMyOST.Galleries
     public class LocalGallery : ICoversGallery
     {
         private readonly string[] _imagePatterns = {"*.jpg", "*.png", "*.gif"};
+        public string Name { get; set; }
+        public bool Enable { get; set; }
 
         public LocalGallery(string path)
         {
             Name = path;
         }
 
-        public string Name { get; set; }
-        public bool Enable { get; set; }
-
         public CoverSearchResult Search(string query)
         {
             IEnumerable<string> files =
                 _imagePatterns.AsParallel().
-                               SelectMany(imagePattern => Directory.EnumerateFiles(Name, imagePattern)).
-                               Where(file =>
-                               {
-                                   string filename = Path.GetFileNameWithoutExtension(file);
-                                   return filename != null && filename.Contains(query);
-                               });
+                    SelectMany(imagePattern => Directory.EnumerateFiles(Name, imagePattern)).
+                    Where(file =>
+                    {
+                        string filename = Path.GetFileNameWithoutExtension(file);
+                        return filename != null && filename.Contains(query);
+                    });
 
             var result = new CoverSearchResult();
             foreach (string file in files)

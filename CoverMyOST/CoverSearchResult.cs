@@ -6,26 +6,30 @@ namespace CoverMyOST
 {
     public class CoverSearchResult : IEnumerable<CoverEntry>
     {
-        public CoverEntry this[string name] { get { return _list.First(cover => cover.Name == name); } }
-
-        public int Count { get { return _list.Count; } }
         private readonly List<CoverEntry> _list = new List<CoverEntry>();
 
-        public CoverSearchResult() {}
+        public int Count
+        {
+            get { return _list.Count; }
+        }
+
+        public CoverSearchResult()
+        {
+        }
 
         public CoverSearchResult(params CoverEntry[] entries)
         {
             _list.AddRange(entries);
         }
 
+        public CoverEntry this[string name]
+        {
+            get { return _list.First(cover => cover.Name == name); }
+        }
+
         public IEnumerator<CoverEntry> GetEnumerator()
         {
             return _list.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public void Add(CoverEntry coverEntry)
@@ -36,6 +40,11 @@ namespace CoverMyOST
         public bool Contains(string name)
         {
             return _list.Any(cover => cover.Name == name);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

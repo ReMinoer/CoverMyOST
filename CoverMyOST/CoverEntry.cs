@@ -4,11 +4,14 @@ namespace CoverMyOST
 {
     public class CoverEntry
     {
+        private readonly OnlineGallery _gallery;
         public string Name { get; private set; }
         public Bitmap Cover { get; private set; }
-        public string GalleryName { get { return _gallery.Name; } }
 
-        private readonly OnlineGallery _gallery;
+        public string GalleryName
+        {
+            get { return _gallery.Name; }
+        }
 
         public CoverEntry(string name, Bitmap cover, OnlineGallery gallery = null)
         {

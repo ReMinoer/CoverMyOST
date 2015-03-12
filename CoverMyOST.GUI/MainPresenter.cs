@@ -15,7 +15,6 @@ namespace CoverMyOST.GUI
     {
         private readonly CoverMyOSTClient _client;
         private readonly IMainView _view;
-
         private bool _isSaved = true;
 
         public MainPresenter(IMainView view)
@@ -49,8 +48,8 @@ namespace CoverMyOST.GUI
         {
             DataGridViewRow row = _view.GridView.Rows[eventArgs.RowIndex];
 
-			if (row.Cells["File"].Value == null)
-				return;
+            if (row.Cells["File"].Value == null)
+                return;
 
             string path = Path.Combine(_client.WorkingDirectory, (string)row.Cells["File"].Value);
 

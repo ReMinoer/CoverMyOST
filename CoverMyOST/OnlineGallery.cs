@@ -8,15 +8,20 @@ namespace CoverMyOST
     public abstract class OnlineGallery : ICoversGallery
     {
         public bool CacheEnable { get; set; }
-
+        public bool Enable { get; set; }
         protected abstract string CacheDirectoryName { get; }
 
         private string CacheDirectory
         {
             get { return Path.Combine(GalleryCollection.CacheRoot, CacheDirectoryName + "/"); }
         }
+
         public abstract string Name { get; }
-        public bool Enable { get; set; }
+
+        protected OnlineGallery()
+        {
+            Enable = true;
+        }
 
         public CoverSearchResult Search(string query)
         {
@@ -59,6 +64,14 @@ namespace CoverMyOST
             return new CoverEntry(query, new Bitmap(ms), this);
         }
 
+        public void ClearCache()
+        {
+            if (Directory.Exists(CacheDirectory))
+                Directory.Delete(CacheDirectory, true);
+        }
+
+        public abstract void CancelSearch();
+
         internal void AddCoverToCache(CoverEntry entry, string name)
         {
             if (!Directory.Exists(CacheDirectory))
@@ -67,13 +80,5 @@ namespace CoverMyOST
             string path = Path.Combine(CacheDirectory, name + ".png");
             entry.Cover.Save(path, ImageFormat.Png);
         }
-
-        public void ClearCache()
-        {
-            if (Directory.Exists(CacheDirectory))
-                Directory.Delete(CacheDirectory, true);
-        }
-
-        public abstract void CancelSearch();
     }
 }

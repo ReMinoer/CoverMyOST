@@ -257,8 +257,8 @@ namespace CoverMyOST.GUI.Dialogs
                     worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
 
                     progress.SearchResult = gallery is OnlineGallery
-                                                ? (gallery as OnlineGallery).SearchOnline(_currentFile.Album)
-                                                : gallery.Search(_currentFile.Album);
+                        ? (gallery as OnlineGallery).SearchOnline(_currentFile.Album)
+                        : gallery.Search(_currentFile.Album);
                     worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
 
                     i++;
@@ -297,8 +297,8 @@ namespace CoverMyOST.GUI.Dialogs
             {
                 var aggregateException = e.Error as AggregateException;
                 string errorMessage = aggregateException != null
-                                          ? aggregateException.InnerExceptions[0].Message
-                                          : e.Error.Message;
+                    ? aggregateException.InnerExceptions[0].Message
+                    : e.Error.Message;
 
                 if (SearchError != null)
                     SearchError.Invoke(this, errorMessage);

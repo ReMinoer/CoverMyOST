@@ -1,6 +1,6 @@
 ﻿namespace CoverMyOST.GUI.Dialogs
 {
-    class GalleryManagerPresenter
+    internal class GalleryManagerPresenter
     {
         private readonly CoverMyOSTClient _client;
         private readonly IGalleryManagerView _view;

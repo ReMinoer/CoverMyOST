@@ -123,4 +123,5 @@
       &lt;/Entry.Match&gt;&#xD;
     &lt;/Entry&gt;&#xD;
   &lt;/TypePattern&gt;&#xD;
-&lt;/Patterns&gt;</s:String></wpf:ResourceDictionary>
+&lt;/Patterns&gt;</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=OST/@EntryIndexedValue">OST</s:String></wpf:ResourceDictionary>

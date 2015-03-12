@@ -9,17 +9,20 @@ namespace CoverMyOST
 {
     public class GalleryCollection : IEnumerable<ICoversGallery>
     {
-        public IReadOnlyList<ICoversGallery> List { get { return _list.AsReadOnly(); } }
-
-        public IReadOnlyList<LocalGallery> Local { get { return _local.AsReadOnly(); } }
-        public MyAnimeListGallery MyAnimeList { get; private set; }
-
-        public ICoversGallery this[string name] { get { return _list.First(gallery => gallery.Name == name); } }
-
         private readonly List<ICoversGallery> _list;
         private readonly List<LocalGallery> _local;
-
         public const string CacheRoot = "cache/";
+        public MyAnimeListGallery MyAnimeList { get; private set; }
+
+        public IReadOnlyList<ICoversGallery> List
+        {
+            get { return _list.AsReadOnly(); }
+        }
+
+        public IReadOnlyList<LocalGallery> Local
+        {
+            get { return _local.AsReadOnly(); }
+        }
 
         public GalleryCollection()
         {
@@ -31,14 +34,14 @@ namespace CoverMyOST
             EnableAll();
         }
 
+        public ICoversGallery this[string name]
+        {
+            get { return _list.First(gallery => gallery.Name == name); }
+        }
+
         public IEnumerator<ICoversGallery> GetEnumerator()
         {
             return _list.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public TOnlineGallery Get<TOnlineGallery>() where TOnlineGallery : OnlineGallery
@@ -78,8 +81,8 @@ namespace CoverMyOST
                 if (gallery.Enable)
                 {
                     CoverSearchResult search = (gallery is OnlineGallery)
-                                                   ? await (gallery as OnlineGallery).SearchAsync(query)
-                                                   : gallery.Search(query);
+                        ? await (gallery as OnlineGallery).SearchAsync(query)
+                        : gallery.Search(query);
 
                     foreach (CoverEntry entry in search)
                         result.Add(entry);
@@ -141,18 +144,6 @@ namespace CoverMyOST
             return null;
         }
 
-        private CoverSearchResult SearchLocalCover(string query)
-        {
-            var result = new CoverSearchResult();
-
-            foreach (ICoversGallery gallery in Local)
-                if (gallery.Enable)
-                    foreach (CoverEntry entry in gallery.Search(query))
-                        result.Add(entry);
-
-            return result;
-        }
-
         public void ClearAllCache()
         {
             foreach (ICoversGallery gallery in _list)
@@ -173,6 +164,23 @@ namespace CoverMyOST
         {
             foreach (ICoversGallery gallery in _list)
                 gallery.Enable = false;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        private CoverSearchResult SearchLocalCover(string query)
+        {
+            var result = new CoverSearchResult();
+
+            foreach (ICoversGallery gallery in Local)
+                if (gallery.Enable)
+                    foreach (CoverEntry entry in gallery.Search(query))
+                        result.Add(entry);
+
+            return result;
         }
     }
 }

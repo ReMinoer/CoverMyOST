@@ -11,6 +11,10 @@ namespace CoverMyOST
 {
     public class MusicFile
     {
+        private readonly File _file;
+        private readonly string[] _musicExtensions = {".mp3", ".wma", ".flac", ".ogg"};
+        public string Path { get; private set; }
+
         public Bitmap Cover
         {
             get
@@ -48,10 +52,11 @@ namespace CoverMyOST
             }
         }
 
-        public string Path { get; private set; }
-        public string Album { get { return _file.Tag.Album; } set { _file.Tag.Album = value; } }
-        private readonly File _file;
-        private readonly string[] _musicExtensions = {".mp3", ".wma", ".flac", ".ogg"};
+        public string Album
+        {
+            get { return _file.Tag.Album; }
+            set { _file.Tag.Album = value; }
+        }
 
         internal MusicFile(string path)
         {
