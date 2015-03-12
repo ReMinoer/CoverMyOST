@@ -4,7 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CoverMyOST.Data;
+using System.Windows.Forms;
+using CoverMyOST.DataModels;
 using Diese.Serialization;
 using TagLib;
 using File = System.IO.File;
@@ -56,10 +57,10 @@ namespace CoverMyOST
         private MusicFileFilter _filter;
         private Dictionary<string, MusicFileEntry> _filteredFiles;
 
-        private const string ConfigFileName = "CoverMyOSTconfig.xml";
+        private const string ConfigFileName = "CoverMyOST-config.xml";
 
-        static private readonly XmlSerializer<CoverMyOSTClient, CoverMyOSTClientModel> Exporter =
-            new XmlSerializer<CoverMyOSTClient, CoverMyOSTClientModel>();
+        static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientModel> Serializer =
+            new SerializerXml<CoverMyOSTClient, CoverMyOSTClientModel>();
 
 #if !MONO
         private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
@@ -78,13 +79,22 @@ namespace CoverMyOST
 
         public void LoadConfiguration()
         {
-            if (File.Exists(ConfigFileName))
-                Exporter.Load(this, ConfigFileName);
+            try
+            {
+                if (File.Exists(ConfigFileName))
+                    Serializer.Initialization(this, ConfigFileName);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(@"Config file is corrupted. Fix it by yourself or delete it to reset.", "CoverMyOST",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         public void SaveConfiguration()
         {
-            Exporter.Save(this, ConfigFileName);
+            Serializer.Save(this, ConfigFileName);
         }
 
         public void ChangeDirectory(string path)
@@ -104,7 +114,9 @@ namespace CoverMyOST
                     var musicFile = new MusicFileEntry(fullpath);
                     _allFiles.Add(fullpath, musicFile);
                 }
-                catch (UnsupportedFormatException) {}
+                catch (UnsupportedFormatException)
+                {
+                }
             }
 
             FilterFiles(MusicFileFilter.None);
@@ -120,11 +132,11 @@ namespace CoverMyOST
                     break;
                 case MusicFileFilter.AlbumSpecified:
                     _filteredFiles = _allFiles.Where(e => !string.IsNullOrEmpty(e.Value.Album)).
-                                               ToDictionary(e => e.Key, e => e.Value);
+                        ToDictionary(e => e.Key, e => e.Value);
                     break;
                 case MusicFileFilter.NoAlbum:
                     _filteredFiles = _allFiles.Where(e => string.IsNullOrEmpty(e.Value.Album)).
-                                               ToDictionary(e => e.Key, e => e.Value);
+                        ToDictionary(e => e.Key, e => e.Value);
                     break;
                 case MusicFileFilter.CoverSpecified:
                     _filteredFiles = _allFiles.Where(e => e.Value.Cover != null).ToDictionary(e => e.Key, e => e.Value);

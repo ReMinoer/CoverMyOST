@@ -26,8 +26,10 @@ namespace CoverMyOST.Annotations
     /// </example>
     [AttributeUsage(
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate
-        | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class CanBeNullAttribute : Attribute {}
+        | AttributeTargets.Field)]
+    public sealed class CanBeNullAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     Indicates that the value of the marked element could never be <c>null</c>
@@ -41,8 +43,10 @@ namespace CoverMyOST.Annotations
     /// </example>
     [AttributeUsage(
         AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate
-        | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class NotNullAttribute : Attribute {}
+        | AttributeTargets.Field)]
+    public sealed class NotNullAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     Indicates that the marked method builds string by format pattern and (optional) arguments.
@@ -58,7 +62,7 @@ namespace CoverMyOST.Annotations
     /// }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
     public sealed class StringFormatMethodAttribute : Attribute
     {
         public string FormatParameterName { get; private set; }
@@ -85,8 +89,10 @@ namespace CoverMyOST.Annotations
     /// }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public sealed class InvokerParameterNameAttribute : Attribute {}
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public sealed class InvokerParameterNameAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     Indicates that the method is contained in a type that implements
@@ -143,11 +149,14 @@ namespace CoverMyOST.Annotations
     ///         </item>
     ///     </list>
     /// </example>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
         public string ParameterName { get; private set; }
-        public NotifyPropertyChangedInvocatorAttribute() {}
+
+        public NotifyPropertyChangedInvocatorAttribute()
+        {
+        }
 
         public NotifyPropertyChangedInvocatorAttribute(string parameterName)
         {
@@ -209,14 +218,16 @@ namespace CoverMyOST.Annotations
     ///         </item>
     ///     </list>
     /// </examples>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class ContractAnnotationAttribute : Attribute
     {
         public string Contract { get; private set; }
         public bool ForceFullStates { get; private set; }
 
         public ContractAnnotationAttribute([NotNull] string contract)
-            : this(contract, false) {}
+            : this(contract, false)
+        {
+        }
 
         public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
         {
@@ -236,13 +247,15 @@ namespace CoverMyOST.Annotations
     /// }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.All)]
     public sealed class LocalizationRequiredAttribute : Attribute
     {
         public bool Required { get; private set; }
 
         public LocalizationRequiredAttribute()
-            : this(true) {}
+            : this(true)
+        {
+        }
 
         public LocalizationRequiredAttribute(bool required)
         {
@@ -271,9 +284,10 @@ namespace CoverMyOST.Annotations
     /// }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false,
-        Inherited = true)]
-    public sealed class CannotApplyEqualityOperatorAttribute : Attribute {}
+    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
+    public sealed class CannotApplyEqualityOperatorAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     When applied to a target attribute, specifies a requirement for any type marked
@@ -287,7 +301,7 @@ namespace CoverMyOST.Annotations
     /// public class MyComponent : IComponent { }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true), BaseTypeRequired(typeof(Attribute))
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true), BaseTypeRequired(typeof(Attribute))
     ]
     public sealed class BaseTypeRequiredAttribute : Attribute
     {
@@ -305,20 +319,26 @@ namespace CoverMyOST.Annotations
     ///     (e.g. via reflection, in external library), so this symbol
     ///     will not be marked as unused (as well as by other usage inspections)
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.All)]
     public sealed class UsedImplicitlyAttribute : Attribute
     {
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
         public ImplicitUseTargetFlags TargetFlags { get; private set; }
 
         public UsedImplicitlyAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) {}
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+        {
+        }
 
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default) {}
+            : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        {
+        }
 
         public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags) {}
+            : this(ImplicitUseKindFlags.Default, targetFlags)
+        {
+        }
 
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
@@ -332,22 +352,29 @@ namespace CoverMyOST.Annotations
     ///     to not mark symbols marked with such attributes as unused
     ///     (as well as by other usage inspections)
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class MeansImplicitUseAttribute : Attribute
     {
         [UsedImplicitly]
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
+
         [UsedImplicitly]
         public ImplicitUseTargetFlags TargetFlags { get; private set; }
 
         public MeansImplicitUseAttribute()
-            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) {}
+            : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
+        {
+        }
 
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-            : this(useKindFlags, ImplicitUseTargetFlags.Default) {}
+            : this(useKindFlags, ImplicitUseTargetFlags.Default)
+        {
+        }
 
         public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-            : this(ImplicitUseKindFlags.Default, targetFlags) {}
+            : this(ImplicitUseKindFlags.Default, targetFlags)
+        {
+        }
 
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
         {
@@ -360,17 +387,21 @@ namespace CoverMyOST.Annotations
     public enum ImplicitUseKindFlags
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
+
         /// <summary>Only entity marked with attribute considered used</summary>
         Access = 1,
+
         /// <summary>Indicates implicit assignment to a member</summary>
         Assign = 2,
+
         /// <summary>
         ///     Indicates implicit instantiation of a type with fixed constructor signature.
         ///     That means any unused constructor parameters won't be reported as such.
         /// </summary>
         InstantiatedWithFixedConstructorSignature = 4,
+
         /// <summary>Indicates implicit instantiation of a type</summary>
-        InstantiatedNoFixedConstructorSignature = 8,
+        InstantiatedNoFixedConstructorSignature = 8
     }
 
     /// <summary>
@@ -383,8 +414,10 @@ namespace CoverMyOST.Annotations
     {
         Default = Itself,
         Itself = 1,
+
         /// <summary>Members of entity marked with attribute are considered used</summary>
         Members = 2,
+
         /// <summary>Entity marked with attribute and all its members considered used</summary>
         WithMembers = Itself | Members
     }
@@ -398,7 +431,10 @@ namespace CoverMyOST.Annotations
     {
         [NotNull]
         public string Comment { get; private set; }
-        public PublicAPIAttribute() {}
+
+        public PublicAPIAttribute()
+        {
+        }
 
         public PublicAPIAttribute([NotNull] string comment)
         {
@@ -413,8 +449,10 @@ namespace CoverMyOST.Annotations
     ///     If the parameter is an enumerable, indicates that it is enumerated
     ///     while the method is executed
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = true)]
-    public sealed class InstantHandleAttribute : Attribute {}
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public sealed class InstantHandleAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     Indicates that a method does not make any observable state changes.
@@ -429,8 +467,10 @@ namespace CoverMyOST.Annotations
     /// }
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Method, Inherited = true)]
-    public sealed class PureAttribute : Attribute {}
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class PureAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     Indicates that a parameter is a path to a file or a folder
@@ -442,7 +482,10 @@ namespace CoverMyOST.Annotations
     {
         [NotNull]
         public string BasePath { get; private set; }
-        public PathReferenceAttribute() {}
+
+        public PathReferenceAttribute()
+        {
+        }
 
         public PathReferenceAttribute([PathReference] string basePath)
         {
@@ -455,37 +498,49 @@ namespace CoverMyOST.Annotations
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
     {
-        public AspMvcAreaMasterLocationFormatAttribute(string format) {}
+        public AspMvcAreaMasterLocationFormatAttribute(string format)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
     {
-        public AspMvcAreaPartialViewLocationFormatAttribute(string format) {}
+        public AspMvcAreaPartialViewLocationFormatAttribute(string format)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
     {
-        public AspMvcAreaViewLocationFormatAttribute(string format) {}
+        public AspMvcAreaViewLocationFormatAttribute(string format)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcMasterLocationFormatAttribute : Attribute
     {
-        public AspMvcMasterLocationFormatAttribute(string format) {}
+        public AspMvcMasterLocationFormatAttribute(string format)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
     {
-        public AspMvcPartialViewLocationFormatAttribute(string format) {}
+        public AspMvcPartialViewLocationFormatAttribute(string format)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class AspMvcViewLocationFormatAttribute : Attribute
     {
-        public AspMvcViewLocationFormatAttribute(string format) {}
+        public AspMvcViewLocationFormatAttribute(string format)
+        {
+        }
     }
 
     /// <summary>
@@ -499,7 +554,10 @@ namespace CoverMyOST.Annotations
     {
         [NotNull]
         public string AnonymousProperty { get; private set; }
-        public AspMvcActionAttribute() {}
+
+        public AspMvcActionAttribute()
+        {
+        }
 
         public AspMvcActionAttribute([NotNull] string anonymousProperty)
         {
@@ -517,7 +575,10 @@ namespace CoverMyOST.Annotations
     {
         [NotNull]
         public string AnonymousProperty { get; private set; }
-        public AspMvcAreaAttribute() {}
+
+        public AspMvcAreaAttribute()
+        {
+        }
 
         public AspMvcAreaAttribute([NotNull] string anonymousProperty)
         {
@@ -537,7 +598,10 @@ namespace CoverMyOST.Annotations
     {
         [NotNull]
         public string AnonymousProperty { get; private set; }
-        public AspMvcControllerAttribute() {}
+
+        public AspMvcControllerAttribute()
+        {
+        }
 
         public AspMvcControllerAttribute([NotNull] string anonymousProperty)
         {
@@ -551,7 +615,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Controller.View(String, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcMasterAttribute : Attribute {}
+    public sealed class AspMvcMasterAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
@@ -559,7 +625,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Controller.View(String, Object)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcModelTypeAttribute : Attribute {}
+    public sealed class AspMvcModelTypeAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that
@@ -569,14 +637,18 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute {}
+    public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Allows disabling all inspections
     ///     for MVC views within a class or a method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class AspMvcSupressViewErrorAttribute : Attribute {}
+    public sealed class AspMvcSupressViewErrorAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
@@ -584,7 +656,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcDisplayTemplateAttribute : Attribute {}
+    public sealed class AspMvcDisplayTemplateAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
@@ -592,7 +666,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcEditorTemplateAttribute : Attribute {}
+    public sealed class AspMvcEditorTemplateAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
@@ -600,7 +676,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcTemplateAttribute : Attribute {}
+    public sealed class AspMvcTemplateAttribute : Attribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
@@ -609,7 +687,9 @@ namespace CoverMyOST.Annotations
     ///     <c>System.Web.Mvc.Controller.View(Object)</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    public sealed class AspMvcViewAttribute : PathReferenceAttribute {}
+    public sealed class AspMvcViewAttribute : PathReferenceAttribute
+    {
+    }
 
     /// <summary>
     ///     ASP.NET MVC attribute. When applied to a parameter of an attribute,
@@ -625,14 +705,19 @@ namespace CoverMyOST.Annotations
     /// </code>
     /// </example>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-    public sealed class AspMvcActionSelectorAttribute : Attribute {}
+    public sealed class AspMvcActionSelectorAttribute : Attribute
+    {
+    }
 
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
     public sealed class HtmlElementAttributesAttribute : Attribute
     {
         [NotNull]
         public string Name { get; private set; }
-        public HtmlElementAttributesAttribute() {}
+
+        public HtmlElementAttributesAttribute()
+        {
+        }
 
         public HtmlElementAttributesAttribute([NotNull] string name)
         {
@@ -640,7 +725,7 @@ namespace CoverMyOST.Annotations
         }
     }
 
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
     public sealed class HtmlAttributeValueAttribute : Attribute
     {
         [NotNull]
@@ -659,6 +744,8 @@ namespace CoverMyOST.Annotations
     ///     Use this attribute for custom wrappers similar to
     ///     <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method, Inherited = true)]
-    public sealed class RazorSectionAttribute : Attribute {}
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
+    public sealed class RazorSectionAttribute : Attribute
+    {
+    }
 }
