@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using Ui = CoverMyOST.GUI.Dialogs.CoverSearchUi;
 
 namespace CoverMyOST.GUI.Dialogs
 {
@@ -14,15 +15,15 @@ namespace CoverMyOST.GUI.Dialogs
         private int _lastSelection;
         private CoverSearchResult _searchResult;
         private CoverSearchStep _step;
-        public event EventHandler<CoverSearchUi.InitializeEventArgs> Initialize;
-        public event EventHandler<string> ResetAlbum;
-        public event EventHandler<CoverSearchUi.CoverChangeEventArgs> CoverChange;
+        public event EventHandler<Ui.InitializeEventArgs> Initialize;
+        public event EventHandler<Ui.ResetAlbumEventArgs> ResetAlbum;
+        public event EventHandler<Ui.CoverChangeEventArgs> CoverChange;
         public event EventHandler<ProgressChangedEventArgs> SearchProgress;
         public event EventHandler SearchCancel;
-        public event EventHandler<string> SearchError;
+        public event EventHandler<Ui.SearchErrorEventArgs> SearchError;
         public event EventHandler SearchComplete;
-        public event EventHandler<bool> SearchEnd;
-        public event EventHandler<bool> PlaySong;
+        public event EventHandler<Ui.SearchEndEventArgs> SearchEnd;
+        public event EventHandler<Ui.ToggleSongEventArgs> ToggleSong;
         public event EventHandler Close;
 
         public CoverSearchModel(CoverMyOSTClient client)
@@ -51,7 +52,7 @@ namespace CoverMyOST.GUI.Dialogs
             if (_isPlayingSong)
                 _client.PlayMusic(_currentFile.Path);
 
-            var args = new CoverSearchUi.InitializeEventArgs
+            var args = new Ui.InitializeEventArgs
             {
                 FileIndex = _fileIndex,
                 FilesCount = _client.AllSelectedFiles.Count,
@@ -62,7 +63,7 @@ namespace CoverMyOST.GUI.Dialogs
                 Initialize.Invoke(this, args);
         }
 
-        public void OnPlaySongRequest(object sender, EventArgs e)
+        public void OnToggleSongRequest(object sender, EventArgs e)
         {
             _isPlayingSong = !_isPlayingSong;
 
@@ -71,8 +72,8 @@ namespace CoverMyOST.GUI.Dialogs
             else
                 _client.StopMusic();
 
-            if (PlaySong != null)
-                PlaySong.Invoke(this, _isPlayingSong);
+            if (ToggleSong != null)
+                ToggleSong.Invoke(this, new Ui.ToggleSongEventArgs { ToggleSong = _isPlayingSong });
         }
 
         public void OnApplyRequest(object sender, EventArgs e)
@@ -92,11 +93,11 @@ namespace CoverMyOST.GUI.Dialogs
             }
         }
 
-        public void OnEditAlbumRequest(object sender, string albumName)
+        public void OnEditAlbumRequest(object sender, Ui.EditAlbumRequestEventArgs e)
         {
-            if (_currentFile.Album != albumName)
+            if (_currentFile.Album != e.AlbumName)
             {
-                _currentFile.Album = albumName;
+                _currentFile.Album = e.AlbumName;
 
                 switch (_step)
                 {
@@ -113,7 +114,7 @@ namespace CoverMyOST.GUI.Dialogs
         public void OnResetAlbumRequest(object sender, EventArgs e)
         {
             if (ResetAlbum != null)
-                ResetAlbum.Invoke(this, _currentFile.Album);
+                ResetAlbum.Invoke(this, new Ui.ResetAlbumEventArgs { DefaultAlbumName = _currentFile.Album });
         }
 
         public void OnCloseRequest(object sender, EventArgs e)
@@ -124,12 +125,12 @@ namespace CoverMyOST.GUI.Dialogs
             // BUG : Client continue to search if dialog close.
         }
 
-        public void OnCoverSelectionRequest(object sender, CoverSearchUi.CoverSelectionEventArgs e)
+        public void OnCoverSelectionRequest(object sender, Ui.CoverSelectionEventArgs e)
         {
             if (_step == CoverSearchStep.Init)
                 return;
 
-            var args = new CoverSearchUi.CoverChangeEventArgs();
+            var args = new Ui.CoverChangeEventArgs();
 
             switch (e.Index)
             {
@@ -301,13 +302,13 @@ namespace CoverMyOST.GUI.Dialogs
                     : e.Error.Message;
 
                 if (SearchError != null)
-                    SearchError.Invoke(this, errorMessage);
+                    SearchError.Invoke(this, new Ui.SearchErrorEventArgs { ErrorMessage = errorMessage });
             }
             else if (SearchComplete != null)
                 SearchComplete.Invoke(this, EventArgs.Empty);
 
             if (SearchEnd != null)
-                SearchEnd.Invoke(this, _step != CoverSearchStep.Cancel);
+                SearchEnd.Invoke(this, new Ui.SearchEndEventArgs{ EnableForm = _step != CoverSearchStep.Cancel });
 
             if (_step == CoverSearchStep.Cancel && _fileIndex < _client.AllSelectedFiles.Count)
                 Reset();
@@ -319,11 +320,8 @@ namespace CoverMyOST.GUI.Dialogs
     public enum CoverSearchStep
     {
         Init,
-
         Search,
-
         Wait,
-
         Cancel
     }
 

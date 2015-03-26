@@ -2,16 +2,17 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
+using Ui = CoverMyOST.GUI.Dialogs.CoverSearchUi;
 
 namespace CoverMyOST.GUI.Dialogs
 {
     public partial class CoverSearchView : Form, CoverSearchUi.IView
     {
-        public event EventHandler<string> EditAlbumRequest;
+        public event EventHandler<Ui.EditAlbumRequestEventArgs> EditAlbumRequest;
         public event EventHandler ResetAlbumRequest;
-        public event EventHandler<CoverSearchUi.CoverSelectionEventArgs> CoverSelectionRequest;
+        public event EventHandler<Ui.CoverSelectionEventArgs> CoverSelectionRequest;
         public event EventHandler ApplyRequest;
-        public event EventHandler PlaySongRequest;
+        public event EventHandler ToggleSongRequest;
         public event EventHandler CloseRequest;
 
         public CoverSearchView()
@@ -30,15 +31,7 @@ namespace CoverMyOST.GUI.Dialogs
             Closing += OnClosing;
         }
 
-        public void Show(bool stayFocus)
-        {
-            if (stayFocus)
-                ShowDialog();
-            else
-                Show();
-        }
-
-        public void OnInitialize(object sender, CoverSearchUi.InitializeEventArgs e)
+        public void OnInitialize(object sender, Ui.InitializeEventArgs e)
         {
             _listView.Items.Clear();
             _listView.Groups.Clear();
@@ -67,9 +60,9 @@ namespace CoverMyOST.GUI.Dialogs
             _listView.Items[1].Selected = true;
         }
 
-        public void OnPlaySong(object sender, bool isPlaying)
+        public void OnToggleSong(object sender, Ui.ToggleSongEventArgs e)
         {
-            _playButton.Text = isPlaying ? @"Stop" : @"Play";
+            _playButton.Text = e.ToggleSong ? @"Stop" : @"Play";
         }
 
         public void OnSearchCancel(object sender, EventArgs e)
@@ -78,12 +71,12 @@ namespace CoverMyOST.GUI.Dialogs
             _statusLabel.Text = @"Waiting end of search...";
         }
 
-        public void OnResetAlbum(object sender, string albumName)
+        public void OnResetAlbum(object sender, Ui.ResetAlbumEventArgs e)
         {
-            _albumTextBox.Text = albumName;
+            _albumTextBox.Text = e.DefaultAlbumName;
         }
 
-        public void OnCoverChange(object sender, CoverSearchUi.CoverChangeEventArgs e)
+        public void OnCoverChange(object sender, Ui.CoverChangeEventArgs e)
         {
             _coverPreview.Image = e.Cover;
             _coverNameLabel.Text = e.Name;
@@ -118,10 +111,10 @@ namespace CoverMyOST.GUI.Dialogs
             _listView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        public void OnSearchError(object sender, string errorMessage)
+        public void OnSearchError(object sender, Ui.SearchErrorEventArgs e)
         {
             _searchProgressBar.Value = 0;
-            _statusLabel.Text = errorMessage;
+            _statusLabel.Text = e.ErrorMessage;
         }
 
         public void OnSearchComplete(object sender, EventArgs e)
@@ -130,9 +123,9 @@ namespace CoverMyOST.GUI.Dialogs
             _statusLabel.Text = @"Search completed.";
         }
 
-        public void OnSearchEnd(object sender, bool enableForm)
+        public void OnSearchEnd(object sender, Ui.SearchEndEventArgs e)
         {
-            Enabled(enableForm);
+            Enabled(e.EnableForm);
         }
 
         public void OnClose(object sender, EventArgs e)
@@ -148,14 +141,14 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void PlayButtonOnClick(object sender, EventArgs e)
         {
-            if (PlaySongRequest != null)
-                PlaySongRequest(sender, e);
+            if (ToggleSongRequest != null)
+                ToggleSongRequest(sender, e);
         }
 
         private void AlbumTextBoxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             if (keyEventArgs.KeyCode == Keys.Enter && EditAlbumRequest != null)
-                EditAlbumRequest.Invoke(this, _albumTextBox.Text);
+                EditAlbumRequest.Invoke(this, new Ui.EditAlbumRequestEventArgs { AlbumName = _albumTextBox.Text });
         }
 
         private void AlbumTextBoxOnLeave(object sender, EventArgs e)
@@ -175,7 +168,7 @@ namespace CoverMyOST.GUI.Dialogs
             if (CoverSelectionRequest == null)
                 return;
 
-            var args = new CoverSearchUi.CoverSelectionEventArgs
+            var args = new Ui.CoverSelectionEventArgs
             {
                 Index = e.ItemIndex,
                 Group = _listView.Items[e.ItemIndex].Group.Name
