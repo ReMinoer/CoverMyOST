@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using Diese.UserInterface;
 
 namespace CoverMyOST.GUI.Dialogs
 {
-    public class CoverSearchUi : IUserInterface<CoverSearchUi.IModel, CoverSearchUi.IView>
+    public class CoverSearchUi
     {
         public IModel Model { get; private set; }
         public IView View { get; private set; }
@@ -15,11 +14,6 @@ namespace CoverMyOST.GUI.Dialogs
             Model = model;
             View = view;
 
-            BindEvents(Model, View);
-        }
-
-        public void BindEvents(IModel model, IView view)
-        {
             Model.Initialize += View.OnInitialize;
 
             View.ApplyRequest += Model.OnApplyRequest;

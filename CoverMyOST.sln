@@ -26,8 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B5A5DE98
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoverMyOST.Test", "CoverMyOST.Test\CoverMyOST.Test.csproj", "{D64AD78C-7BDA-4892-A8D7-27EC17F3115F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diese.UserInterface", "External\Diese\Diese.UserInterface\Diese.UserInterface.csproj", "{C82169C6-794E-47FE-BCEA-0037A6B428E6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,12 +69,6 @@ Global
 		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F}.Mono|Any CPU.Build.0 = Release|Any CPU
 		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Mono|Any CPU.ActiveCfg = Release|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Mono|Any CPU.Build.0 = Release|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,7 +78,6 @@ Global
 		{0781AD0F-EB0F-442E-9A1C-34C2AA9319FD} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 		{4AE2D764-4161-453D-8B2D-BD66607EC27A} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F} = {B5A5DE98-AC82-4EA2-8A07-195515451DA0}
-		{C82169C6-794E-47FE-BCEA-0037A6B428E6} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = CoverMyOST.GUI\CoverMyOST.GUI.csproj
