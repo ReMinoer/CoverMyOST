@@ -48,7 +48,8 @@
     <Compile Include="Dialogs\CoverSearchView.Designer.cs">
       <DependentUpon>CoverSearchView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\GalleryManagerPresenter.cs" />
+    <Compile Include="Dialogs\GalleryManagerModel.cs" />
+    <Compile Include="Dialogs\GalleryManagerUi.cs" />
     <Compile Include="Dialogs\GalleryManagerView.cs">
       <SubType>Form</SubType>
     </Compile>

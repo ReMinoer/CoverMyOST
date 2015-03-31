@@ -152,8 +152,8 @@ namespace CoverMyOST.GUI
 
         private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var galleryManagerView = new GalleryManagerView(_client);
-            galleryManagerView.ShowDialog();
+            var galleryManagerUi = new GalleryManagerUi(new GalleryManagerModel(), new GalleryManagerView());
+            ((GalleryManagerView)galleryManagerUi.View).ShowDialog();
         }
 
         private void StopButtonOnClick(object sender, EventArgs eventArgs)

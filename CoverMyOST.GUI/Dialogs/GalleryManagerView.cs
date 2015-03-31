@@ -1,21 +1,13 @@
 ﻿using System.Windows.Forms;
-using CoverMyOST.Annotations;
+using Ui = CoverMyOST.GUI.Dialogs.GalleryManagerUi;
 
 namespace CoverMyOST.GUI.Dialogs
 {
-    public partial class GalleryManagerView : Form, IGalleryManagerView
+    public partial class GalleryManagerView : Form, Ui.IView
     {
-        [UsedImplicitly] private GalleryManagerPresenter _presenter;
-
-        public GalleryManagerView(CoverMyOSTClient client)
+        public GalleryManagerView()
         {
             InitializeComponent();
-
-            _presenter = new GalleryManagerPresenter(this, client);
         }
-    }
-
-    public interface IGalleryManagerView
-    {
     }
 }
