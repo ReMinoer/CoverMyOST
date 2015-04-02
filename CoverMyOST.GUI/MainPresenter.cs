@@ -166,8 +166,8 @@ namespace CoverMyOST.GUI
         {
             _client.StopMusic();
 
-            var coverSearchUi = new CoverSearchUi(new CoverSearchModel(_client), new CoverSearchView());
-            ((CoverSearchView)coverSearchUi.View).ShowDialog();
+            var coverSearchUi = new CoverSearchUi(_client);
+            coverSearchUi.View.ShowDialog();
 
             RefreshGrid();
             OnModification();

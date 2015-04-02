@@ -1,19 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Ui = CoverMyOST.GUI.Dialogs.CoverSearchUi;
 
 namespace CoverMyOST.GUI.Dialogs
 {
-    public partial class CoverSearchView : Form, CoverSearchUi.IView
+    public partial class CoverSearchView : Form
     {
-        public event EventHandler<Ui.EditAlbumRequestEventArgs> EditAlbumRequest;
+        public event EventHandler<EditAlbumRequestEventArgs> EditAlbumRequest;
         public event EventHandler ResetAlbumRequest;
-        public event EventHandler<Ui.CoverSelectionEventArgs> CoverSelectionRequest;
+        public event EventHandler<CoverSelectionEventArgs> CoverSelectionRequest;
         public event EventHandler ApplyRequest;
         public event EventHandler ToggleSongRequest;
-        public event EventHandler CloseRequest;
 
         public CoverSearchView()
         {
@@ -27,11 +26,9 @@ namespace CoverMyOST.GUI.Dialogs
             _albumTextBox.GotFocus += AlbumTextBoxOnGotFocus;
 
             _listView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
-
-            Closing += OnClosing;
         }
 
-        public void OnInitialize(object sender, Ui.InitializeEventArgs e)
+        public void Initialize(MusicFile currentFile, int fileIndex, int filesCount)
         {
             _listView.Items.Clear();
             _listView.Groups.Clear();
@@ -46,11 +43,11 @@ namespace CoverMyOST.GUI.Dialogs
 
             _coverNameLabel.Text = @"*Actual cover*";
 
-            _countLabel.Text = (e.FileIndex + 1) + @"/" + e.FilesCount;
-            _fileTextBox.Text = Path.GetFileName(e.CurrentFile.Path);
-            _albumTextBox.Text = e.CurrentFile.Album;
+            _countLabel.Text = (fileIndex + 1) + @"/" + filesCount;
+            _fileTextBox.Text = Path.GetFileName(currentFile.Path);
+            _albumTextBox.Text = currentFile.Album;
 
-            _coverPreview.Image = e.CurrentFile.Cover;
+            _coverPreview.Image = currentFile.Cover;
 
             Enabled(true);
             ActiveControl = _albumTextBox;
@@ -60,33 +57,24 @@ namespace CoverMyOST.GUI.Dialogs
             _listView.Items[1].Selected = true;
         }
 
-        public void OnToggleSong(object sender, Ui.ToggleSongEventArgs e)
+        public void UpdatePlayMusicButton(bool isPlaying)
         {
-            _playButton.Text = e.ToggleSong ? @"Stop" : @"Play";
+            _playButton.Text = isPlaying ? @"Stop" : @"Play";
         }
 
-        public void OnSearchCancel(object sender, EventArgs e)
+        public void ChangeAlbumName(string albumName)
         {
-            Enabled(false);
-            _statusLabel.Text = @"Waiting end of search...";
+            _albumTextBox.Text = albumName;
         }
 
-        public void OnResetAlbum(object sender, Ui.ResetAlbumEventArgs e)
+        public void ChangeCover(Bitmap cover)
         {
-            _albumTextBox.Text = e.DefaultAlbumName;
+            _coverPreview.Image = cover;
         }
 
-        public void OnCoverChange(object sender, Ui.CoverChangeEventArgs e)
+        public void SearchProgress(CoverSearchProgress searchProgress, int progressPercentage)
         {
-            _coverPreview.Image = e.Cover;
-            _coverNameLabel.Text = e.Name;
-        }
-
-        public void OnSearchProgress(object sender, ProgressChangedEventArgs e)
-        {
-            var searchProgress = ((CoverSearchProgress)e.UserState);
-
-            _searchProgressBar.Value = e.ProgressPercentage;
+            _searchProgressBar.Value = progressPercentage;
             _statusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
 
             var firstCached = false;
@@ -111,26 +99,27 @@ namespace CoverMyOST.GUI.Dialogs
             _listView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        public void OnSearchError(object sender, Ui.SearchErrorEventArgs e)
+        public void SearchCancel()
         {
-            _searchProgressBar.Value = 0;
-            _statusLabel.Text = e.ErrorMessage;
+            Enabled(false);
+            _statusLabel.Text = @"Waiting end of search...";
         }
 
-        public void OnSearchComplete(object sender, EventArgs e)
+        public void SearchError(string errorMessage)
+        {
+            _searchProgressBar.Value = 0;
+            _statusLabel.Text = errorMessage;
+        }
+
+        public void SearchComplete()
         {
             _searchProgressBar.Value = 100;
             _statusLabel.Text = @"Search completed.";
         }
 
-        public void OnSearchEnd(object sender, Ui.SearchEndEventArgs e)
+        public void SearchEnd(bool enableForm)
         {
-            Enabled(e.EnableForm);
-        }
-
-        public void OnClose(object sender, EventArgs e)
-        {
-            Close();
+            Enabled(enableForm);
         }
 
         private void ApplyButtonOnClick(object sender, EventArgs e)
@@ -148,7 +137,7 @@ namespace CoverMyOST.GUI.Dialogs
         private void AlbumTextBoxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             if (keyEventArgs.KeyCode == Keys.Enter && EditAlbumRequest != null)
-                EditAlbumRequest.Invoke(this, new Ui.EditAlbumRequestEventArgs { AlbumName = _albumTextBox.Text });
+                EditAlbumRequest.Invoke(this, new EditAlbumRequestEventArgs {AlbumName = _albumTextBox.Text});
         }
 
         private void AlbumTextBoxOnLeave(object sender, EventArgs e)
@@ -165,22 +154,30 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (CoverSelectionRequest == null)
-                return;
+            var args = new CoverSelectionEventArgs();
 
-            var args = new Ui.CoverSelectionEventArgs
+            switch (e.ItemIndex)
             {
-                Index = e.ItemIndex,
-                Group = _listView.Items[e.ItemIndex].Group.Name
-            };
+                case 0:
+                    args.Action = CoverSelectionAction.Remove;
+                    args.SelectionIndex = -1;
+                    _coverNameLabel.Text = @"*No cover*";
+                    break;
+                case 1:
+                    args.Action = CoverSelectionAction.Reset;
+                    args.SelectionIndex = -1;
+                    _coverNameLabel.Text = @"*Actual cover*";
+                    break;
+                default:
+                    args.Action = CoverSelectionAction.Change;
+                    args.SelectionIndex = e.ItemIndex - 2;
+                    ListViewItem item = _listView.Items[e.ItemIndex];
+                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group.Name, item.Name);
+                    break;
+            }
 
-            CoverSelectionRequest.Invoke(this, args);
-        }
-
-        private void OnClosing(object sender, CancelEventArgs e)
-        {
-            if (CloseRequest != null)
-                CloseRequest(sender, e);
+            if (CoverSelectionRequest != null)
+                CoverSelectionRequest.Invoke(this, args);
         }
 
         private void Enabled(bool state)
@@ -189,6 +186,24 @@ namespace CoverMyOST.GUI.Dialogs
             _albumTextBox.Enabled = state;
             _applyButton.Enabled = state;
             _playButton.Enabled = state;
+        }
+
+        public enum CoverSelectionAction
+        {
+            Remove,
+            Reset,
+            Change
+        }
+
+        public class EditAlbumRequestEventArgs : EventArgs
+        {
+            public string AlbumName { get; set; }
+        }
+
+        public class CoverSelectionEventArgs : EventArgs
+        {
+            public CoverSelectionAction Action { get; set; }
+            public int SelectionIndex { get; set; }
         }
     }
 }

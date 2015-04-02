@@ -1,30 +1,34 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
-using Ui = CoverMyOST.GUI.Dialogs.CoverSearchUi;
 
 namespace CoverMyOST.GUI.Dialogs
 {
-    public class CoverSearchModel : CoverSearchUi.IModel
+    public class CoverSearchModel
     {
         private readonly BackgroundWorker _backgroundWorker;
         private readonly CoverMyOSTClient _client;
-        private MusicFile _currentFile;
-        private int _fileIndex;
-        private bool _isPlayingSong;
-        private int _lastSelection;
+        private int _indexSelected;
         private CoverSearchResult _searchResult;
-        private CoverSearchStep _step;
-        public event EventHandler<Ui.InitializeEventArgs> Initialize;
-        public event EventHandler<Ui.ResetAlbumEventArgs> ResetAlbum;
-        public event EventHandler<Ui.CoverChangeEventArgs> CoverChange;
+        public CoverSearchStep Step { get; private set; }
+        public MusicFile CurrentFile { get; private set; }
+        public int FileIndex { get; private set; }
+        public Bitmap CoverSelected { get; private set; }
+        public bool IsPlayingSong { get; private set; }
+
+        public int FilesCount
+        {
+            get { return _client.AllSelectedFiles.Count; }
+        }
+
+        public event EventHandler Initialize;
         public event EventHandler<ProgressChangedEventArgs> SearchProgress;
         public event EventHandler SearchCancel;
-        public event EventHandler<Ui.SearchErrorEventArgs> SearchError;
+        public event EventHandler<SearchErrorEventArgs> SearchError;
         public event EventHandler SearchComplete;
-        public event EventHandler<Ui.SearchEndEventArgs> SearchEnd;
-        public event EventHandler<Ui.ToggleSongEventArgs> ToggleSong;
-        public event EventHandler Close;
+        public event EventHandler SearchEnd;
+        public event EventHandler ProcessEnd;
 
         public CoverSearchModel(CoverMyOSTClient client)
         {
@@ -39,46 +43,36 @@ namespace CoverMyOST.GUI.Dialogs
 
         public void Reset()
         {
-            _step = CoverSearchStep.Init;
+            Step = CoverSearchStep.Init;
 
             _searchResult = new CoverSearchResult();
-            _currentFile = _client.AllSelectedFiles.ElementAt(_fileIndex).Value;
+            CurrentFile = _client.AllSelectedFiles.ElementAt(FileIndex).Value;
 
             _backgroundWorker.RunWorkerAsync();
 
-            _step = CoverSearchStep.Search;
-            _lastSelection = 1;
+            Step = CoverSearchStep.Search;
+            CoverSelected = CurrentFile.Cover;
 
-            if (_isPlayingSong)
-                _client.PlayMusic(_currentFile.Path);
-
-            var args = new Ui.InitializeEventArgs
-            {
-                FileIndex = _fileIndex,
-                FilesCount = _client.AllSelectedFiles.Count,
-                CurrentFile = _currentFile
-            };
+            if (IsPlayingSong)
+                _client.PlayMusic(CurrentFile.Path);
 
             if (Initialize != null)
-                Initialize.Invoke(this, args);
+                Initialize.Invoke(this, EventArgs.Empty);
         }
 
-        public void OnToggleSongRequest(object sender, EventArgs e)
+        public void ToggleSong()
         {
-            _isPlayingSong = !_isPlayingSong;
+            IsPlayingSong = !IsPlayingSong;
 
-            if (_isPlayingSong)
-                _client.PlayMusic(_currentFile.Path);
+            if (IsPlayingSong)
+                _client.PlayMusic(CurrentFile.Path);
             else
                 _client.StopMusic();
-
-            if (ToggleSong != null)
-                ToggleSong.Invoke(this, new Ui.ToggleSongEventArgs { ToggleSong = _isPlayingSong });
         }
 
-        public void OnApplyRequest(object sender, EventArgs e)
+        public void Apply()
         {
-            switch (_step)
+            switch (Step)
             {
                 case CoverSearchStep.Search:
                     CancelSearch();
@@ -93,13 +87,13 @@ namespace CoverMyOST.GUI.Dialogs
             }
         }
 
-        public void OnEditAlbumRequest(object sender, Ui.EditAlbumRequestEventArgs e)
+        public void EditAlbum(string albumName)
         {
-            if (_currentFile.Album != e.AlbumName)
+            if (CurrentFile.Album != albumName)
             {
-                _currentFile.Album = e.AlbumName;
+                CurrentFile.Album = albumName;
 
-                switch (_step)
+                switch (Step)
                 {
                     case CoverSearchStep.Search:
                         CancelSearch();
@@ -111,13 +105,7 @@ namespace CoverMyOST.GUI.Dialogs
             }
         }
 
-        public void OnResetAlbumRequest(object sender, EventArgs e)
-        {
-            if (ResetAlbum != null)
-                ResetAlbum.Invoke(this, new Ui.ResetAlbumEventArgs { DefaultAlbumName = _currentFile.Album });
-        }
-
-        public void OnCloseRequest(object sender, EventArgs e)
+        public void Close()
         {
             CancelSearch();
             _client.StopMusic();
@@ -125,39 +113,37 @@ namespace CoverMyOST.GUI.Dialogs
             // BUG : Client continue to search if dialog close.
         }
 
-        public void OnCoverSelectionRequest(object sender, Ui.CoverSelectionEventArgs e)
+        public void ChangeCoverSelected(int index)
         {
-            if (_step == CoverSearchStep.Init)
+            if (Step == CoverSearchStep.Init)
                 return;
 
-            var args = new Ui.CoverChangeEventArgs();
+            CoverSelected = _searchResult.ElementAt(index).Cover;
+            _indexSelected = index;
+        }
 
-            switch (e.Index)
-            {
-                case 0:
-                    args.Cover = null;
-                    args.Name = @"*No cover*";
-                    break;
-                case 1:
-                    args.Cover = _currentFile.Cover;
-                    args.Name = @"*Actual cover*";
-                    break;
-                default:
-                    args.Cover = _searchResult.ElementAt(e.Index - 2).Cover;
-                    args.Name = string.Format("[{0}] {1}", e.Group, _searchResult.ElementAt(e.Index - 2).Name);
-                    break;
-            }
+        public void ResetCoverSelected()
+        {
+            if (Step == CoverSearchStep.Init)
+                return;
 
-            _lastSelection = e.Index;
+            CoverSelected = CurrentFile.Cover;
+            _indexSelected = -1;
+        }
 
-            if (CoverChange != null)
-                CoverChange.Invoke(this, args);
+        public void RemoveCoverSelected()
+        {
+            if (Step == CoverSearchStep.Init)
+                return;
+
+            CoverSelected = null;
+            _indexSelected = -1;
         }
 
         private void CancelSearch()
         {
             _backgroundWorker.CancelAsync();
-            _step = CoverSearchStep.Cancel;
+            Step = CoverSearchStep.Cancel;
 
             if (SearchCancel != null)
                 SearchCancel.Invoke(this, EventArgs.Empty);
@@ -165,24 +151,22 @@ namespace CoverMyOST.GUI.Dialogs
 
         private void ApplyCover()
         {
-            if (_lastSelection == 0)
-                _currentFile.Cover = null;
-            else if (_lastSelection != 1)
+            CurrentFile.Cover = CoverSelected;
+            if (_indexSelected != -1)
             {
-                CoverEntry entry = _searchResult.ElementAt(_lastSelection - 2);
-                _currentFile.Cover = entry.Cover;
-                entry.AddToGalleryCache(_currentFile.Album);
+                CoverEntry entry = _searchResult.ElementAt(_indexSelected);
+                entry.AddToGalleryCache(CurrentFile.Album);
             }
         }
 
         private bool NextImage()
         {
-            _fileIndex++;
-            if (_fileIndex < _client.AllSelectedFiles.Count)
+            FileIndex++;
+            if (FileIndex < _client.AllSelectedFiles.Count)
                 return true;
 
-            if (Close != null)
-                Close.Invoke(this, EventArgs.Empty);
+            if (ProcessEnd != null)
+                ProcessEnd.Invoke(this, EventArgs.Empty);
 
             return false;
         }
@@ -229,7 +213,7 @@ namespace CoverMyOST.GUI.Dialogs
                     progress.SearchResult = new CoverSearchResult();
                     worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
 
-                    CoverEntry entry = (gallery as OnlineGallery).SearchCached(_currentFile.Album);
+                    CoverEntry entry = (gallery as OnlineGallery).SearchCached(CurrentFile.Album);
                     progress.SearchResult = entry != null ? new CoverSearchResult(entry) : new CoverSearchResult();
 
                     i++;
@@ -258,8 +242,8 @@ namespace CoverMyOST.GUI.Dialogs
                     worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
 
                     progress.SearchResult = gallery is OnlineGallery
-                        ? (gallery as OnlineGallery).SearchOnline(_currentFile.Album)
-                        : gallery.Search(_currentFile.Album);
+                        ? (gallery as OnlineGallery).SearchOnline(CurrentFile.Album)
+                        : gallery.Search(CurrentFile.Album);
                     worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
 
                     i++;
@@ -302,18 +286,18 @@ namespace CoverMyOST.GUI.Dialogs
                     : e.Error.Message;
 
                 if (SearchError != null)
-                    SearchError.Invoke(this, new Ui.SearchErrorEventArgs { ErrorMessage = errorMessage });
+                    SearchError.Invoke(this, new SearchErrorEventArgs {ErrorMessage = errorMessage});
             }
             else if (SearchComplete != null)
                 SearchComplete.Invoke(this, EventArgs.Empty);
 
             if (SearchEnd != null)
-                SearchEnd.Invoke(this, new Ui.SearchEndEventArgs{ EnableForm = _step != CoverSearchStep.Cancel });
+                SearchEnd.Invoke(this, EventArgs.Empty);
 
-            if (_step == CoverSearchStep.Cancel && _fileIndex < _client.AllSelectedFiles.Count)
+            if (Step == CoverSearchStep.Cancel && FileIndex < _client.AllSelectedFiles.Count)
                 Reset();
 
-            _step = CoverSearchStep.Wait;
+            Step = CoverSearchStep.Wait;
         }
     }
 
@@ -330,5 +314,10 @@ namespace CoverMyOST.GUI.Dialogs
         public CoverSearchResult SearchResult { get; set; }
         public string GalleryName { get; set; }
         public bool Cached { get; set; }
+    }
+
+    public class SearchErrorEventArgs : EventArgs
+    {
+        public string ErrorMessage { get; set; }
     }
 }
