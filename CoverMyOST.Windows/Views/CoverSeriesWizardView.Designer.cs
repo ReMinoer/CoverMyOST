@@ -1,6 +1,6 @@
-﻿namespace CoverMyOST.GUI.Dialogs
+﻿namespace CoverMyOST.Windows.Views
 {
-    partial class CoverSearchView
+    partial class CoverSeriesWizardView
     {
         /// <summary>
         /// Required designer variable.
@@ -192,7 +192,7 @@
             this._coverNameLabel.TabIndex = 11;
             this._coverNameLabel.Text = "Cover name";
             // 
-            // CoverSearchView
+            // MusicFileCollectionWizardView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -208,7 +208,7 @@
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this._listView);
             this.MinimumSize = new System.Drawing.Size(554, 447);
-            this.Name = "CoverSearchView";
+            this.Name = "MusicFileCollectionWizardView";
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this._coverPreview)).EndInit();
             this.statusStrip1.ResumeLayout(false);

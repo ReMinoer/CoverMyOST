@@ -10,7 +10,6 @@ using Diese.Serialization;
 using TagLib;
 using File = System.IO.File;
 #if !MONO
-using System.Windows.Media;
 
 #else
 using System.Diagnostics;
@@ -62,12 +61,6 @@ namespace CoverMyOST
         static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientModel> Serializer =
             new SerializerXml<CoverMyOSTClient, CoverMyOSTClientModel>();
 
-#if !MONO
-        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
-#else
-        private Process _musicProcess;
-#endif
-
         public CoverMyOSTClient()
         {
             WorkingDirectory = "";
@@ -99,8 +92,6 @@ namespace CoverMyOST
 
         public void ChangeDirectory(string path)
         {
-            StopMusic();
-
             if (!Directory.Exists(path))
                 throw new ArgumentException("Directory specify does not exist.");
 
@@ -149,8 +140,6 @@ namespace CoverMyOST
 
         public void SaveAll()
         {
-            StopMusic();
-
             foreach (MusicFileEntry musicFile in _allFiles.Values)
                 try
                 {
@@ -235,27 +224,6 @@ namespace CoverMyOST
         public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile) where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
-        }
-
-        public void PlayMusic(string path)
-        {
-#if !MONO
-            _mediaPlayer.Open(new Uri(path));
-            _mediaPlayer.Play();
-#else
-            _musicProcess = Process.Start(path);
-#endif
-        }
-
-        public void StopMusic()
-        {
-#if !MONO
-            _mediaPlayer.Stop();
-            _mediaPlayer.Close();
-#else
-            if (_musicProcess != null && !_musicProcess.HasExited)
-                _musicProcess.Kill();
-#endif
         }
     }
 }

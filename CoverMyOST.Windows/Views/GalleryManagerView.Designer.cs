@@ -1,4 +1,4 @@
-﻿namespace CoverMyOST.GUI.Dialogs
+﻿namespace CoverMyOST.Windows.Views
 {
     partial class GalleryManagerView
     {

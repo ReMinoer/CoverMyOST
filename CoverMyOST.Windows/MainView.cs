@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using CoverMyOST.Annotations;
 
-namespace CoverMyOST.GUI
+namespace CoverMyOST.Windows
 {
     public partial class MainView : Form, IMainView
     {

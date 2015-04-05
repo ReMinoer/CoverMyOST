@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{702C304C-E9EC-4491-A8A6-639CFBBE8510}</ProjectGuid>
+    <ProjectGuid>{88C8B7EE-E259-436E-8227-A72285563DA7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoverMyOST.GUI</RootNamespace>
-    <AssemblyName>CoverMyOST.GUI</AssemblyName>
+    <RootNamespace>CoverMyOST.Windows</RootNamespace>
+    <AssemblyName>CoverMyOST.Windows</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,22 +40,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dialogs\CoverSearchModel.cs" />
-    <Compile Include="Dialogs\CoverSearchUi.cs" />
-    <Compile Include="Dialogs\CoverSearchView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\CoverSearchView.Designer.cs">
-      <DependentUpon>CoverSearchView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\GalleryManagerModel.cs" />
-    <Compile Include="Dialogs\GalleryManagerUi.cs" />
-    <Compile Include="Dialogs\GalleryManagerView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\GalleryManagerView.Designer.cs">
-      <DependentUpon>GalleryManagerView.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Dialogs\CoverSeriesWizardDialog.cs" />
+    <Compile Include="Dialogs\GalleryManagerDialog.cs" />
     <Compile Include="MainPresenter.cs" />
     <Compile Include="MainView.cs">
       <SubType>Form</SubType>
@@ -63,11 +49,22 @@
     <Compile Include="MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\DefaultMusicPlayerModel.cs" />
+    <Compile Include="Models\WindowsMediaPlayerModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Dialogs\CoverSearchView.resx">
-      <DependentUpon>CoverSearchView.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Views\CoverSeriesWizardView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CoverSeriesWizardView.Designer.cs">
+      <DependentUpon>CoverSeriesWizardView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GalleryManagerView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\GalleryManagerView.Designer.cs">
+      <DependentUpon>GalleryManagerView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
@@ -80,6 +77,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\CoverSeriesWizardView.resx">
+      <DependentUpon>CoverSeriesWizardView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -94,6 +94,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoverMyOST.Ui\CoverMyOST.Ui.csproj">
+      <Project>{57216B15-3EED-4FF8-A208-5915E27129AF}</Project>
+      <Name>CoverMyOST.Ui</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoverMyOST\CoverMyOST.csproj">
       <Project>{DBCFB4F4-3E66-459B-8EE0-394E2A5801C9}</Project>
       <Name>CoverMyOST</Name>

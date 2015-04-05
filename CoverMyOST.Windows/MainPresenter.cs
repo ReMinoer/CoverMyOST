@@ -4,9 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using CoverMyOST.GUI.Dialogs;
+using CoverMyOST.Ui;
+using CoverMyOST.Windows.Dialogs;
+using CoverMyOST.Windows.Models;
 
-namespace CoverMyOST.GUI
+namespace CoverMyOST.Windows
 {
     // TODO : Create the dialog for galleries options
     // TODO : Fix save conditions & signs of edition
@@ -15,6 +17,7 @@ namespace CoverMyOST.GUI
     {
         private readonly CoverMyOSTClient _client;
         private readonly IMainView _view;
+        private readonly IMusicPlayerModel _musicPlayer;
         private bool _isSaved = true;
 
         public MainPresenter(IMainView view)
@@ -40,6 +43,12 @@ namespace CoverMyOST.GUI
             _view.GridView.CellMouseUp += GridViewOnCellMouseUp;
 
             _view.ClosingProgram += ViewOnClosing;
+
+#if !MONO
+            _musicPlayer = new WindowsMediaPlayerModel();
+#else
+            _musicPlayer = new DefaultMusicPlayerModel();
+#endif
 
             RefreshGrid();
         }
@@ -81,7 +90,7 @@ namespace CoverMyOST.GUI
             switch (_view.GridView.Columns[eventArgs.ColumnIndex].Name)
             {
                 case "Song":
-                    _client.PlayMusic(path);
+                    _musicPlayer.Play(path);
                     _view.StatusStripLabel = @"Now playing : " + name;
                     break;
             }
@@ -120,7 +129,7 @@ namespace CoverMyOST.GUI
                 _view.StatusStripLabel = @"Load completed.";
 
                 _view.FilterComboBox.SelectedIndex = 0;
-                _client.StopMusic();
+                _musicPlayer.Stop();
                 _client.SaveConfiguration();
                 RefreshGrid();
             }
@@ -152,21 +161,21 @@ namespace CoverMyOST.GUI
 
         private void GalleryManagerButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var galleryManagerUi = new GalleryManagerUi(new GalleryManagerModel(), new GalleryManagerView());
-            ((GalleryManagerView)galleryManagerUi.View).ShowDialog();
+            var galleryManagerUi = new GalleryManagerDialog();
+            galleryManagerUi.View.ShowDialog();
         }
 
         private void StopButtonOnClick(object sender, EventArgs eventArgs)
         {
-            _client.StopMusic();
+            _musicPlayer.Stop();
             ShowCountsInStatusStrip();
         }
 
         private void CoversButtonOnClick(object sender, EventArgs eventArgs)
         {
-            _client.StopMusic();
+            _musicPlayer.Stop();
 
-            var coverSearchUi = new CoverSearchUi(_client);
+            var coverSearchUi = new CoverSeriesWizardDialog(_client);
             coverSearchUi.View.ShowDialog();
 
             RefreshGrid();

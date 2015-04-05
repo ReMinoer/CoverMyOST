@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CoverMyOST.GUI
+namespace CoverMyOST.Windows
 {
     static internal class Program
     {

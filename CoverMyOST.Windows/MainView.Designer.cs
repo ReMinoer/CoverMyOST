@@ -1,4 +1,4 @@
-﻿namespace CoverMyOST.GUI
+﻿namespace CoverMyOST.Windows
 {
     partial class MainView
     {
