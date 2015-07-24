@@ -13,7 +13,9 @@ namespace CoverMyOST.Windows
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainView());
+
+            var mainWindow = new MainWindow();
+            Application.Run(mainWindow.View);
         }
     }
 }

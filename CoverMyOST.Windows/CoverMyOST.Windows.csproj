@@ -42,13 +42,14 @@
   <ItemGroup>
     <Compile Include="Dialogs\CoverSeriesWizardDialog.cs" />
     <Compile Include="Dialogs\GalleryManagerDialog.cs" />
-    <Compile Include="MainPresenter.cs" />
+    <Compile Include="MainModel.cs" />
     <Compile Include="MainView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainWindow.cs" />
     <Compile Include="Models\DefaultMusicPlayerModel.cs" />
     <Compile Include="Models\WindowsMediaPlayerModel.cs" />
     <Compile Include="Program.cs" />

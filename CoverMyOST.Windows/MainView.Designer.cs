@@ -192,7 +192,7 @@
             this.gridView.Size = new System.Drawing.Size(717, 336);
             this.gridView.TabIndex = 3;
             // 
-            // Selected
+            // IsSelected
             // 
             this.Selected.FillWeight = 6.817649F;
             this.Selected.HeaderText = "";
