@@ -3,40 +3,37 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace CoverMyOST.Windows 
+namespace CoverMyOST.Windows.Views
 {
     public partial class MainView : Form
     {
+        private bool _isSaved = true;
         public event EventHandler<ChangeFolderRequestArgs> ChangeFolderRequest;
         public event EventHandler SaveAllRequest;
         public event EventHandler<ChangeFilterRequestArgs> ChangeFilterRequest;
         public event EventHandler ShowGalleryManagerRequest;
         public event EventHandler ShowCoverSeriesWizardRequest;
-
         public event EventHandler<SelectedFileChangedArgs> SelectedFilesChanged;
         public event EventHandler<AlbumNameChangedArgs> AlbumNameChanged;
-
-        public event EventHandler<PlayMusicArgs> PlayMusicRequest; 
+        public event EventHandler<PlayMusicArgs> PlayMusicRequest;
         public event EventHandler StopMusicRequest;
-
         public event EventHandler<CloseRequestArgs> CloseRequest;
-
-        private bool _isSaved = true;
 
         public MainView(IEnumerable<MusicFileEntry> musicFileEntries)
         {
             InitializeComponent();
+
+            stopButton.Enabled = false;
 
             foreach (string name in Enum.GetNames(typeof(MusicFileFilter)))
                 filterComboBox.Items.Add(Regex.Replace(name, "([a-z])([A-Z])", "$1 $2"));
 
             openButton.Click += OpenButtonOnClick;
             saveAllButton.Click += SaveAllButtonOnClick;
-            filterComboBox.Click += FilterComboBoxOnClick;
+            filterComboBox.SelectedIndexChanged += FilterComboBoxOnSelectedIndexChanged;
             galleryManagerButton.Click += GalleryManagerButtonOnClick;
             coversButton.Click += CoversButtonOnClick;
             stopButton.Click += StopButtonOnClick;
@@ -67,6 +64,13 @@ namespace CoverMyOST.Windows
                     musicFile.Album, "Play");
         }
 
+        public void HighlightAlbumChange(string filename)
+        {
+            foreach (DataGridViewRow row in gridView.Rows)
+                if ((string)row.Cells["File"].Value == filename)
+                    row.Cells["Album"].Style.ForeColor = Color.Red;
+        }
+
         public void CompleteFolderChange()
         {
             statusStripLabel.Text = @"Load completed.";
@@ -83,15 +87,9 @@ namespace CoverMyOST.Windows
             statusStripLabel.Text = @"Save completed.";
         }
 
-        public void HighlightAlbumChange(string filename)
-        {
-            foreach (DataGridViewRow row in gridView.Rows)
-                if ((string)row.Cells["File"].Value == filename)
-                    row.Cells["Album"].Style.ForeColor = Color.Red;
-        }
-
         public void CompleteMusicPlay(string filename)
         {
+            stopButton.Enabled = true;
             statusStripLabel.Text = @"Now playing : " + filename;
         }
 
@@ -122,7 +120,10 @@ namespace CoverMyOST.Windows
                 statusStripLabel.Text = @"Loading files...";
 
                 if (ChangeFolderRequest != null)
-                    ChangeFolderRequest.Invoke(this, new ChangeFolderRequestArgs { FolderPath = dialog.SelectedPath });
+                    ChangeFolderRequest.Invoke(this, new ChangeFolderRequestArgs
+                    {
+                        FolderPath = dialog.SelectedPath
+                    });
             }
         }
 
@@ -134,7 +135,7 @@ namespace CoverMyOST.Windows
                 SaveAllRequest.Invoke(this, EventArgs.Empty);
         }
 
-        private void FilterComboBoxOnClick(object sender, EventArgs eventArgs)
+        private void FilterComboBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             if (ChangeFilterRequest == null)
                 return;

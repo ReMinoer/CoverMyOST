@@ -1,4 +1,4 @@
-﻿namespace CoverMyOST.Windows
+﻿namespace CoverMyOST.Windows.Views
 {
     partial class MainView
     {

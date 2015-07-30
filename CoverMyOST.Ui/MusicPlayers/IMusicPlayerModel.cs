@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace CoverMyOST.Ui
+namespace CoverMyOST.Ui.MusicPlayers
 {
     public interface IMusicPlayerModel
     {
-        event EventHandler MusicEnded;
-
         bool IsPlaying { get; }
+        event EventHandler MusicEnded;
         void Play(string url);
         void Stop();
         void Toggle(string path);

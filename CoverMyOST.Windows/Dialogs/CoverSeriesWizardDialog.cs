@@ -1,4 +1,5 @@
 ﻿using CoverMyOST.Ui;
+using CoverMyOST.Ui.MusicPlayers;
 using CoverMyOST.Windows.Models;
 using CoverMyOST.Windows.Views;
 

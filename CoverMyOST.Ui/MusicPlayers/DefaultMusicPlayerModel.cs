@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using CoverMyOST.Ui;
 
-namespace CoverMyOST.Windows.Models
+namespace CoverMyOST.Ui.MusicPlayers
 {
     public class DefaultMusicPlayerModel : IMusicPlayerModel
     {
-        private Process _musicProcess;
         private string _lastPath;
-
+        private Process _musicProcess;
         public bool IsPlaying { get; private set; }
 
         public event EventHandler MusicEnded

@@ -7,7 +7,13 @@ namespace CoverMyOST.Galleries
 {
     public class LocalGallery : ICoversGallery
     {
-        private readonly string[] _imagePatterns = {"*.jpg", "*.png", "*.gif"};
+        private readonly string[] _imagePatterns =
+        {
+            "*.jpg",
+            "*.png",
+            "*.gif"
+        };
+
         public string Name { get; set; }
         public bool Enable { get; set; }
 

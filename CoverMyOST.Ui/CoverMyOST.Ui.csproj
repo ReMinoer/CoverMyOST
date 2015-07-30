@@ -38,8 +38,9 @@
     <Compile Include="CoverSearchModel.cs" />
     <Compile Include="CoverSeriesWizardModel.cs" />
     <Compile Include="CoverWizardModel.cs" />
+    <Compile Include="MusicPlayers\DefaultMusicPlayerModel.cs" />
     <Compile Include="GalleryManagerModel.cs" />
-    <Compile Include="IMusicPlayerModel.cs" />
+    <Compile Include="MusicPlayers\IMusicPlayerModel.cs" />
     <Compile Include="MusicFileEditorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

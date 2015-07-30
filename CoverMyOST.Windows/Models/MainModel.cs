@@ -1,13 +1,24 @@
-﻿namespace CoverMyOST.Windows
+﻿namespace CoverMyOST.Windows.Models
 {
     public class MainModel
     {
-        public CoverMyOSTClient Client { get; private set; }
         private bool _isSaved = true;
+        public CoverMyOSTClient Client { get; private set; }
 
-        public int FilesCount { get { return Client.AllFiles.Count; } }
-        public int SelectedFilesCount { get { return Client.AllSelectedFiles.Count; } }
-        public int DisplayedFilesCount { get { return Client.Files.Count; } }
+        public int FilesCount
+        {
+            get { return Client.AllFiles.Count; }
+        }
+
+        public int SelectedFilesCount
+        {
+            get { return Client.AllSelectedFiles.Count; }
+        }
+
+        public int DisplayedFilesCount
+        {
+            get { return Client.Files.Count; }
+        }
 
         public MainModel()
         {

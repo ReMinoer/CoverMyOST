@@ -9,6 +9,7 @@ using CoverMyOST.DataModels;
 using Diese.Serialization;
 using TagLib;
 using File = System.IO.File;
+
 #if !MONO
 
 #else
@@ -19,6 +20,13 @@ namespace CoverMyOST
 {
     public class CoverMyOSTClient
     {
+        static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientModel> Serializer =
+            new SerializerXml<CoverMyOSTClient, CoverMyOSTClientModel>();
+
+        private const string ConfigFileName = "CoverMyOST-config.xml";
+        private readonly Dictionary<string, MusicFileEntry> _allFiles;
+        private MusicFileFilter _filter;
+        private Dictionary<string, MusicFileEntry> _filteredFiles;
         public string WorkingDirectory { get; private set; }
         public GalleryCollection Galleries { get; private set; }
 
@@ -51,15 +59,6 @@ namespace CoverMyOST
                 _filter = value;
             }
         }
-
-        private readonly Dictionary<string, MusicFileEntry> _allFiles;
-        private MusicFileFilter _filter;
-        private Dictionary<string, MusicFileEntry> _filteredFiles;
-
-        private const string ConfigFileName = "CoverMyOST-config.xml";
-
-        static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientModel> Serializer =
-            new SerializerXml<CoverMyOSTClient, CoverMyOSTClientModel>();
 
         public CoverMyOSTClient()
         {
@@ -112,30 +111,6 @@ namespace CoverMyOST
 
             FilterFiles(MusicFileFilter.None);
             WorkingDirectory = path;
-        }
-
-        private void FilterFiles(MusicFileFilter filter)
-        {
-            switch (filter)
-            {
-                case MusicFileFilter.None:
-                    _filteredFiles = _allFiles;
-                    break;
-                case MusicFileFilter.AlbumSpecified:
-                    _filteredFiles = _allFiles.Where(e => !string.IsNullOrEmpty(e.Value.Album)).
-                        ToDictionary(e => e.Key, e => e.Value);
-                    break;
-                case MusicFileFilter.NoAlbum:
-                    _filteredFiles = _allFiles.Where(e => string.IsNullOrEmpty(e.Value.Album)).
-                        ToDictionary(e => e.Key, e => e.Value);
-                    break;
-                case MusicFileFilter.CoverSpecified:
-                    _filteredFiles = _allFiles.Where(e => e.Value.Cover != null).ToDictionary(e => e.Key, e => e.Value);
-                    break;
-                case MusicFileFilter.NoCover:
-                    _filteredFiles = _allFiles.Where(e => e.Value.Cover == null).ToDictionary(e => e.Key, e => e.Value);
-                    break;
-            }
         }
 
         public void SaveAll()
@@ -224,6 +199,30 @@ namespace CoverMyOST
         public CoverEntry SearchCoverCached<TOnlineGallery>(MusicFile musicFile) where TOnlineGallery : OnlineGallery
         {
             return Galleries.SearchCoverCached<TOnlineGallery>(musicFile.Path);
+        }
+
+        private void FilterFiles(MusicFileFilter filter)
+        {
+            switch (filter)
+            {
+                case MusicFileFilter.None:
+                    _filteredFiles = _allFiles;
+                    break;
+                case MusicFileFilter.AlbumSpecified:
+                    _filteredFiles = _allFiles.Where(e => !string.IsNullOrEmpty(e.Value.Album)).
+                        ToDictionary(e => e.Key, e => e.Value);
+                    break;
+                case MusicFileFilter.NoAlbum:
+                    _filteredFiles = _allFiles.Where(e => string.IsNullOrEmpty(e.Value.Album)).
+                        ToDictionary(e => e.Key, e => e.Value);
+                    break;
+                case MusicFileFilter.CoverSpecified:
+                    _filteredFiles = _allFiles.Where(e => e.Value.Cover != null).ToDictionary(e => e.Key, e => e.Value);
+                    break;
+                case MusicFileFilter.NoCover:
+                    _filteredFiles = _allFiles.Where(e => e.Value.Cover == null).ToDictionary(e => e.Key, e => e.Value);
+                    break;
+            }
         }
     }
 }

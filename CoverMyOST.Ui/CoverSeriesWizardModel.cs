@@ -10,7 +10,6 @@ namespace CoverMyOST.Ui
         private readonly CoverMyOSTClient _client;
         private readonly CoverWizardModel _wizardModel;
         private bool _currentIsCancel;
-
         public int FileIndex { get; private set; }
 
         public int FilesCount
@@ -18,46 +17,53 @@ namespace CoverMyOST.Ui
             get { return _client.AllSelectedFiles.Count; }
         }
 
-        public event EventHandler Initialize;
-        public event EventHandler ProcessEnd;
-
         public CoverSearchState State
         {
             get { return _wizardModel.State; }
         }
+
         public string FilePath
         {
             get { return _wizardModel.FilePath; }
         }
+
         public Bitmap SelectedCover
         {
             get { return _wizardModel.SelectedCover; }
         }
+
         public string EditedAlbum
         {
             get { return _wizardModel.EditedAlbum; }
         }
+
+        public event EventHandler Initialize;
+        public event EventHandler ProcessEnd;
 
         public event EventHandler<ProgressChangedEventArgs> SearchProgress
         {
             add { _wizardModel.SearchProgress += value; }
             remove { _wizardModel.SearchProgress -= value; }
         }
+
         public event EventHandler SearchCancel
         {
             add { _wizardModel.SearchCancel += value; }
             remove { _wizardModel.SearchCancel -= value; }
         }
+
         public event EventHandler<SearchErrorEventArgs> SearchError
         {
             add { _wizardModel.SearchError += value; }
             remove { _wizardModel.SearchError -= value; }
         }
+
         public event EventHandler SearchSuccess
         {
             add { _wizardModel.SearchSuccess += value; }
             remove { _wizardModel.SearchSuccess -= value; }
         }
+
         public event EventHandler SearchEnd
         {
             add { _wizardModel.SearchEnd += value; }

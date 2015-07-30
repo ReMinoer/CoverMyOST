@@ -9,9 +9,9 @@ namespace CoverMyOST
 {
     public class GalleryCollection : IEnumerable<ICoversGallery>
     {
+        public const string CacheRoot = "cache/";
         private readonly List<ICoversGallery> _list;
         private readonly List<LocalGallery> _local;
-        public const string CacheRoot = "cache/";
         public MyAnimeListGallery MyAnimeList { get; private set; }
 
         public IReadOnlyList<ICoversGallery> List
@@ -28,7 +28,10 @@ namespace CoverMyOST
         {
             MyAnimeList = new MyAnimeListGallery();
 
-            _list = new List<ICoversGallery> {MyAnimeList};
+            _list = new List<ICoversGallery>
+            {
+                MyAnimeList
+            };
             _local = new List<LocalGallery>();
 
             EnableAll();
@@ -57,7 +60,10 @@ namespace CoverMyOST
 
         public void AddLocal(string path)
         {
-            AddLocal(new LocalGallery(path) {Enable = true});
+            AddLocal(new LocalGallery(path)
+            {
+                Enable = true
+            });
         }
 
         public void ClearLocal()

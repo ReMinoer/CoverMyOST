@@ -42,15 +42,14 @@
   <ItemGroup>
     <Compile Include="Dialogs\CoverSeriesWizardDialog.cs" />
     <Compile Include="Dialogs\GalleryManagerDialog.cs" />
-    <Compile Include="MainModel.cs" />
-    <Compile Include="MainView.cs">
+    <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Views\MainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainView.Designer.cs">
+    <Compile Include="Views\MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.cs" />
-    <Compile Include="Models\DefaultMusicPlayerModel.cs" />
     <Compile Include="Models\WindowsMediaPlayerModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,7 +65,7 @@
     <Compile Include="Views\GalleryManagerView.Designer.cs">
       <DependentUpon>GalleryManagerView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainView.resx">
+    <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

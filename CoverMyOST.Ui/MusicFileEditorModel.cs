@@ -5,6 +5,8 @@ namespace CoverMyOST.Ui
     public class MusicFileEditorModel
     {
         private MusicFile _file;
+        public string EditedAlbum { get; set; }
+        public Bitmap SelectedCover { get; set; }
 
         public MusicFile File
         {
@@ -15,9 +17,6 @@ namespace CoverMyOST.Ui
                 ResetAll();
             }
         }
-
-        public string EditedAlbum { get; set; }
-        public Bitmap SelectedCover { get; set; }
 
         public MusicFileEditorModel(MusicFile file)
         {

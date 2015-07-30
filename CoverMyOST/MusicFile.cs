@@ -12,7 +12,15 @@ namespace CoverMyOST
     public class MusicFile
     {
         private readonly File _file;
-        private readonly string[] _musicExtensions = {".mp3", ".wma", ".flac", ".ogg"};
+
+        private readonly string[] _musicExtensions =
+        {
+            ".mp3",
+            ".wma",
+            ".flac",
+            ".ogg"
+        };
+
         public string Path { get; private set; }
 
         public Bitmap Cover
@@ -48,7 +56,10 @@ namespace CoverMyOST
                     Type = PictureType.FrontCover
                 };
 
-                _file.Tag.Pictures = new IPicture[] {albumCoverPictFrame};
+                _file.Tag.Pictures = new IPicture[]
+                {
+                    albumCoverPictFrame
+                };
             }
         }
 

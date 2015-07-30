@@ -7,59 +7,66 @@ namespace CoverMyOST.Ui
 {
     public class CoverWizardModel
     {
-        private MusicFileEditorModel _musicFileEditor;
         private readonly CoverSearchModel _coverSearch;
-
         private int _indexSelected;
+        private MusicFileEditorModel _musicFileEditor;
 
         public CoverSearchState State
         {
             get { return _coverSearch.State; }
         }
+
         public string FilePath
         {
             get { return _musicFileEditor.File.Path; }
         }
+
         public Bitmap SelectedCover
         {
             get { return _musicFileEditor.SelectedCover; }
         }
+
         public string EditedAlbum
         {
             get { return _musicFileEditor.EditedAlbum; }
         }
-        
+
         public event EventHandler SearchLaunch
         {
             add { _coverSearch.SearchLaunch += value; }
             remove { _coverSearch.SearchLaunch -= value; }
         }
+
         public event EventHandler<ProgressChangedEventArgs> SearchProgress
         {
             add { _coverSearch.SearchProgress += value; }
             remove { _coverSearch.SearchProgress -= value; }
         }
+
         public event EventHandler SearchCancel
         {
             add { _coverSearch.SearchCancel += value; }
             remove { _coverSearch.SearchCancel -= value; }
         }
+
         public event EventHandler<SearchErrorEventArgs> SearchError
         {
             add { _coverSearch.SearchError += value; }
             remove { _coverSearch.SearchError -= value; }
         }
+
         public event EventHandler SearchSuccess
         {
             add { _coverSearch.SearchSuccess += value; }
             remove { _coverSearch.SearchSuccess -= value; }
         }
+
         public event EventHandler SearchEnd
         {
             add { _coverSearch.SearchEnd += value; }
             remove { _coverSearch.SearchEnd -= value; }
         }
-        
+
         public CoverWizardModel(CoverMyOSTClient client)
         {
             _musicFileEditor = new MusicFileEditorModel(client.AllSelectedFiles.ElementAt(0).Value);

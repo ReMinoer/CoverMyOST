@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
-using CoverMyOST.Ui;
+using CoverMyOST.Ui.MusicPlayers;
 
 namespace CoverMyOST.Windows.Models
 {

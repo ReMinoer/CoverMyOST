@@ -3,7 +3,7 @@ using CoverMyOST.Windows.Views;
 
 namespace CoverMyOST.Windows.Dialogs
 {
-    class GalleryManagerDialog
+    internal class GalleryManagerDialog
     {
         public GalleryManagerModel Model { get; private set; }
         public GalleryManagerView View { get; private set; }

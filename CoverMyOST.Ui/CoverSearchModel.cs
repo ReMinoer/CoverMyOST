@@ -10,14 +10,13 @@ namespace CoverMyOST.Ui
     {
         private readonly BackgroundWorker _backgroundWorker;
         private readonly CoverMyOSTClient _client;
-        private CoverSearchResult _searchResult;
         private string _albumName;
-
+        private CoverSearchResult _searchResult;
         public CoverSearchState State { get; private set; }
 
         public IReadOnlyList<CoverEntry> SearchResults
         {
-            get { return new ReadOnlyCollection<CoverEntry>(_searchResult.ToList());}
+            get { return new ReadOnlyCollection<CoverEntry>(_searchResult.ToList()); }
         }
 
         public event EventHandler SearchLaunch;
@@ -31,7 +30,11 @@ namespace CoverMyOST.Ui
         {
             _client = client;
 
-            _backgroundWorker = new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
+            _backgroundWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
 
             _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;
             _backgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
@@ -75,7 +78,7 @@ namespace CoverMyOST.Ui
             if (worker == null)
                 return;
 
-            var galleryCount = 0;
+            int galleryCount = 0;
             foreach (ICoversGallery coversGallery in _client.Galleries)
             {
                 if (!coversGallery.Enable)
@@ -95,8 +98,8 @@ namespace CoverMyOST.Ui
 
             worker.ReportProgress(0, progress);
 
-            var countProgress = 0;
-            var i = 0;
+            int countProgress = 0;
+            int i = 0;
             foreach (ICoversGallery gallery in _client.Galleries)
             {
                 if (worker.CancellationPending)
@@ -167,7 +170,6 @@ namespace CoverMyOST.Ui
         private void BackgroundWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled)
-            {
                 if (e.Error != null)
                 {
                     var aggregateException = e.Error as AggregateException;
@@ -176,11 +178,13 @@ namespace CoverMyOST.Ui
                         : e.Error.Message;
 
                     if (SearchError != null)
-                        SearchError.Invoke(this, new SearchErrorEventArgs {ErrorMessage = errorMessage});
+                        SearchError.Invoke(this, new SearchErrorEventArgs
+                        {
+                            ErrorMessage = errorMessage
+                        });
                 }
                 else if (SearchSuccess != null)
                     SearchSuccess.Invoke(this, EventArgs.Empty);
-            }
 
             State = CoverSearchState.Wait;
 

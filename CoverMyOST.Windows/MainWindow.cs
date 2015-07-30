@@ -1,7 +1,8 @@
 ﻿using System.IO;
-using CoverMyOST.Ui;
+using CoverMyOST.Ui.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
 using CoverMyOST.Windows.Models;
+using CoverMyOST.Windows.Views;
 
 namespace CoverMyOST.Windows
 {
@@ -97,6 +98,7 @@ namespace CoverMyOST.Windows
 
             View.StopMusicRequest += (sender, args) =>
             {
+                View.DisableStopButton();
                 MusicPlayer.Stop();
                 View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
             };

@@ -77,7 +77,7 @@ namespace CoverMyOST.Windows.Views
             _searchProgressBar.Value = progressPercentage;
             _statusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
 
-            var firstCached = false;
+            bool firstCached = false;
             ListViewGroup group = null;
 
             if (!searchProgress.Cached)
@@ -137,7 +137,10 @@ namespace CoverMyOST.Windows.Views
         private void AlbumTextBoxOnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             if (keyEventArgs.KeyCode == Keys.Enter && EditAlbumRequest != null)
-                EditAlbumRequest.Invoke(this, new EditAlbumRequestEventArgs {AlbumName = _albumTextBox.Text});
+                EditAlbumRequest.Invoke(this, new EditAlbumRequestEventArgs
+                {
+                    AlbumName = _albumTextBox.Text
+                });
         }
 
         private void AlbumTextBoxOnLeave(object sender, EventArgs e)
