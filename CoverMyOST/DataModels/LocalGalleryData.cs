@@ -2,7 +2,7 @@ using CoverMyOST.Galleries;
 
 namespace CoverMyOST.DataModels
 {
-    public class LocalGalleryModel : ICoversGalleryModel<LocalGallery>
+    public class LocalGalleryData : ICoversGalleryModel<LocalGallery>
     {
         public string Name { get; set; }
         public bool Enable { get; set; }

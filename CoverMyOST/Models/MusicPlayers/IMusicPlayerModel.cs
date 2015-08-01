@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoverMyOST.Ui.MusicPlayers
+namespace CoverMyOST.Models.MusicPlayers
 {
     public interface IMusicPlayerModel
     {

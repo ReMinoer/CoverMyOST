@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CoverMyOST.Ui
+namespace CoverMyOST.Models
 {
     public class MusicFileEditorModel
     {

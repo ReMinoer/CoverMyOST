@@ -2,7 +2,7 @@
 
 namespace CoverMyOST.DataModels
 {
-    public class MyAnimeListGalleryModel : IOnlineGalleryModel<MyAnimeListGallery>
+    public class MyAnimeListGalleryData : IOnlineGalleryModel<MyAnimeListGallery>
     {
         public bool Enable { get; set; }
         public bool CacheEnable { get; set; }

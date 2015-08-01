@@ -37,6 +37,7 @@ namespace CoverMyOST.Galleries
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
                 using (var httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                {
                     using (Stream stream = httpWebReponse.GetResponseStream())
                     {
                         if (stream == null)
@@ -45,6 +46,7 @@ namespace CoverMyOST.Galleries
                         var image = new Bitmap(Image.FromStream(stream));
                         result.Add(new CoverEntry(entry.Title, image, this));
                     }
+                }
             }
 
             return result;

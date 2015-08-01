@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace CoverMyOST.Ui.MusicPlayers
+namespace CoverMyOST.Models.MusicPlayers
 {
     public class DefaultMusicPlayerModel : IMusicPlayerModel
     {

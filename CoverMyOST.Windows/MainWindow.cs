@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using CoverMyOST.Ui.MusicPlayers;
+using CoverMyOST.Models.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
 using CoverMyOST.Windows.Models;
 using CoverMyOST.Windows.Views;

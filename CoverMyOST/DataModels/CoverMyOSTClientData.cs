@@ -3,14 +3,14 @@ using Diese.Modelization;
 
 namespace CoverMyOST.DataModels
 {
-    public class CoverMyOSTClientModel : IDataModel<CoverMyOSTClient>
+    public class CoverMyOSTClientData : IDataModel<CoverMyOSTClient>
     {
         public string WorkingDirectory { get; set; }
-        public GalleryCollectionModel GalleriesCollection { get; set; }
+        public GalleryCollectionData GalleriesCollection { get; set; }
 
-        public CoverMyOSTClientModel()
+        public CoverMyOSTClientData()
         {
-            GalleriesCollection = new GalleryCollectionModel();
+            GalleriesCollection = new GalleryCollectionData();
         }
 
         public void From(CoverMyOSTClient obj)

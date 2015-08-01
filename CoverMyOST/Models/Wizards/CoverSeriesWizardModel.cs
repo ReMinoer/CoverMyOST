@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
-namespace CoverMyOST.Ui
+namespace CoverMyOST.Models.Wizards
 {
     public class CoverSeriesWizardModel
     {

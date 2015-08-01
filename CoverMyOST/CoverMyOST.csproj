@@ -50,7 +50,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataModels\MyAnimeListGalleryModel.cs" />
+    <Compile Include="DataModels\MyAnimeListGalleryData.cs" />
+    <Compile Include="Models\CoverSearchModel.cs" />
+    <Compile Include="Models\Wizards\CoverSeriesWizardModel.cs" />
+    <Compile Include="Models\Wizards\CoverWizardModel.cs" />
+    <Compile Include="Models\Managers\GalleryManagerModel.cs" />
+    <Compile Include="Models\MusicFileEditorModel.cs" />
+    <Compile Include="Models\MusicPlayers\DefaultMusicPlayerModel.cs" />
+    <Compile Include="Models\MusicPlayers\IMusicPlayerModel.cs" />
     <Compile Include="MusicFileEntry.cs" />
     <Compile Include="OnlineGallery.cs" />
     <Compile Include="CoverEntry.cs" />
@@ -63,11 +70,11 @@
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
     <Compile Include="MusicFileFilter.cs" />
-    <Compile Include="DataModels\CoverMyOSTClientModel.cs" />
-    <Compile Include="DataModels\GalleryCollectionModel.cs" />
-    <Compile Include="DataModels\ICoversGalleryModel.cs" />
-    <Compile Include="DataModels\LocalGalleryModel.cs" />
-    <Compile Include="DataModels\IOnlineGalleryModel.cs" />
+    <Compile Include="DataModels\CoverMyOSTClientData.cs" />
+    <Compile Include="DataModels\GalleryCollectionData.cs" />
+    <Compile Include="DataModels\ICoversGalleryData.cs" />
+    <Compile Include="DataModels\LocalGalleryData.cs" />
+    <Compile Include="DataModels\IOnlineGalleryData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

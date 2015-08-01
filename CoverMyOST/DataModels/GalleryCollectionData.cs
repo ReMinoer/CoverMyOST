@@ -4,15 +4,15 @@ using Diese.Modelization;
 
 namespace CoverMyOST.DataModels
 {
-    public class GalleryCollectionModel : IDataModel<GalleryCollection>
+    public class GalleryCollectionData : IDataModel<GalleryCollection>
     {
-        public List<LocalGalleryModel> LocalDataList { get; set; }
-        public MyAnimeListGalleryModel MyAnimeList { get; set; }
+        public List<LocalGalleryData> LocalDataList { get; set; }
+        public MyAnimeListGalleryData MyAnimeList { get; set; }
 
-        public GalleryCollectionModel()
+        public GalleryCollectionData()
         {
-            LocalDataList = new List<LocalGalleryModel>();
-            MyAnimeList = new MyAnimeListGalleryModel();
+            LocalDataList = new List<LocalGalleryData>();
+            MyAnimeList = new MyAnimeListGalleryData();
         }
 
         public void From(GalleryCollection obj)
@@ -20,7 +20,7 @@ namespace CoverMyOST.DataModels
             LocalDataList.Clear();
             foreach (LocalGallery local in obj.Local)
             {
-                var localData = new LocalGalleryModel();
+                var localData = new LocalGalleryData();
                 localData.From(local);
                 LocalDataList.Add(localData);
             }
@@ -31,7 +31,7 @@ namespace CoverMyOST.DataModels
         public void To(GalleryCollection obj)
         {
             obj.ClearLocal();
-            foreach (LocalGalleryModel localData in LocalDataList)
+            foreach (LocalGalleryData localData in LocalDataList)
                 obj.AddLocal(localData.Create());
 
             MyAnimeList.To(obj.MyAnimeList);

@@ -94,10 +94,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoverMyOST.Ui\CoverMyOST.Ui.csproj">
-      <Project>{57216B15-3EED-4FF8-A208-5915E27129AF}</Project>
-      <Name>CoverMyOST.Ui</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CoverMyOST\CoverMyOST.csproj">
       <Project>{DBCFB4F4-3E66-459B-8EE0-394E2A5801C9}</Project>
       <Name>CoverMyOST</Name>

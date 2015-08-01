@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using CoverMyOST.Ui;
+using CoverMyOST.Models;
 
 namespace CoverMyOST.Windows.Views
 {

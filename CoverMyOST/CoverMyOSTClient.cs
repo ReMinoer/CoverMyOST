@@ -20,8 +20,8 @@ namespace CoverMyOST
 {
     public class CoverMyOSTClient
     {
-        static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientModel> Serializer =
-            new SerializerXml<CoverMyOSTClient, CoverMyOSTClientModel>();
+        static private readonly ISerializer<CoverMyOSTClient, CoverMyOSTClientData> Serializer =
+            new SerializerXml<CoverMyOSTClient, CoverMyOSTClientData>();
 
         private const string ConfigFileName = "CoverMyOST-config.xml";
         private readonly Dictionary<string, MusicFileEntry> _allFiles;
