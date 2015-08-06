@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoverMyOST.Test", "CoverMyO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoverMyOST.Windows", "CoverMyOST.Windows\CoverMyOST.Windows.csproj", "{88C8B7EE-E259-436E-8227-A72285563DA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diese.Composition", "External\Diese\Diese.Composition\Diese.Composition.csproj", "{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,12 @@ Global
 		{88C8B7EE-E259-436E-8227-A72285563DA7}.Mono|Any CPU.Build.0 = Release|Any CPU
 		{88C8B7EE-E259-436E-8227-A72285563DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C8B7EE-E259-436E-8227-A72285563DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Mono|Any CPU.ActiveCfg = Release|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Mono|Any CPU.Build.0 = Release|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +86,7 @@ Global
 		{0781AD0F-EB0F-442E-9A1C-34C2AA9319FD} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 		{4AE2D764-4161-453D-8B2D-BD66607EC27A} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 		{D64AD78C-7BDA-4892-A8D7-27EC17F3115F} = {B5A5DE98-AC82-4EA2-8A07-195515451DA0}
+		{E8D6F663-89A6-497F-A02F-D0FC562D2D0E} = {97BAC9C2-3802-42CD-9926-0F4633D925C3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = CoverMyOST.GUI\CoverMyOST.GUI.csproj

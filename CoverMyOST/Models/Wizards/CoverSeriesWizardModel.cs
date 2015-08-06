@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Models.Wizards
 {

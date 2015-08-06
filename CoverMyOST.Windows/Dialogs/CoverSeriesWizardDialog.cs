@@ -1,5 +1,6 @@
 ﻿using CoverMyOST.Models;
 using CoverMyOST.Models.MusicPlayers;
+using CoverMyOST.Models.Search;
 using CoverMyOST.Models.Wizards;
 using CoverMyOST.Windows.Models;
 using CoverMyOST.Windows.Views;

@@ -51,11 +51,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\MyAnimeListGalleryData.cs" />
-    <Compile Include="Models\CoverSearchModel.cs" />
+    <Compile Include="Models\Files\Base\IMusicFilesContainer.cs" />
+    <Compile Include="Models\Files\Base\IMusicFilesContainerDecorator.cs" />
+    <Compile Include="Models\Files\Base\MusicFilesContainer.cs" />
+    <Compile Include="Models\Files\Base\MusicFilesContainerDecorator.cs" />
+    <Compile Include="Models\Files\MusicFilesFilter.cs" />
+    <Compile Include="Models\Files\MusicFilesLoader.cs" />
+    <Compile Include="Models\Options\ConfigurationModel.cs" />
+    <Compile Include="Models\Search\CoverSearchModel.cs" />
+    <Compile Include="Models\Files\MusicFilesSelector.cs" />
     <Compile Include="Models\Wizards\CoverSeriesWizardModel.cs" />
     <Compile Include="Models\Wizards\CoverWizardModel.cs" />
-    <Compile Include="Models\Managers\GalleryManagerModel.cs" />
-    <Compile Include="Models\MusicFileEditorModel.cs" />
+    <Compile Include="Models\Galleries\GalleryManagerModel.cs" />
+    <Compile Include="Models\Edition\MusicFileEditor.cs" />
     <Compile Include="Models\MusicPlayers\DefaultMusicPlayerModel.cs" />
     <Compile Include="Models\MusicPlayers\IMusicPlayerModel.cs" />
     <Compile Include="MusicFileEntry.cs" />
@@ -80,6 +88,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\External\Diese\Diese.Composition\Diese.Composition.csproj">
+      <Project>{e8d6f663-89a6-497f-a02f-d0fc562d2d0e}</Project>
+      <Name>Diese.Composition</Name>
+    </ProjectReference>
     <ProjectReference Include="..\External\Diese\Diese.Modelization\Diese.Modelization.csproj">
       <Project>{0781AD0F-EB0F-442E-9A1C-34C2AA9319FD}</Project>
       <Name>Diese.Modelization</Name>

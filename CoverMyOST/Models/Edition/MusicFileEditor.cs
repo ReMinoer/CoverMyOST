@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace CoverMyOST.Models
+namespace CoverMyOST.Models.Edition
 {
-    public class MusicFileEditorModel
+    public class MusicFileEditor
     {
         private MusicFile _file;
         public string EditedAlbum { get; set; }
@@ -18,7 +18,7 @@ namespace CoverMyOST.Models
             }
         }
 
-        public MusicFileEditorModel(MusicFile file)
+        public MusicFileEditor(MusicFile file)
         {
             _file = file;
             ResetAll();

@@ -1,4 +1,4 @@
-﻿using CoverMyOST.Models.Managers;
+﻿using CoverMyOST.Models.Galleries;
 using CoverMyOST.Windows.Views;
 
 namespace CoverMyOST.Windows.Dialogs

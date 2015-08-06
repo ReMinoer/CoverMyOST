@@ -1,4 +1,4 @@
-﻿namespace CoverMyOST.Models.Managers
+﻿namespace CoverMyOST.Models.Galleries
 {
     public class GalleryManagerModel
     {

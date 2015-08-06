@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using CoverMyOST.Models;
+using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Windows.Views
 {

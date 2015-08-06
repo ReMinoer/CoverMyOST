@@ -74,7 +74,7 @@ namespace CoverMyOST
             try
             {
                 if (File.Exists(ConfigFileName))
-                    Serializer.Initialization(this, ConfigFileName);
+                    Serializer.Load(this, ConfigFileName);
             }
             catch (Exception)
             {

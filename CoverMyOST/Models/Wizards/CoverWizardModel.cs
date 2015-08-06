@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using CoverMyOST.Models.Edition;
+using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Models.Wizards
 {
@@ -9,7 +11,7 @@ namespace CoverMyOST.Models.Wizards
     {
         private readonly CoverSearchModel _coverSearch;
         private int _indexSelected;
-        private MusicFileEditorModel _musicFileEditor;
+        private MusicFileEditor _musicFileEditor;
 
         public CoverSearchState State
         {
@@ -69,7 +71,7 @@ namespace CoverMyOST.Models.Wizards
 
         public CoverWizardModel(CoverMyOSTClient client)
         {
-            _musicFileEditor = new MusicFileEditorModel(client.AllSelectedFiles.ElementAt(0).Value);
+            _musicFileEditor = new MusicFileEditor(client.AllSelectedFiles.ElementAt(0).Value);
             _coverSearch = new CoverSearchModel(client);
         }
 
