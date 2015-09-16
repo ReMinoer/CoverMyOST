@@ -49,9 +49,6 @@
             // 
             // _listView
             // 
-            this._listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this._listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.imageColumn});
             this._listView.FullRowSelect = true;
@@ -65,7 +62,6 @@
             this._listView.Size = new System.Drawing.Size(299, 366);
             this._listView.TabIndex = 0;
             this._listView.UseCompatibleStateImageBehavior = false;
-            this._listView.View = System.Windows.Forms.View.Details;
             // 
             // imageColumn
             // 
@@ -192,10 +188,11 @@
             this._coverNameLabel.TabIndex = 11;
             this._coverNameLabel.Text = "Cover name";
             // 
-            // MusicFileCollectionWizardView
+            // CoverSeriesWizardView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(538, 409);
             this.Controls.Add(this._coverNameLabel);
             this.Controls.Add(this._playButton);
@@ -207,8 +204,11 @@
             this.Controls.Add(this._applyButton);
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this._listView);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(554, 447);
-            this.Name = "MusicFileCollectionWizardView";
+            this.Name = "CoverSeriesWizardView";
+            this.ShowInTaskbar = false;
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this._coverPreview)).EndInit();
             this.statusStrip1.ResumeLayout(false);

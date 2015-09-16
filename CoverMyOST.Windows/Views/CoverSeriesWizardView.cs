@@ -8,6 +8,7 @@ namespace CoverMyOST.Windows.Views
 {
     public partial class CoverSeriesWizardView : Form
     {
+        private readonly ImageList _imageList;
         public event EventHandler<EditAlbumRequestEventArgs> EditAlbumRequest;
         public event EventHandler ResetAlbumRequest;
         public event EventHandler<CoverSelectionEventArgs> CoverSelectionRequest;
@@ -17,6 +18,13 @@ namespace CoverMyOST.Windows.Views
         public CoverSeriesWizardView()
         {
             InitializeComponent();
+
+            _imageList = new ImageList
+            {
+                ImageSize = new Size(50, 70),
+                ColorDepth = ColorDepth.Depth24Bit
+            };
+            _listView.LargeImageList = _imageList;
 
             _playButton.Click += PlayButtonOnClick;
             _applyButton.Click += ApplyButtonOnClick;
@@ -42,6 +50,7 @@ namespace CoverMyOST.Windows.Views
             _listView.Items.Add(new ListViewItem("*Actual cover*", defaultGroup));
 
             _listView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
+            _imageList.Images.Clear();
 
             _coverNameLabel.Text = @"*Actual cover*";
 
@@ -91,9 +100,14 @@ namespace CoverMyOST.Windows.Views
                 if (searchStatus.Cached && _listView.Groups["Cached"].Items.Count == 0)
                     firstCached = true;
 
-                _listView.Items.Add(searchStatus.Cached
+                ListViewItem item = searchStatus.Cached
                     ? new ListViewItem(entry.GalleryName, _listView.Groups["Cached"])
-                    : new ListViewItem(entry.Name, group));
+                    : new ListViewItem(entry.Name, group);
+
+                _imageList.Images.Add(entry.Cover);
+                item.ImageIndex = _imageList.Images.Count - 1;
+
+                _listView.Items.Add(item);
             }
 
             if (firstCached)
