@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using CoverMyOST.Models.Edition;
+using CoverMyOST.Models.Galleries;
 using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Models.Wizards
@@ -10,8 +10,8 @@ namespace CoverMyOST.Models.Wizards
     public class CoverWizardModel
     {
         private readonly CoverSearchModel _coverSearch;
-        private int _indexSelected;
         private MusicFileEditor _musicFileEditor;
+        private int _indexSelected;
 
         public CoverSearchState State
         {
@@ -39,7 +39,7 @@ namespace CoverMyOST.Models.Wizards
             remove { _coverSearch.SearchLaunch -= value; }
         }
 
-        public event EventHandler<ProgressChangedEventArgs> SearchProgress
+        public event EventHandler<SearchProgressEventArgs> SearchProgress
         {
             add { _coverSearch.SearchProgress += value; }
             remove { _coverSearch.SearchProgress -= value; }
@@ -69,18 +69,18 @@ namespace CoverMyOST.Models.Wizards
             remove { _coverSearch.SearchEnd -= value; }
         }
 
-        public CoverWizardModel(CoverMyOSTClient client)
+        public CoverWizardModel(MusicFileEditor musicFileEditor, GalleryManager galleryManager)
         {
-            _musicFileEditor = new MusicFileEditor(client.AllSelectedFiles.ElementAt(0).Value);
-            _coverSearch = new CoverSearchModel(client);
+            _musicFileEditor = musicFileEditor;
+            _coverSearch = new CoverSearchModel(galleryManager);
         }
 
-        public void SetMusicFile(MusicFile musicFile)
+        public void SetMusicFile(MusicFileEditor musicFileEditor)
         {
             if (_coverSearch.State != CoverSearchState.Wait)
                 throw new InvalidOperationException("Can't set a MusicFile while another is processing or canceled.");
 
-            _musicFileEditor.File = musicFile;
+            _musicFileEditor = musicFileEditor;
             _coverSearch.LaunchSearch(_musicFileEditor.EditedAlbum);
         }
 

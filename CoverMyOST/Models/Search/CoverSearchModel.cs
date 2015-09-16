@@ -1,63 +1,181 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using CoverMyOST.Galleries.Base;
+using CoverMyOST.Models.Galleries;
 
 namespace CoverMyOST.Models.Search
 {
     public class CoverSearchModel
     {
-        private readonly BackgroundWorker _backgroundWorker;
-        private readonly CoverMyOSTClient _client;
-        private string _albumName;
+        private readonly GalleryManager _galleryManager;
+        private CancellationTokenSource _cancellationTokenSource;
         private CoverSearchResult _searchResult;
         public CoverSearchState State { get; private set; }
 
         public IReadOnlyList<CoverEntry> SearchResults
         {
-            get { return new ReadOnlyCollection<CoverEntry>(_searchResult.ToList()); }
+            get { return _searchResult.AsReadOnly(); }
         }
 
         public event EventHandler SearchLaunch;
-        public event EventHandler<ProgressChangedEventArgs> SearchProgress;
+        public event EventHandler<SearchProgressEventArgs> SearchProgress;
         public event EventHandler SearchCancel;
         public event EventHandler<SearchErrorEventArgs> SearchError;
         public event EventHandler SearchSuccess;
         public event EventHandler SearchEnd;
 
-        public CoverSearchModel(CoverMyOSTClient client)
+        public CoverSearchModel(GalleryManager galleryManager)
         {
-            _client = client;
-
-            _backgroundWorker = new BackgroundWorker
-            {
-                WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
-            };
-
-            _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;
-            _backgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
-            _backgroundWorker.RunWorkerCompleted += BackgroundWorkerOnRunWorkerCompleted;
+            _galleryManager = galleryManager;
         }
 
-        public void LaunchSearch(string albumName)
+        public async void LaunchSearch(string albumName)
         {
             if (State != CoverSearchState.Wait)
                 throw new InvalidOperationException("New search can't be launch while another is processing or canceled.");
 
-            _albumName = albumName;
             _searchResult = new CoverSearchResult();
 
             if (albumName == "")
                 return;
 
-            _backgroundWorker.RunWorkerAsync();
+            var progressHandler = new Progress<CoverSearchStatus>();
+            progressHandler.ProgressChanged += ProgressHandlerOnProgressChanged;
+
+            IProgress<CoverSearchStatus> progress = progressHandler;
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken ct = _cancellationTokenSource.Token;
+            
+            IEnumerable<CoversGallery> galleries = _galleryManager.GetAllComponentsInChildren<CoversGallery>().ToList();
+
+            var status = new CoverSearchStatus
+            {
+                Progress = 0,
+                SearchResult = new CoverSearchResult(),
+                GalleryName = galleries.ElementAt(0).Name,
+                Cached = true
+            };
 
             State = CoverSearchState.Search;
 
             if (SearchLaunch != null)
                 SearchLaunch.Invoke(this, EventArgs.Empty);
+
+            int galleryCount = 0;
+            foreach (ICoversGallery coversGallery in galleries)
+            {
+                if (!coversGallery.Enable)
+                    continue;
+
+                galleryCount++;
+                if (coversGallery is OnlineGallery && (coversGallery as OnlineGallery).UseCache)
+                    galleryCount++;
+            }
+
+            try
+            {
+                ct.ThrowIfCancellationRequested();
+
+                progress.Report(status);
+
+                double countProgress = 0;
+                int i = 0;
+                foreach (ICoversGallery gallery in galleries)
+                {
+                    if (gallery.Enable && gallery is OnlineGallery && (gallery as OnlineGallery).UseCache)
+                    {
+                        status.Progress = countProgress / galleryCount;
+                        status.GalleryName = galleries.ElementAt(i).Name + " (cache)";
+                        status.SearchResult = new CoverSearchResult();
+                        progress.Report(status);
+
+                        CoverEntry entry = (gallery as OnlineGallery).SearchCached(albumName);
+
+                        status.SearchResult = new CoverSearchResult();
+                        if (entry != null)
+                        {
+                            status.SearchResult.Add(entry);
+                            _searchResult.Add(entry);
+                        }
+
+                        i++;
+                        countProgress++;
+
+                        status.Progress = countProgress / galleryCount;
+                        progress.Report(status);
+                    }
+
+                    ct.ThrowIfCancellationRequested();
+                }
+
+                i = 0;
+                status.Cached = false;
+
+                foreach (ICoversGallery gallery in galleries)
+                {
+                    if (gallery.Enable)
+                    {
+                        status.Progress = countProgress / galleryCount;
+                        status.GalleryName = galleries.ElementAt(i).Name;
+                        status.SearchResult = new CoverSearchResult();
+                        progress.Report(status);
+
+                        status.SearchResult = gallery is OnlineGallery
+                            ? await (gallery as OnlineGallery).SearchOnlineAsync(albumName, _cancellationTokenSource.Token)
+                            : await gallery.SearchAsync(albumName, _cancellationTokenSource.Token);
+
+                        foreach (CoverEntry entry in status.SearchResult)
+                            _searchResult.Add(entry);
+
+                        i++;
+                        countProgress++;
+
+                        status.Progress = countProgress / galleryCount;
+                        progress.Report(status);
+                    }
+
+                    ct.ThrowIfCancellationRequested();
+                }
+
+                State = CoverSearchState.Wait;
+
+                if (SearchSuccess != null)
+                    SearchSuccess.Invoke(this, EventArgs.Empty);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                var args = new SearchErrorEventArgs
+                {
+                    ErrorMessage = e.Message
+                };
+
+                if (SearchError != null)
+                    SearchError.Invoke(this, args);
+            }
+            finally
+            {
+                State = CoverSearchState.Wait;
+
+                if (SearchEnd != null)
+                    SearchEnd.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void ProgressHandlerOnProgressChanged(object sender, CoverSearchStatus coverSearchStatus)
+        {
+            var args = new SearchProgressEventArgs
+            {
+                Status = coverSearchStatus
+            };
+
+            if (SearchProgress != null)
+                SearchProgress.Invoke(sender, args);
         }
 
         public void CancelSearch()
@@ -65,131 +183,12 @@ namespace CoverMyOST.Models.Search
             if (State != CoverSearchState.Search)
                 throw new InvalidOperationException("There is no search currently running.");
 
-            _backgroundWorker.CancelAsync();
             State = CoverSearchState.Cancel;
 
             if (SearchCancel != null)
                 SearchCancel.Invoke(this, EventArgs.Empty);
-        }
 
-        private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)
-        {
-            var worker = sender as BackgroundWorker;
-            if (worker == null)
-                return;
-
-            int galleryCount = 0;
-            foreach (ICoversGallery coversGallery in _client.Galleries)
-            {
-                if (!coversGallery.Enable)
-                    continue;
-
-                galleryCount++;
-                if (coversGallery is OnlineGallery && (coversGallery as OnlineGallery).CacheEnable)
-                    galleryCount++;
-            }
-
-            var progress = new CoverSearchProgress
-            {
-                SearchResult = new CoverSearchResult(),
-                GalleryName = _client.Galleries.ElementAt(0).Name,
-                Cached = true
-            };
-
-            worker.ReportProgress(0, progress);
-
-            int countProgress = 0;
-            int i = 0;
-            foreach (ICoversGallery gallery in _client.Galleries)
-            {
-                if (worker.CancellationPending)
-                {
-                    e.Cancel = true;
-                    break;
-                }
-
-                if (gallery.Enable && gallery is OnlineGallery && (gallery as OnlineGallery).CacheEnable)
-                {
-                    progress.GalleryName = _client.Galleries.ElementAt(i).Name + " (cache)";
-                    progress.SearchResult = new CoverSearchResult();
-                    worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
-
-                    CoverEntry entry = (gallery as OnlineGallery).SearchCached(_albumName);
-                    progress.SearchResult = entry != null ? new CoverSearchResult(entry) : new CoverSearchResult();
-
-                    i++;
-                    countProgress++;
-                    worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
-                }
-            }
-
-            i = 0;
-            progress.Cached = false;
-
-            foreach (ICoversGallery gallery in _client.Galleries)
-            {
-                if (worker.CancellationPending)
-                {
-                    if (gallery is OnlineGallery)
-                        (gallery as OnlineGallery).CancelSearch();
-                    e.Cancel = true;
-                    break;
-                }
-
-                if (gallery.Enable)
-                {
-                    progress.GalleryName = _client.Galleries.ElementAt(i).Name;
-                    progress.SearchResult = new CoverSearchResult();
-                    worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
-
-                    progress.SearchResult = gallery is OnlineGallery
-                        ? (gallery as OnlineGallery).SearchOnline(_albumName)
-                        : gallery.Search(_albumName);
-                    worker.ReportProgress((int)(countProgress * (100.0 / galleryCount)), progress);
-
-                    i++;
-                    countProgress++;
-                }
-            }
-
-            if (worker.CancellationPending)
-                e.Cancel = true;
-        }
-
-        private void BackgroundWorkerOnProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            var searchProgress = ((CoverSearchProgress)e.UserState);
-
-            foreach (CoverEntry entry in searchProgress.SearchResult)
-                _searchResult.Add(entry);
-
-            if (SearchProgress != null)
-                SearchProgress.Invoke(this, e);
-        }
-
-        private void BackgroundWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (!e.Cancelled)
-                if (e.Error != null)
-                {
-                    var aggregateException = e.Error as AggregateException;
-                    string errorMessage = aggregateException != null
-                        ? aggregateException.InnerExceptions[0].Message
-                        : e.Error.Message;
-
-                    if (SearchError != null)
-                        SearchError.Invoke(this, new SearchErrorEventArgs
-                        {
-                            ErrorMessage = errorMessage
-                        });
-                }
-                else if (SearchSuccess != null)
-                    SearchSuccess.Invoke(this, EventArgs.Empty);
-
-            State = CoverSearchState.Wait;
-
-            if (SearchEnd != null)
-                SearchEnd.Invoke(this, EventArgs.Empty);
+            _cancellationTokenSource.Cancel();
         }
     }
 
@@ -200,11 +199,17 @@ namespace CoverMyOST.Models.Search
         Cancel
     }
 
-    public struct CoverSearchProgress
+    public struct CoverSearchStatus
     {
+        public double Progress { get; set; }
         public CoverSearchResult SearchResult { get; set; }
         public string GalleryName { get; set; }
         public bool Cached { get; set; }
+    }
+
+    public struct SearchProgressEventArgs
+    {
+        public CoverSearchStatus Status { get; set; }
     }
 
     public class SearchErrorEventArgs : EventArgs

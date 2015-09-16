@@ -1,68 +1,100 @@
-﻿namespace CoverMyOST.Windows.Models
+﻿using System.Collections.Generic;
+using System.IO;
+using CoverMyOST.Models.Configuration;
+using CoverMyOST.Models.Edition;
+using CoverMyOST.Models.Files;
+using CoverMyOST.Models.Galleries;
+
+namespace CoverMyOST.Windows.Models
 {
     public class MainModel
     {
-        private bool _isSaved = true;
-        public CoverMyOSTClient Client { get; private set; }
+        private readonly MusicFilesLoader _musicFilesLoader;
+        private readonly MusicFilesSelector _musicFilesSelector;
+        private readonly MusicFilesFilter _musicFilesFilter;
+        private readonly UserConfiguration _userConfiguration;
+        public GalleryManager GalleryManager { get; private set; }
+        public MusicFileCollectionEditor MusicFileCollectionEditor { get; private set; }
 
-        public int FilesCount
+        public IEnumerable<MusicFile> Files
         {
-            get { return Client.AllFiles.Count; }
+            get { return _musicFilesLoader.Files.Values; }
         }
 
-        public int SelectedFilesCount
+        public IEnumerable<MusicFile> SelectedFiles
         {
-            get { return Client.AllSelectedFiles.Count; }
+            get { return _musicFilesSelector.Files.Values; }
         }
 
-        public int DisplayedFilesCount
+        public IEnumerable<MusicFile> DisplayedFiles
         {
-            get { return Client.Files.Count; }
+            get { return _musicFilesFilter.Files.Values; }
+        }
+
+        public string WorkingDirectory
+        {
+            get { return _musicFilesLoader.WorkingDirectory; }
         }
 
         public MainModel()
         {
-            Client = new CoverMyOSTClient();
-            Client.LoadConfiguration();
+            _musicFilesLoader = new MusicFilesLoader();
+            _musicFilesSelector = new MusicFilesSelector(_musicFilesLoader);
+            _musicFilesFilter = new MusicFilesFilter(_musicFilesLoader);
+
+            GalleryManager = new GalleryManager();
+            MusicFileCollectionEditor = new MusicFileCollectionEditor();
+
+            _userConfiguration = new UserConfiguration(_musicFilesLoader, GalleryManager);
+
+            try
+            {
+                _userConfiguration.Load();
+            }
+            catch (FileNotFoundException)
+            {
+            }
+
+            _musicFilesSelector.SelectAll();
+            MusicFileCollectionEditor.Files = _musicFilesLoader.Files.Values;
         }
 
         public void ChangeFolder(string folderPath)
         {
-            Client.ChangeDirectory(folderPath);
-            Client.SaveConfiguration();
+            _musicFilesLoader.ChangeDirectory(folderPath);
+            MusicFileCollectionEditor.Files = _musicFilesLoader.Files.Values;
+            _userConfiguration.Save();
         }
 
         public void SaveAll()
         {
-            Client.SaveAll();
-
-            _isSaved = true;
+            MusicFileCollectionEditor.ApplyAll();
         }
 
         public void SaveConfiguration()
         {
-            Client.SaveConfiguration();
+            _userConfiguration.Save();
         }
 
         public void ChangeFilter(MusicFileFilter musicFileFilter)
         {
-            Client.Filter = musicFileFilter;
+            _musicFilesFilter.Filter = musicFileFilter;
         }
 
         public void ChangeFileSelection(string path, bool isSelected)
         {
-            Client.Files[path].Selected = isSelected;
+            if (isSelected)
+                _musicFilesSelector.Select(path);
+            else
+                _musicFilesSelector.Unselect(path);
         }
 
         public void ChangeFileAlbumName(string path, string albumName)
         {
-            if (Client.Files[path].Album != albumName)
-                Client.Files[path].Album = albumName;
-        }
+            MusicFileEditor editor = MusicFileCollectionEditor[path];
 
-        public void SetAsEdited()
-        {
-            _isSaved = false;
+            if (editor.EditedAlbum != albumName)
+                editor.EditedAlbum = albumName;
         }
     }
 }

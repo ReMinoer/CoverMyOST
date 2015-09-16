@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CoverMyOST.Galleries;
+using CoverMyOST.Models.Files;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
@@ -12,19 +13,18 @@ namespace CoverMyOST.Test
         {
             // Prerequisites
             string filePath = TestPaths.MusicC;
-            MusicFile temp = ClientTest.ResetFile(filePath);
-            temp.Album = "coverA";
-            temp.Save();
 
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Galleries.AddLocal(TestPaths.CoverDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
-            CoverSearchResult searchResult = client.SearchCover<LocalGallery>(filePath);
+            var localGallery = new LocalGallery("Test", TestPaths.CoverDirectory);
 
-            client.Files[filePath].Cover = searchResult.First().Cover;
-            client.Files[filePath].Save();
+            CoverSearchResult searchResult = localGallery.Search("coverA");
+
+            MusicFile musicFile = ClientTest.ResetFile(filePath);
+            musicFile.Cover = searchResult.First().Cover;
+            musicFile.Save();
 
             // Test
             MusicFile resultFile = ClientTest.LoadFile(filePath);

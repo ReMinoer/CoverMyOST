@@ -1,4 +1,6 @@
-﻿using CoverMyOST.Models;
+﻿using System.Collections.Generic;
+using CoverMyOST.Models.Edition;
+using CoverMyOST.Models.Galleries;
 using CoverMyOST.Models.MusicPlayers;
 using CoverMyOST.Models.Search;
 using CoverMyOST.Models.Wizards;
@@ -13,9 +15,9 @@ namespace CoverMyOST.Windows.Dialogs
         public IMusicPlayerModel MusicPlayer { get; private set; }
         public CoverSeriesWizardView View { get; private set; }
 
-        public CoverSeriesWizardDialog(CoverMyOSTClient coverMyOSTClient)
+        public CoverSeriesWizardDialog(MusicFileCollectionEditor musicFileEditors, GalleryManager galleryManager)
         {
-            Model = new CoverSeriesWizardModel(coverMyOSTClient);
+            Model = new CoverSeriesWizardModel(musicFileEditors, galleryManager);
             View = new CoverSeriesWizardView();
 
 #if !MONO
@@ -72,7 +74,7 @@ namespace CoverMyOST.Windows.Dialogs
 
             Model.SearchProgress += (sender, args) =>
             {
-                View.SearchProgress((CoverSearchProgress)args.UserState, args.ProgressPercentage);
+                View.SearchProgress(args.Status);
             };
 
             Model.SearchCancel += (sender, args) =>
@@ -92,7 +94,7 @@ namespace CoverMyOST.Windows.Dialogs
 
             Model.SearchEnd += (sender, args) =>
             {
-                View.SearchEnd(Model.State != CoverSearchState.Cancel);
+                View.SearchEnd(Model.State);
             };
 
             // Music player

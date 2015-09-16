@@ -1,21 +1,22 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using CoverMyOST.Models.Edition;
+using CoverMyOST.Models.Galleries;
 using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Models.Wizards
 {
     public class CoverSeriesWizardModel
     {
-        private readonly CoverMyOSTClient _client;
+        private readonly MusicFileCollectionEditor _musicFileEditors;
         private readonly CoverWizardModel _wizardModel;
         private bool _currentIsCancel;
         public int FileIndex { get; private set; }
 
         public int FilesCount
         {
-            get { return _client.AllSelectedFiles.Count; }
+            get { return _musicFileEditors.Count(); }
         }
 
         public CoverSearchState State
@@ -41,7 +42,7 @@ namespace CoverMyOST.Models.Wizards
         public event EventHandler Initialize;
         public event EventHandler ProcessEnd;
 
-        public event EventHandler<ProgressChangedEventArgs> SearchProgress
+        public event EventHandler<SearchProgressEventArgs> SearchProgress
         {
             add { _wizardModel.SearchProgress += value; }
             remove { _wizardModel.SearchProgress -= value; }
@@ -71,10 +72,10 @@ namespace CoverMyOST.Models.Wizards
             remove { _wizardModel.SearchEnd -= value; }
         }
 
-        public CoverSeriesWizardModel(CoverMyOSTClient client)
+        public CoverSeriesWizardModel(MusicFileCollectionEditor musicFileEditors, GalleryManager galleryManager)
         {
-            _client = client;
-            _wizardModel = new CoverWizardModel(client);
+            _musicFileEditors = musicFileEditors;
+            _wizardModel = new CoverWizardModel(musicFileEditors.ElementAt(0), galleryManager);
 
             _wizardModel.SearchLaunch += WizardModelOnSearchLaunch;
             _wizardModel.SearchCancel += WizardModelOnSearchCancel;
@@ -83,7 +84,7 @@ namespace CoverMyOST.Models.Wizards
 
         public void ResetSearch()
         {
-            _wizardModel.SetMusicFile(_client.AllSelectedFiles.ElementAt(FileIndex).Value);
+            _wizardModel.SetMusicFile(_musicFileEditors.ElementAt(FileIndex));
             _currentIsCancel = false;
 
             if (Initialize != null)
@@ -137,7 +138,7 @@ namespace CoverMyOST.Models.Wizards
         private bool NextFile()
         {
             FileIndex++;
-            if (FileIndex < _client.AllSelectedFiles.Count)
+            if (FileIndex < _musicFileEditors.Count())
                 return true;
 
             if (ProcessEnd != null)
@@ -159,7 +160,7 @@ namespace CoverMyOST.Models.Wizards
 
         private void WizardModelOnSearchEnd(object sender, EventArgs eventArgs)
         {
-            if (FileIndex >= _client.AllSelectedFiles.Count && ProcessEnd != null)
+            if (FileIndex >= _musicFileEditors.Count() && ProcessEnd != null)
             {
                 ProcessEnd.Invoke(this, EventArgs.Empty);
                 return;

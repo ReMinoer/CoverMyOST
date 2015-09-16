@@ -98,6 +98,10 @@
       <Project>{DBCFB4F4-3E66-459B-8EE0-394E2A5801C9}</Project>
       <Name>CoverMyOST</Name>
     </ProjectReference>
+    <ProjectReference Include="..\External\Diese\Diese.Composition\Diese.Composition.csproj">
+      <Project>{e8d6f663-89a6-497f-a02f-d0fc562d2d0e}</Project>
+      <Name>Diese.Composition</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

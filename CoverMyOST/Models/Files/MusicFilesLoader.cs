@@ -24,9 +24,9 @@ namespace CoverMyOST.Models.Files
             Refresh();
         }
 
-        public override void Refresh()
+        protected override void RefreshLocal()
         {
-            _files.Clear();
+            LocalFiles.Clear();
 
             foreach (string file in Directory.EnumerateFiles(WorkingDirectory))
             {
@@ -34,7 +34,7 @@ namespace CoverMyOST.Models.Files
                 try
                 {
                     var musicFile = new MusicFile(fullpath);
-                    _files.Add(fullpath, musicFile);
+                    LocalFiles.Add(fullpath, musicFile);
                 }
                 catch (UnsupportedFormatException)
                 {

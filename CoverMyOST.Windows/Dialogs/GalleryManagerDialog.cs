@@ -5,12 +5,12 @@ namespace CoverMyOST.Windows.Dialogs
 {
     internal class GalleryManagerDialog
     {
-        public GalleryManagerModel Model { get; private set; }
+        public GalleryManager Model { get; private set; }
         public GalleryManagerView View { get; private set; }
 
         public GalleryManagerDialog()
         {
-            Model = new GalleryManagerModel();
+            Model = new GalleryManager();
             View = new GalleryManagerView();
         }
     }

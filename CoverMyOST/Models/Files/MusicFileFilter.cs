@@ -1,4 +1,4 @@
-namespace CoverMyOST
+namespace CoverMyOST.Models.Files
 {
     public enum MusicFileFilter
     {

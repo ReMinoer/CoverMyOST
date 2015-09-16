@@ -1,29 +1,23 @@
 ﻿using CoverMyOST.Galleries;
+using Diese.Modelization;
 
 namespace CoverMyOST.DataModels
 {
-    public class MyAnimeListGalleryData : IOnlineGalleryModel<MyAnimeListGallery>
+    public class MyAnimeListGalleryData : IConfigurator<MyAnimeListGallery>
     {
         public bool Enable { get; set; }
-        public bool CacheEnable { get; set; }
+        public bool UseCache { get; set; }
 
         public void From(MyAnimeListGallery obj)
         {
             Enable = obj.Enable;
-            CacheEnable = obj.CacheEnable;
+            UseCache = obj.UseCache;
         }
 
-        public void To(MyAnimeListGallery obj)
+        public void Configure(MyAnimeListGallery obj)
         {
             obj.Enable = Enable;
-            obj.CacheEnable = CacheEnable;
-        }
-
-        public MyAnimeListGallery Create()
-        {
-            var obj = new MyAnimeListGallery();
-            To(obj);
-            return obj;
+            obj.UseCache = UseCache;
         }
     }
 }

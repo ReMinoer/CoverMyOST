@@ -1,27 +1,27 @@
 using CoverMyOST.Galleries;
+using Diese.Modelization;
 
 namespace CoverMyOST.DataModels
 {
-    public class LocalGalleryData : ICoversGalleryModel<LocalGallery>
+    public class LocalGalleryData : ICreator<LocalGallery>
     {
-        public string Name { get; set; }
         public bool Enable { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
 
         public void From(LocalGallery obj)
         {
-            Name = obj.Name;
             Enable = obj.Enable;
-        }
-
-        public void To(LocalGallery obj)
-        {
-            obj.Enable = Enable;
+            Name = obj.Name;
+            Path = obj.Path;
         }
 
         public LocalGallery Create()
         {
-            var obj = new LocalGallery(Name);
-            To(obj);
+            var obj = new LocalGallery(Name, Path)
+            {
+                Enable = Enable
+            };
             return obj;
         }
     }

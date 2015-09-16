@@ -69,7 +69,7 @@ namespace CoverMyOST
             set { _file.Tag.Album = value; }
         }
 
-        internal MusicFile(string path)
+        public MusicFile(string path)
         {
             string extension = System.IO.Path.GetExtension(path);
             if (extension == null || !_musicExtensions.Contains(extension.ToLower()))

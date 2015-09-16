@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using CoverMyOST.Models.Files;
 
 namespace CoverMyOST.Windows.Views
 {
@@ -22,7 +24,7 @@ namespace CoverMyOST.Windows.Views
         public event EventHandler StopMusicRequest;
         public event EventHandler<CloseRequestArgs> CloseRequest;
 
-        public MainView(IEnumerable<MusicFileEntry> musicFileEntries)
+        public MainView(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
         {
             InitializeComponent();
 
@@ -30,6 +32,10 @@ namespace CoverMyOST.Windows.Views
 
             foreach (string name in Enum.GetNames(typeof(MusicFileFilter)))
                 filterComboBox.Items.Add(Regex.Replace(name, "([a-z])([A-Z])", "$1 $2"));
+
+            ResetView(musicFiles, selectedFiles);
+
+            coversButton.Enabled = selectedFiles.Any();
 
             openButton.Click += OpenButtonOnClick;
             saveAllButton.Click += SaveAllButtonOnClick;
@@ -43,25 +49,26 @@ namespace CoverMyOST.Windows.Views
             gridView.CellMouseUp += GridViewOnCellMouseUp;
 
             Closing += OnClosing;
-
-            ResetView(musicFileEntries);
         }
 
-        public void ResetView(IEnumerable<MusicFileEntry> musicFileEntries)
+        public void ResetView(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
         {
             filterComboBox.SelectedIndex = 0;
-            RefreshGrid(musicFileEntries);
+            RefreshGrid(musicFiles, selectedFiles);
         }
 
-        public void RefreshGrid(IEnumerable<MusicFileEntry> musicFileEntries)
+        public void RefreshGrid(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
         {
             statusStripLabel.Text = @"Refresh...";
 
+            IEnumerable<MusicFile> selectedList = selectedFiles.ToList();
             gridView.Rows.Clear();
 
-            foreach (MusicFileEntry musicFile in musicFileEntries)
-                gridView.Rows.Add(musicFile.Selected, musicFile.Cover, Path.GetFileName(musicFile.Path),
+            foreach (MusicFile musicFile in musicFiles)
+            {
+                gridView.Rows.Add(selectedList.Contains(musicFile), musicFile.Cover, Path.GetFileName(musicFile.Path),
                     musicFile.Album, "Play");
+            }
         }
 
         public void HighlightAlbumChange(string filename)

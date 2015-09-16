@@ -1,5 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
+using CoverMyOST.Galleries.Base;
+using CoverMyOST.Models.Files;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
@@ -11,14 +14,14 @@ namespace CoverMyOST.Test
         public void ChangeDirectory()
         {
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             // Test
-            Assert.AreEqual(client.WorkingDirectory, TestPaths.MusicDirectory);
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicA));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+            Assert.AreEqual(loader.WorkingDirectory, TestPaths.MusicDirectory);
+            Assert.IsTrue(loader.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsTrue(loader.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(loader.Files.ContainsKey(TestPaths.MusicC));
         }
 
         [Test]
@@ -37,23 +40,26 @@ namespace CoverMyOST.Test
             temp2.Save();
 
             // Process 1
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
-            client.Filter = MusicFileFilter.NoAlbum;
+            var filter = new MusicFilesFilter(loader)
+            {
+                Filter = MusicFileFilter.NoAlbum
+            };
 
             // Test 1
-            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
-            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicB));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+            Assert.IsFalse(filter.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsFalse(filter.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(filter.Files.ContainsKey(TestPaths.MusicC));
 
             // Process 2
-            client.Filter = MusicFileFilter.NoCover;
+            filter.Filter = MusicFileFilter.NoCover;
 
             // Test 2
-            Assert.IsFalse(client.Files.ContainsKey(TestPaths.MusicA));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicB));
-            Assert.IsTrue(client.Files.ContainsKey(TestPaths.MusicC));
+            Assert.IsFalse(filter.Files.ContainsKey(TestPaths.MusicA));
+            Assert.IsTrue(filter.Files.ContainsKey(TestPaths.MusicB));
+            Assert.IsTrue(filter.Files.ContainsKey(TestPaths.MusicC));
         }
 
         [Test]
@@ -64,12 +70,12 @@ namespace CoverMyOST.Test
             ResetFile(filePath);
 
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             const string name = "Insert an album name here";
-            client.Files[filePath].Album = name;
-            client.Files[filePath].Save();
+            loader.Files[filePath].Album = name;
+            loader.Files[filePath].Save();
 
             // Test
             MusicFile result = LoadFile(filePath);
@@ -84,190 +90,73 @@ namespace CoverMyOST.Test
             ResetFile(filePath);
 
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
-            client.Files[filePath].Cover = cover;
-            client.Files[filePath].Save();
+            loader.Files[filePath].Cover = cover;
+            loader.Files[filePath].Save();
 
             // Test
             MusicFile result = LoadFile(filePath);
             Assert.AreEqual(result.Cover.Size, cover.Size);
         }
 
-        [Test]
-        public void SaveAll()
-        {
-            // Prerequisites
-            ResetFile(TestPaths.MusicA);
-            ResetFile(TestPaths.MusicB);
-            ResetFile(TestPaths.MusicC);
-
-            // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-
-            const string albumA = "AlbumA";
-            const string albumB = "AlbumB";
-            const string albumC = "AlbumC";
-            client.Files[TestPaths.MusicA].Album = albumA;
-            client.Files[TestPaths.MusicB].Album = albumB;
-            client.Files[TestPaths.MusicC].Album = albumC;
-
-            client.SaveAll();
-
-            // Test
-            MusicFile resultA = LoadFile(TestPaths.MusicA);
-            MusicFile resultB = LoadFile(TestPaths.MusicB);
-            MusicFile resultC = LoadFile(TestPaths.MusicC);
-            Assert.AreEqual(resultA.Album, albumA);
-            Assert.AreEqual(resultB.Album, albumB);
-            Assert.AreEqual(resultC.Album, albumC);
-        }
-
-        [Test]
-        public void SearchCover()
-        {
-            // Prerequisites
-            string filePath = TestPaths.MusicA;
-            MusicFile temp = ResetFile(filePath);
-            temp.Album = "Death";
-            temp.Save();
-
-            // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Galleries.EnableAll();
-
-            CoverSearchResult result = client.SearchCover(filePath);
-
-            // Test
-            Assert.IsTrue(result.Count > 0);
-        }
-
-        [Test]
-        public void SearchCoverWithFilterOnGalleries()
-        {
-            // Prerequisites
-            string filePath = TestPaths.MusicB;
-            MusicFile temp = ResetFile(filePath);
-            temp.Album = "cover";
-            temp.Save();
-
-            // Process 1
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Galleries.AddLocal(TestPaths.CoverDirectory);
-            client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
-
-            client.Galleries.DisableAll();
-            client.Galleries[TestPaths.CoverDirectory].Enable = true;
-
-            CoverSearchResult result = client.SearchCover(filePath);
-
-            // Test 1
-            Assert.IsTrue(result.Contains(TestPaths.CoverA));
-            Assert.IsFalse(result.Contains(TestPaths.CoverB));
-
-            // Process 2
-            client.Galleries.EnableAll();
-            result = client.SearchCover(filePath);
-
-            // Test 2
-            Assert.IsTrue(result.Contains(TestPaths.CoverA));
-            Assert.IsTrue(result.Contains(TestPaths.CoverB));
-        }
-
-        [Test]
-        public void UseConfigFile()
-        {
-            // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-            client.Filter = MusicFileFilter.NoCover;
-
-            client.Galleries.AddLocal(TestPaths.CoverDirectory);
-            client.Galleries.AddLocal(TestPaths.CoverDirectoryBis);
-
-            client.Galleries.MyAnimeList.Enable = false;
-            client.Galleries.MyAnimeList.CacheEnable = false;
-            client.Galleries.Local[0].Enable = false;
-
-            client.SaveConfiguration();
-
-            var newClient = new CoverMyOSTClient();
-            newClient.LoadConfiguration();
-
-            // Test
-            Assert.AreEqual(newClient.WorkingDirectory, TestPaths.MusicDirectory);
-            Assert.AreEqual(newClient.Filter, MusicFileFilter.NoCover);
-
-            Assert.AreEqual(newClient.Galleries.Local.Count, 2);
-            Assert.AreEqual(newClient.Galleries.Local[0].Name, TestPaths.CoverDirectory);
-            Assert.AreEqual(newClient.Galleries.Local[1].Name, TestPaths.CoverDirectoryBis);
-
-            Assert.IsFalse(newClient.Galleries.MyAnimeList.Enable);
-            Assert.IsFalse(newClient.Galleries.MyAnimeList.CacheEnable);
-            Assert.IsFalse(newClient.Galleries.Local[0].Enable);
-        }
-
-        static public void AssignCoverOnline<TOnlineGallery>(string filePath, string query)
-            where TOnlineGallery : OnlineGallery
+        static public void AssignCoverOnline(Func<IOnlineGallery> galleryFactory, string filePath, string query)
         {
             // Prerequisites
             MusicFile temp = ResetFile(filePath);
-            temp.Album = query;
-            temp.Save();
 
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
-            CoverSearchResult searchResult = client.SearchCoverOnline<TOnlineGallery>(filePath);
+            IOnlineGallery gallery = galleryFactory();
+            CoverSearchResult searchResult = gallery.SearchOnline(query);
 
-            client.Files[filePath].Cover = searchResult.First().Cover;
-            client.Files[filePath].Save();
+            MusicFile file = LoadFile(filePath);
+            file.Cover = searchResult.First().Cover;
+            file.Save();
 
             // Test
             MusicFile resultFile = LoadFile(filePath);
             Assert.AreEqual(searchResult.First().Cover.Size, resultFile.Cover.Size);
         }
 
-        static public void AssignCoverCached<TOnlineGallery>(string filePath, string query)
-            where TOnlineGallery : OnlineGallery
+        static public void AssignCoverCached(Func<IOnlineGallery> galleryFactory, string filePath, string query)
         {
             // Prerequisites
             MusicFile temp = ResetFile(filePath);
             temp.Album = query;
             temp.Save();
 
-            var tempClient = new CoverMyOSTClient();
-            tempClient.Galleries.ClearAllCache();
+            IOnlineGallery gallery = galleryFactory();
+            gallery.ClearCache();
 
-            CoverSearchResult tempCover = tempClient.Galleries.SearchCoverOnline<TOnlineGallery>(query);
+            CoverSearchResult tempCover = gallery.SearchOnline(query);
             tempCover.First().AddToGalleryCache(query);
 
             // Process
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
-
-            CoverEntry entry = client.SearchCoverCached<TOnlineGallery>(filePath);
-
-            client.Files[filePath].Cover = entry.Cover;
-            client.Files[filePath].Save();
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
+            
+            CoverEntry coverEntry = gallery.SearchCached(query);
+            
+            MusicFile file = LoadFile(filePath);
+            file.Cover = coverEntry.Cover;
+            file.Save();
 
             // Test
             MusicFile resultFile = LoadFile(filePath);
-            Assert.AreEqual(entry.Cover.Size, resultFile.Cover.Size);
+            Assert.AreEqual(coverEntry.Cover.Size, resultFile.Cover.Size);
         }
 
         static public MusicFile LoadFile(string path)
         {
-            var client = new CoverMyOSTClient();
-            client.ChangeDirectory(TestPaths.MusicDirectory);
+            var loader = new MusicFilesLoader();
+            loader.ChangeDirectory(TestPaths.MusicDirectory);
 
-            return client.Files[path];
+            return loader.Files[path];
         }
 
         static public MusicFile ResetFile(string path)

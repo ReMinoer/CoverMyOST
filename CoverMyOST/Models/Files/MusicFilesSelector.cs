@@ -5,55 +5,58 @@ using CoverMyOST.Models.Files.Base;
 
 namespace CoverMyOST.Models.Files
 {
-    public class MusicFilesSelector : MusicFilesContainerDecorator
+    public class MusicFilesSelector : MusicFilesContainer
     {
-        private readonly List<string> _selectedFilesName;
-
-        public MusicFilesSelector()
+        public MusicFilesSelector(IMusicFilesContainer parent)
         {
-            _selectedFilesName = new List<string>();
+            Parent = parent;
         }
 
         public void Select(string filename)
         {
             Refresh();
 
-            if (!Component.Files.ContainsKey(filename))
+            if (!Parent.Files.ContainsKey(filename))
                 throw new ArgumentException("Component doesn't contain the filename " + filename);
 
-            if (!_selectedFilesName.Contains(filename))
-                _selectedFilesName.Add(filename);
+            if (!LocalFiles.ContainsKey(filename))
+                LocalFiles.Add(filename, Parent.Files[filename]);
         }
 
         public void Unselect(string filename)
         {
             Refresh();
 
-            if (!Component.Files.ContainsKey(filename))
+            if (!Parent.Files.ContainsKey(filename))
                 throw new ArgumentException("Component doesn't contain the filename " + filename);
 
-            if (_selectedFilesName.Contains(filename))
-                _selectedFilesName.Add(filename);
+            if (LocalFiles.ContainsKey(filename))
+                LocalFiles.Remove(filename);
         }
 
         public void SelectAll()
         {
             Refresh();
-            _selectedFilesName.Clear();
+            LocalFiles.Clear();
 
-            foreach (string filename in Component.Files.Keys)
-                _selectedFilesName.Add(filename);
+            foreach (KeyValuePair<string, MusicFile> pair in Parent.Files)
+                LocalFiles.Add(pair.Key, pair.Value);
         }
 
         public void UnselectAll()
         {
-            _selectedFilesName.Clear();
+            LocalFiles.Clear();
         }
 
-        protected override void Refresh(IReadOnlyDictionary<string, MusicFile> componentFiles)
+        protected override void RefreshLocal()
         {
-            foreach (string filename in _selectedFilesName.Where(filename => !componentFiles.ContainsKey(filename)))
-                _selectedFilesName.Remove(filename);
+            var toRemove = new List<string>();
+
+            foreach (string filename in LocalFiles.Where(file => !Parent.Files.ContainsKey(file.Key)).Select(x => x.Key))
+                toRemove.Add(filename);
+
+            foreach (string s in toRemove)
+                LocalFiles.Remove(s);
         }
     }
 }

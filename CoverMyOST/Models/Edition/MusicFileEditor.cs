@@ -14,17 +14,17 @@ namespace CoverMyOST.Models.Edition
             set
             {
                 _file = value;
-                ResetAll();
+                ResetAllTags();
             }
         }
 
         public MusicFileEditor(MusicFile file)
         {
             _file = file;
-            ResetAll();
+            ResetAllTags();
         }
 
-        public void ResetAll()
+        public void ResetAllTags()
         {
             ResetAlbum();
             ResetCover();
@@ -44,6 +44,7 @@ namespace CoverMyOST.Models.Edition
         {
             File.Album = EditedAlbum;
             File.Cover = SelectedCover;
+            File.Save();
         }
     }
 }

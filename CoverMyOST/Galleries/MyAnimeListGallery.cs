@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using CoverMyOST.Galleries.Base;
 using MiniMAL;
 using MiniMAL.Anime;
 
@@ -11,50 +14,59 @@ namespace CoverMyOST.Galleries
     // TODO : Fix cancelable request for MyAnimeList
     // TODO : Create an understandable error when no results
     // TODO : Create a special account for MyAnimeList
-    public class MyAnimeListGallery : OnlineGallery
+    public sealed class MyAnimeListGallery : OnlineGallery
     {
-        private readonly MiniMALClient _miniMal = new MiniMALClient();
+        private readonly MiniMALClient _miniMal;
 
-        public override string Name
+        public MyAnimeListGallery()
+            : base("MyAnimeList", "MyAnimeList")
         {
-            get { return "MyAnimeList"; }
+            _miniMal = new MiniMALClient();
         }
 
-        protected override string CacheDirectoryName
+        public override async Task<CoverSearchResult> SearchOnlineAsync(string query, CancellationToken ct)
         {
-            get { return "myanimelist"; }
-        }
+            ct.ThrowIfCancellationRequested();
 
-        public override async Task<CoverSearchResult> SearchOnlineAsync(string query)
-        {
             if (!_miniMal.IsConnected)
                 Login();
 
             var result = new CoverSearchResult();
 
-            List<AnimeSearchEntry> search = await _miniMal.SearchAnimeAsync(query.Split(' '));
+            List<AnimeSearchEntry> search = await _miniMal.SearchAnimeAsync(query, ct);
+            ct.ThrowIfCancellationRequested();
+
             foreach (AnimeSearchEntry entry in search)
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
-                using (var httpWebReponse = (HttpWebResponse)httpWebRequest.GetResponse())
+                var request = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
+                using (ct.Register(() => request.Abort(), false))
                 {
-                    using (Stream stream = httpWebReponse.GetResponseStream())
+                    try
                     {
-                        if (stream == null)
-                            continue;
+                        using (var httpWebReponse = (HttpWebResponse)(await request.GetResponseAsync()))
+                        {
+                            ct.ThrowIfCancellationRequested();
+                            using (Stream stream = httpWebReponse.GetResponseStream())
+                            {
+                                if (stream == null)
+                                    continue;
 
-                        var image = new Bitmap(Image.FromStream(stream));
-                        result.Add(new CoverEntry(entry.Title, image, this));
+                                var image = new Bitmap(Image.FromStream(stream));
+                                result.Add(new CoverEntry(entry.Title, image, this));
+                            }
+                        }
+                    }
+                    catch (WebException e)
+                    {
+                        if (ct.IsCancellationRequested)
+                            throw new OperationCanceledException(e.Message, e, ct);
+
+                        throw;
                     }
                 }
             }
 
             return result;
-        }
-
-        public override void CancelSearch()
-        {
-            _miniMal.CancelCurrentRequest();
         }
 
         private void Login()

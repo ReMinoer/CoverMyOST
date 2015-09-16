@@ -9,13 +9,13 @@ namespace CoverMyOST.Test
         [Test]
         public void AssignCoverOnline()
         {
-            ClientTest.AssignCoverOnline<MyAnimeListGallery>(TestPaths.MusicA, "Planetes");
+            ClientTest.AssignCoverOnline(() => new MyAnimeListGallery(), TestPaths.MusicA, "Planetes");
         }
 
         [Test]
         public void AssignCoverCached()
         {
-            ClientTest.AssignCoverCached<MyAnimeListGallery>(TestPaths.MusicA, "Planetes");
+            ClientTest.AssignCoverCached(() => new MyAnimeListGallery(), TestPaths.MusicA, "Planetes");
         }
     }
 }

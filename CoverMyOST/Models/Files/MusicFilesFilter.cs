@@ -5,9 +5,14 @@ using CoverMyOST.Models.Files.Base;
 
 namespace CoverMyOST.Models.Files
 {
-    public class MusicFilesFilter : MusicFilesContainerDecorator
+    public class MusicFilesFilter : MusicFilesContainer
     {
         private MusicFileFilter _filter;
+
+        public MusicFilesFilter(IMusicFilesContainer parent)
+        {
+            Parent = parent;
+        }
 
         public MusicFileFilter Filter
         {
@@ -19,34 +24,34 @@ namespace CoverMyOST.Models.Files
             }
         }
 
-        protected override void Refresh(IReadOnlyDictionary<string, MusicFile> componentFiles)
+        protected override void RefreshLocal()
         {
             IEnumerable<KeyValuePair<string, MusicFile>> filteredFiles;
             switch (_filter)
             {
                 case MusicFileFilter.None:
-                    filteredFiles = componentFiles;
+                    filteredFiles = Parent.Files;
                     break;
                 case MusicFileFilter.AlbumSpecified:
-                    filteredFiles = componentFiles.Where(e => !string.IsNullOrEmpty(e.Value.Album));
+                    filteredFiles = Parent.Files.Where(e => !string.IsNullOrEmpty(e.Value.Album));
                     break;
                 case MusicFileFilter.NoAlbum:
-                    filteredFiles = componentFiles.Where(e => string.IsNullOrEmpty(e.Value.Album));
+                    filteredFiles = Parent.Files.Where(e => string.IsNullOrEmpty(e.Value.Album));
                     break;
                 case MusicFileFilter.CoverSpecified:
-                    filteredFiles = componentFiles.Where(e => e.Value.Cover != null);
+                    filteredFiles = Parent.Files.Where(e => e.Value.Cover != null);
                     break;
                 case MusicFileFilter.NoCover:
-                    filteredFiles = componentFiles.Where(e => e.Value.Cover == null);
+                    filteredFiles = Parent.Files.Where(e => e.Value.Cover == null);
                     break;
                 default:
                     throw new InvalidOperationException();
             }
 
-            _files.Clear();
+            LocalFiles.Clear();
 
             foreach (KeyValuePair<string, MusicFile> pair in filteredFiles)
-                _files.Add(pair.Key, pair.Value);
+                LocalFiles.Add(pair.Key, pair.Value);
         }
     }
 }

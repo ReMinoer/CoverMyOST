@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using CoverMyOST.Models.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
 using CoverMyOST.Windows.Models;
@@ -15,7 +16,7 @@ namespace CoverMyOST.Windows
         public MainWindow()
         {
             Model = new MainModel();
-            View = new MainView(Model.Client.Files.Values);
+            View = new MainView(Model.Files, Model.SelectedFiles);
 
 #if !MONO
             MusicPlayer = new WindowsMediaPlayerModel();
@@ -29,8 +30,8 @@ namespace CoverMyOST.Windows
             {
                 MusicPlayer.Stop();
                 Model.ChangeFolder(args.FolderPath);
-                View.ResetView(Model.Client.Files.Values);
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.RefreshGrid(Model.DisplayedFiles, Model.SelectedFiles);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
                 View.CompleteFolderChange();
             };
 
@@ -44,22 +45,22 @@ namespace CoverMyOST.Windows
             View.ChangeFilterRequest += (sender, args) =>
             {
                 Model.ChangeFilter(args.Filter);
-                View.RefreshGrid(Model.Client.Files.Values);
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.RefreshGrid(Model.DisplayedFiles, Model.SelectedFiles);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
             };
 
             // Edit files
 
             View.SelectedFilesChanged += (sender, args) =>
             {
-                string path = Path.Combine(Model.Client.WorkingDirectory, args.Filename);
+                string path = Path.Combine(Model.WorkingDirectory, args.Filename);
                 Model.ChangeFileSelection(path, args.IsSelected);
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
             };
 
             View.AlbumNameChanged += (sender, args) =>
             {
-                string path = Path.Combine(Model.Client.WorkingDirectory, args.Filename);
+                string path = Path.Combine(Model.WorkingDirectory, args.Filename);
                 Model.ChangeFileAlbumName(path, args.AlbumName);
                 View.HighlightAlbumChange(args.Filename);
                 View.SetAsEdited();
@@ -77,13 +78,12 @@ namespace CoverMyOST.Windows
             {
                 MusicPlayer.Stop();
 
-                var coverSeriesWizardDialog = new CoverSeriesWizardDialog(Model.Client);
+                var coverSeriesWizardDialog = new CoverSeriesWizardDialog(Model.MusicFileCollectionEditor, Model.GalleryManager);
                 coverSeriesWizardDialog.View.ShowDialog();
 
-                View.RefreshGrid(Model.Client.Files.Values);
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.RefreshGrid(Model.DisplayedFiles, Model.SelectedFiles);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
 
-                Model.SetAsEdited();
                 View.SetAsEdited();
             };
 
@@ -91,7 +91,7 @@ namespace CoverMyOST.Windows
 
             View.PlayMusicRequest += (sender, args) =>
             {
-                string path = Path.Combine(Model.Client.WorkingDirectory, args.Filename);
+                string path = Path.Combine(Model.WorkingDirectory, args.Filename);
                 MusicPlayer.Play(path);
                 View.CompleteMusicPlay(args.Filename);
             };
@@ -100,13 +100,13 @@ namespace CoverMyOST.Windows
             {
                 View.DisableStopButton();
                 MusicPlayer.Stop();
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
             };
 
             MusicPlayer.MusicEnded += (sender, args) =>
             {
                 View.DisableStopButton();
-                View.ShowCountsInStatusStrip(Model.FilesCount, Model.SelectedFilesCount, Model.DisplayedFilesCount);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
             };
 
             // Closing

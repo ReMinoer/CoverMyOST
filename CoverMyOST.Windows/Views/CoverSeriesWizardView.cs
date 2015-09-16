@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using CoverMyOST.Models;
 using CoverMyOST.Models.Search;
 
 namespace CoverMyOST.Windows.Views
@@ -31,6 +30,8 @@ namespace CoverMyOST.Windows.Views
 
         public void Initialize(string filename, Bitmap cover, string album, int fileIndex, int filesCount)
         {
+            _listView.ItemSelectionChanged -= ListViewOnItemSelectionChanged;
+
             _listView.Items.Clear();
             _listView.Groups.Clear();
 
@@ -56,6 +57,7 @@ namespace CoverMyOST.Windows.Views
             _albumTextBox.SelectionLength = _albumTextBox.TextLength;
 
             _listView.Items[1].Selected = true;
+            _listView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
         }
 
         public void UpdatePlayMusicButton(bool isPlaying)
@@ -73,23 +75,23 @@ namespace CoverMyOST.Windows.Views
             _coverPreview.Image = cover;
         }
 
-        public void SearchProgress(CoverSearchProgress searchProgress, int progressPercentage)
+        public void SearchProgress(CoverSearchStatus searchStatus)
         {
-            _searchProgressBar.Value = progressPercentage;
-            _statusLabel.Text = string.Format("Search in {0}...", searchProgress.GalleryName);
+            _searchProgressBar.Value = (int)(searchStatus.Progress * 100);
+            _statusLabel.Text = string.Format("Search in {0}...", searchStatus.GalleryName);
 
             bool firstCached = false;
             ListViewGroup group = null;
 
-            if (!searchProgress.Cached)
-                group = _listView.Groups.Add(searchProgress.GalleryName, searchProgress.GalleryName);
+            if (!searchStatus.Cached)
+                group = _listView.Groups.Add(searchStatus.GalleryName, searchStatus.GalleryName);
 
-            foreach (CoverEntry entry in searchProgress.SearchResult)
+            foreach (CoverEntry entry in searchStatus.SearchResult)
             {
-                if (searchProgress.Cached && _listView.Groups["Cached"].Items.Count == 0)
+                if (searchStatus.Cached && _listView.Groups["Cached"].Items.Count == 0)
                     firstCached = true;
 
-                _listView.Items.Add(searchProgress.Cached
+                _listView.Items.Add(searchStatus.Cached
                     ? new ListViewItem(entry.GalleryName, _listView.Groups["Cached"])
                     : new ListViewItem(entry.Name, group));
             }
@@ -118,9 +120,9 @@ namespace CoverMyOST.Windows.Views
             _statusLabel.Text = @"Search completed.";
         }
 
-        public void SearchEnd(bool enableForm)
+        public void SearchEnd(CoverSearchState state)
         {
-            EnabledForm(enableForm);
+            EnabledForm(state != CoverSearchState.Cancel);
         }
 
         private void ApplyButtonOnClick(object sender, EventArgs e)
@@ -176,7 +178,7 @@ namespace CoverMyOST.Windows.Views
                     args.Action = CoverSelectionAction.Change;
                     args.SelectionIndex = e.ItemIndex - 2;
                     ListViewItem item = _listView.Items[e.ItemIndex];
-                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group.Name, item.Name);
+                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group != null ? item.Group.Name : "", item.Name);
                     break;
             }
 

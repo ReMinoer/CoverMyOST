@@ -4,22 +4,30 @@ using Diese.Composition;
 
 namespace CoverMyOST.Models.Files.Base
 {
-    public abstract class MusicFilesContainer : Component<IMusicFilesContainer, IMusicFilesContainerDecorator>, IMusicFilesContainer
+    public abstract class MusicFilesContainer : Composite<IMusicFilesContainer, IMusicFilesContainer, IMusicFilesContainer>, IMusicFilesContainer
     {
-        protected readonly Dictionary<string, MusicFile> _files;
-        protected readonly IReadOnlyDictionary<string, MusicFile> _readOnlyFiles;
+        protected readonly Dictionary<string, MusicFile> LocalFiles;
+        protected readonly IReadOnlyDictionary<string, MusicFile> ReadOnlyFiles;
 
         public IReadOnlyDictionary<string, MusicFile> Files
         {
-            get { return _readOnlyFiles; }
+            get { return ReadOnlyFiles; }
         }
 
         protected MusicFilesContainer()
         {
-            _files = new Dictionary<string, MusicFile>();
-            _readOnlyFiles = new ReadOnlyDictionary<string, MusicFile>(_files);
+            LocalFiles = new Dictionary<string, MusicFile>();
+            ReadOnlyFiles = new ReadOnlyDictionary<string, MusicFile>(LocalFiles);
         }
 
-        public abstract void Refresh();
+        public void Refresh()
+        {
+            RefreshLocal();
+
+            foreach (IMusicFilesContainer container in Components)
+                container.Refresh();
+        }
+
+        protected abstract void RefreshLocal();
     }
 }

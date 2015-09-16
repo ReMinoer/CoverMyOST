@@ -3,7 +3,7 @@ using Diese.Composition;
 
 namespace CoverMyOST.Models.Files.Base
 {
-    public interface IMusicFilesContainer : IComponent<IMusicFilesContainer, IMusicFilesContainerDecorator>
+    public interface IMusicFilesContainer : IComposite<IMusicFilesContainer, IMusicFilesContainer, IMusicFilesContainer>
     {
         IReadOnlyDictionary<string, MusicFile> Files { get; }
         void Refresh();

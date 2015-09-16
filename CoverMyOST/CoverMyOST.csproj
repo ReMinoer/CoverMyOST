@@ -51,38 +51,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\MyAnimeListGalleryData.cs" />
+    <Compile Include="Galleries\Base\CoversGallery.cs" />
+    <Compile Include="Galleries\Base\CoversGalleryContainer.cs" />
+    <Compile Include="Galleries\Base\CoversGalleryComposite.cs" />
+    <Compile Include="Galleries\Base\ICoversGalleryContainer.cs" />
+    <Compile Include="Galleries\Base\ICoversGalleryComposite.cs" />
+    <Compile Include="Galleries\Base\ICoversGalleryParent.cs" />
+    <Compile Include="Galleries\Base\IOnlineGallery.cs" />
+    <Compile Include="Models\Edition\MusicFileCollectionEditor.cs" />
     <Compile Include="Models\Files\Base\IMusicFilesContainer.cs" />
-    <Compile Include="Models\Files\Base\IMusicFilesContainerDecorator.cs" />
     <Compile Include="Models\Files\Base\MusicFilesContainer.cs" />
-    <Compile Include="Models\Files\Base\MusicFilesContainerDecorator.cs" />
     <Compile Include="Models\Files\MusicFilesFilter.cs" />
     <Compile Include="Models\Files\MusicFilesLoader.cs" />
-    <Compile Include="Models\Options\ConfigurationModel.cs" />
+    <Compile Include="Models\Configuration\UserConfiguration.cs" />
     <Compile Include="Models\Search\CoverSearchModel.cs" />
     <Compile Include="Models\Files\MusicFilesSelector.cs" />
     <Compile Include="Models\Wizards\CoverSeriesWizardModel.cs" />
     <Compile Include="Models\Wizards\CoverWizardModel.cs" />
-    <Compile Include="Models\Galleries\GalleryManagerModel.cs" />
+    <Compile Include="Models\Galleries\GalleryManager.cs" />
     <Compile Include="Models\Edition\MusicFileEditor.cs" />
     <Compile Include="Models\MusicPlayers\DefaultMusicPlayerModel.cs" />
     <Compile Include="Models\MusicPlayers\IMusicPlayerModel.cs" />
-    <Compile Include="MusicFileEntry.cs" />
-    <Compile Include="OnlineGallery.cs" />
+    <Compile Include="Galleries\Base\OnlineGallery.cs" />
     <Compile Include="CoverEntry.cs" />
-    <Compile Include="CoverMyOSTClient.cs" />
     <Compile Include="CoverSearchResult.cs" />
-    <Compile Include="GalleryCollection.cs" />
-    <Compile Include="ICoversGallery.cs" />
+    <Compile Include="Galleries\Base\ICoversGallery.cs" />
     <Compile Include="Galleries\MyAnimeListGallery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
-    <Compile Include="MusicFileFilter.cs" />
-    <Compile Include="DataModels\CoverMyOSTClientData.cs" />
-    <Compile Include="DataModels\GalleryCollectionData.cs" />
-    <Compile Include="DataModels\ICoversGalleryData.cs" />
+    <Compile Include="Models\Files\MusicFileFilter.cs" />
+    <Compile Include="DataModels\UserConfigurationData.cs" />
+    <Compile Include="DataModels\GalleryManagerData.cs" />
     <Compile Include="DataModels\LocalGalleryData.cs" />
-    <Compile Include="DataModels\IOnlineGalleryData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
