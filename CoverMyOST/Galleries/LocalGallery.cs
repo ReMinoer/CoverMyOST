@@ -10,7 +10,7 @@ namespace CoverMyOST.Galleries
 {
     public sealed class LocalGallery : CoversGallery
     {
-        private static readonly string[] ImageExtensions =
+        static private readonly string[] ImageExtensions =
         {
             "*.jpg",
             "*.png",

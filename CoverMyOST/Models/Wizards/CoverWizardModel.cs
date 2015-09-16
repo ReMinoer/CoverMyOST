@@ -10,8 +10,8 @@ namespace CoverMyOST.Models.Wizards
     public class CoverWizardModel
     {
         private readonly CoverSearchModel _coverSearch;
-        private MusicFileEditor _musicFileEditor;
         private int _indexSelected;
+        private MusicFileEditor _musicFileEditor;
 
         public CoverSearchState State
         {

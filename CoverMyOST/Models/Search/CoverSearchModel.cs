@@ -48,7 +48,7 @@ namespace CoverMyOST.Models.Search
 
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken ct = _cancellationTokenSource.Token;
-            
+
             IEnumerable<CoversGallery> galleries = _galleryManager.GetAllComponentsInChildren<CoversGallery>().ToList();
 
             var status = new CoverSearchStatus
@@ -167,17 +167,6 @@ namespace CoverMyOST.Models.Search
             }
         }
 
-        private void ProgressHandlerOnProgressChanged(object sender, CoverSearchStatus coverSearchStatus)
-        {
-            var args = new SearchProgressEventArgs
-            {
-                Status = coverSearchStatus
-            };
-
-            if (SearchProgress != null)
-                SearchProgress.Invoke(sender, args);
-        }
-
         public void CancelSearch()
         {
             if (State != CoverSearchState.Search)
@@ -189,6 +178,17 @@ namespace CoverMyOST.Models.Search
                 SearchCancel.Invoke(this, EventArgs.Empty);
 
             _cancellationTokenSource.Cancel();
+        }
+
+        private void ProgressHandlerOnProgressChanged(object sender, CoverSearchStatus coverSearchStatus)
+        {
+            var args = new SearchProgressEventArgs
+            {
+                Status = coverSearchStatus
+            };
+
+            if (SearchProgress != null)
+                SearchProgress.Invoke(sender, args);
         }
     }
 

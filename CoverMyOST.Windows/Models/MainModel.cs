@@ -9,9 +9,9 @@ namespace CoverMyOST.Windows.Models
 {
     public class MainModel
     {
+        private readonly MusicFilesFilter _musicFilesFilter;
         private readonly MusicFilesLoader _musicFilesLoader;
         private readonly MusicFilesSelector _musicFilesSelector;
-        private readonly MusicFilesFilter _musicFilesFilter;
         private readonly UserConfiguration _userConfiguration;
         public GalleryManager GalleryManager { get; private set; }
         public MusicFileCollectionEditor MusicFileCollectionEditor { get; private set; }

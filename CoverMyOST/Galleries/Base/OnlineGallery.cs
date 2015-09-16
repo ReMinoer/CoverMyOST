@@ -11,6 +11,8 @@ namespace CoverMyOST.Galleries.Base
     {
         private readonly string _cacheSubFolder;
 
+        public bool UseCache { get; set; }
+
         private string CacheDirectory
         {
             get
@@ -19,8 +21,6 @@ namespace CoverMyOST.Galleries.Base
                     "CoverMyOST/", _cacheSubFolder);
             }
         }
-
-        public bool UseCache { get; set; }
 
         protected OnlineGallery(string name, string cacheSubFolder)
         {
@@ -44,7 +44,10 @@ namespace CoverMyOST.Galleries.Base
             {
                 CoverEntry entry = SearchCached(query);
                 if (entry != null)
-                    return new CoverSearchResult{ entry };
+                    return new CoverSearchResult
+                    {
+                        entry
+                    };
             }
 
             await Task.Yield();

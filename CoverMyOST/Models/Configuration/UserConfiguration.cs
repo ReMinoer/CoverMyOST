@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using CoverMyOST.DataModels;
 using CoverMyOST.Models.Files;
 using CoverMyOST.Models.Galleries;

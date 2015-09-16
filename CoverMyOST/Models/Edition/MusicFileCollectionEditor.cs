@@ -8,11 +8,6 @@ namespace CoverMyOST.Models.Edition
     {
         private readonly Dictionary<string, MusicFileEditor> _editors;
 
-        public MusicFileCollectionEditor()
-        {
-            _editors = new Dictionary<string, MusicFileEditor>();
-        }
-
         public IEnumerable<MusicFile> Files
         {
             get { return _editors.Values.Select(x => x.File); }
@@ -22,6 +17,11 @@ namespace CoverMyOST.Models.Edition
                 foreach (MusicFile musicFile in value)
                     _editors.Add(musicFile.Path, new MusicFileEditor(musicFile));
             }
+        }
+
+        public MusicFileCollectionEditor()
+        {
+            _editors = new Dictionary<string, MusicFileEditor>();
         }
 
         public void ApplyAll()

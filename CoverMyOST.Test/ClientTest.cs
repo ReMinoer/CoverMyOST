@@ -139,9 +139,9 @@ namespace CoverMyOST.Test
             // Process
             var loader = new MusicFilesLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
-            
+
             CoverEntry coverEntry = gallery.SearchCached(query);
-            
+
             MusicFile file = LoadFile(filePath);
             file.Cover = coverEntry.Cover;
             file.Save();

@@ -9,11 +9,6 @@ namespace CoverMyOST.Models.Files
     {
         private MusicFileFilter _filter;
 
-        public MusicFilesFilter(IMusicFilesContainer parent)
-        {
-            Parent = parent;
-        }
-
         public MusicFileFilter Filter
         {
             get { return _filter; }
@@ -22,6 +17,11 @@ namespace CoverMyOST.Models.Files
                 _filter = value;
                 Refresh();
             }
+        }
+
+        public MusicFilesFilter(IMusicFilesContainer parent)
+        {
+            Parent = parent;
         }
 
         protected override void RefreshLocal()
