@@ -192,7 +192,7 @@ namespace CoverMyOST.Windows.Views
                     args.Action = CoverSelectionAction.Change;
                     args.SelectionIndex = e.ItemIndex - 2;
                     ListViewItem item = _listView.Items[e.ItemIndex];
-                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group != null ? item.Group.Name : "", item.Name);
+                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group != null ? item.Group.Name : "", item.Text);
                     break;
             }
 
