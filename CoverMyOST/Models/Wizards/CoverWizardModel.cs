@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using CoverMyOST.Models.Edition;
 using CoverMyOST.Models.Galleries;
 using CoverMyOST.Models.Search;
+using NLog;
 
 namespace CoverMyOST.Models.Wizards
 {
     public class CoverWizardModel
     {
+        private readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly CoverSearchModel _coverSearch;
         private int _indexSelected;
         private MusicFileEditor _musicFileEditor;
@@ -73,6 +77,7 @@ namespace CoverMyOST.Models.Wizards
         {
             _musicFileEditor = musicFileEditor;
             _coverSearch = new CoverSearchModel(galleryManager);
+            _indexSelected = -1;
         }
 
         public void SetMusicFile(MusicFileEditor musicFileEditor)
@@ -97,9 +102,12 @@ namespace CoverMyOST.Models.Wizards
             if (_coverSearch.State == CoverSearchState.Cancel)
                 throw new InvalidOperationException("Can't apply modifications while search is canceling.");
 
+            Logger.Info("Apply changes to: {0}", Path.GetFileName(FilePath));
+            ApplyToMusicFile();
+            _indexSelected = -1;
+
             if (_coverSearch.State == CoverSearchState.Search)
                 _coverSearch.CancelSearch();
-            ApplyToMusicFile();
         }
 
         public void EditAlbum(string albumName)

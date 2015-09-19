@@ -118,7 +118,6 @@ namespace CoverMyOST.Windows.Views
 
         public void SearchCancel()
         {
-            EnabledForm(false);
             _statusLabel.Text = @"Waiting end of search...";
         }
 
@@ -141,6 +140,8 @@ namespace CoverMyOST.Windows.Views
 
         private void ApplyButtonOnClick(object sender, EventArgs e)
         {
+            EnabledForm(false);
+
             if (ApplyRequest != null)
                 ApplyRequest(sender, e);
         }
@@ -192,7 +193,7 @@ namespace CoverMyOST.Windows.Views
                     args.Action = CoverSelectionAction.Change;
                     args.SelectionIndex = e.ItemIndex - 2;
                     ListViewItem item = _listView.Items[e.ItemIndex];
-                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group != null ? item.Group.Name : "", item.Text);
+                    _coverNameLabel.Text = string.Format("[{0}] {1}", item.Group.Name, item.Text);
                     break;
             }
 

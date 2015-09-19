@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using NLog;
 
 namespace CoverMyOST.Models.MusicPlayers
 {
     public class DefaultMusicPlayerModel : IMusicPlayerModel
     {
+        private readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private string _lastPath;
         private Process _musicProcess;
         public bool IsPlaying { get; private set; }
@@ -22,6 +25,8 @@ namespace CoverMyOST.Models.MusicPlayers
 
         public void Play(string path)
         {
+            Logger.Info("Play {0}", path);
+
             if (path == _lastPath && IsPlaying)
                 return;
 
@@ -32,6 +37,8 @@ namespace CoverMyOST.Models.MusicPlayers
 
         public void Stop()
         {
+            Logger.Info("Stop music");
+
             if (_musicProcess != null && !_musicProcess.HasExited)
                 _musicProcess.Kill();
             IsPlaying = false;

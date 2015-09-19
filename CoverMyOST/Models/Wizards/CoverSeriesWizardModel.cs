@@ -4,11 +4,14 @@ using System.Linq;
 using CoverMyOST.Models.Edition;
 using CoverMyOST.Models.Galleries;
 using CoverMyOST.Models.Search;
+using NLog;
 
 namespace CoverMyOST.Models.Wizards
 {
     public class CoverSeriesWizardModel
     {
+        private readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly MusicFileCollectionEditor _musicFileEditors;
         private readonly CoverWizardModel _wizardModel;
         private bool _currentIsCancel;
@@ -84,8 +87,8 @@ namespace CoverMyOST.Models.Wizards
 
         public void ResetSearch()
         {
-            _wizardModel.SetMusicFile(_musicFileEditors.ElementAt(FileIndex));
             _currentIsCancel = false;
+            _wizardModel.SetMusicFile(_musicFileEditors.ElementAt(FileIndex));
 
             if (Initialize != null)
                 Initialize.Invoke(this, EventArgs.Empty);
@@ -105,7 +108,6 @@ namespace CoverMyOST.Models.Wizards
             {
                 case CoverSearchState.Search:
                     _wizardModel.Apply();
-                    NextFile();
                     break;
                 case CoverSearchState.Wait:
                     _wizardModel.Apply();
@@ -139,7 +141,12 @@ namespace CoverMyOST.Models.Wizards
         {
             FileIndex++;
             if (FileIndex < _musicFileEditors.Count())
+            {
+                Logger.Info("Next file : {0}/{1}", FileIndex + 1, _musicFileEditors.Count());
                 return true;
+            }
+
+            Logger.Info("No files left. Wizard will end");
 
             if (ProcessEnd != null)
                 ProcessEnd.Invoke(this, EventArgs.Empty);
@@ -149,8 +156,8 @@ namespace CoverMyOST.Models.Wizards
 
         private void WizardModelOnSearchLaunch(object sender, EventArgs eventArgs)
         {
-            if (Initialize != null)
-                Initialize.Invoke(this, EventArgs.Empty);
+            //if (Initialize != null)
+            //    Initialize.Invoke(this, EventArgs.Empty);
         }
 
         private void WizardModelOnSearchCancel(object sender, EventArgs eventArgs)
@@ -167,7 +174,10 @@ namespace CoverMyOST.Models.Wizards
             }
 
             if (_currentIsCancel)
-                ResetSearch();
+            {
+                if (NextFile())
+                    ResetSearch();
+            }
         }
     }
 }

@@ -26,47 +26,54 @@ namespace CoverMyOST.Galleries
 
         public override async Task<CoverSearchResult> SearchOnlineAsync(string query, CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
-
-            if (!_miniMal.IsConnected)
-                Login();
-
-            var result = new CoverSearchResult();
-
-            List<AnimeSearchEntry> search = await _miniMal.SearchAnimeAsync(query, ct);
-            ct.ThrowIfCancellationRequested();
-
-            foreach (AnimeSearchEntry entry in search)
+            try
             {
-                var request = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
-                using (ct.Register(() => request.Abort(), false))
-                {
-                    try
-                    {
-                        using (var httpWebReponse = (HttpWebResponse)(await request.GetResponseAsync()))
-                        {
-                            ct.ThrowIfCancellationRequested();
-                            using (Stream stream = httpWebReponse.GetResponseStream())
-                            {
-                                if (stream == null)
-                                    continue;
+                ct.ThrowIfCancellationRequested();
 
-                                var image = new Bitmap(Image.FromStream(stream));
-                                result.Add(new CoverEntry(entry.Title, image, this));
+                if (!_miniMal.IsConnected)
+                    Login();
+
+                var result = new CoverSearchResult();
+
+                List<AnimeSearchEntry> search = await _miniMal.SearchAnimeAsync(query, ct);
+                ct.ThrowIfCancellationRequested();
+
+                foreach (AnimeSearchEntry entry in search)
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(entry.ImageUrl);
+                    using (ct.Register(() => request.Abort(), false))
+                    {
+                        try
+                        {
+                            using (var httpWebReponse = (HttpWebResponse)(await request.GetResponseAsync()))
+                            {
+                                ct.ThrowIfCancellationRequested();
+                                using (Stream stream = httpWebReponse.GetResponseStream())
+                                {
+                                    if (stream == null)
+                                        continue;
+
+                                    var image = new Bitmap(Image.FromStream(stream));
+                                    result.Add(new CoverEntry(entry.Title, image, this));
+                                }
                             }
                         }
-                    }
-                    catch (WebException e)
-                    {
-                        if (ct.IsCancellationRequested)
-                            throw new OperationCanceledException(e.Message, e, ct);
+                        catch (WebException e)
+                        {
+                            if (ct.IsCancellationRequested)
+                                throw new OperationCanceledException(e.Message, e, ct);
 
-                        throw;
+                            throw;
+                        }
                     }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            catch (OperationCanceledException)
+            {
+                return new CoverSearchResult();
+            }
         }
 
         private void Login()

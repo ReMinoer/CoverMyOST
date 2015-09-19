@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using CoverMyOST.Galleries;
 using CoverMyOST.Galleries.Base;
 using CoverMyOST.Models.Galleries;
+using NLog;
 
 namespace CoverMyOST.Models.Search
 {
     public class CoverSearchModel
     {
         private readonly GalleryManager _galleryManager;
+        private readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private CancellationTokenSource _cancellationTokenSource;
         private CoverSearchResult _searchResult;
         public CoverSearchState State { get; private set; }
@@ -38,7 +41,7 @@ namespace CoverMyOST.Models.Search
 
             _searchResult = new CoverSearchResult();
 
-            if (albumName == "")
+            if (string.IsNullOrEmpty(albumName))
                 return;
 
             var progressHandler = new Progress<CoverSearchStatus>();
@@ -60,20 +63,32 @@ namespace CoverMyOST.Models.Search
             };
 
             State = CoverSearchState.Search;
+            Logger.Info("Search launched : {0}", albumName);
 
             if (SearchLaunch != null)
                 SearchLaunch.Invoke(this, EventArgs.Empty);
 
-            int galleryCount = 0;
+            int localCount = 0;
+            int onlineCount = 0;
+            int cacheCount = 0;
             foreach (ICoversGallery coversGallery in galleries)
             {
                 if (!coversGallery.Enable)
                     continue;
 
-                galleryCount++;
-                if (coversGallery is OnlineGallery && (coversGallery as OnlineGallery).UseCache)
-                    galleryCount++;
+                if (coversGallery is LocalGallery)
+                    localCount++;
+                else
+                {
+                    onlineCount++;
+                    if (coversGallery is OnlineGallery && (coversGallery as OnlineGallery).UseCache)
+                        cacheCount++;
+                }
             }
+
+            Logger.Info("Galleries enabled: {0} local, {1} online, {2} cache", localCount, onlineCount, cacheCount);
+
+            int galleryCount = localCount + onlineCount + cacheCount;
 
             try
             {
@@ -92,6 +107,8 @@ namespace CoverMyOST.Models.Search
                         status.SearchResult = new CoverSearchResult();
                         progress.Report(status);
 
+                        Logger.Info("Next gallery : {0}", status.GalleryName);
+
                         CoverEntry entry = (gallery as OnlineGallery).SearchCached(albumName);
 
                         status.SearchResult = new CoverSearchResult();
@@ -99,7 +116,10 @@ namespace CoverMyOST.Models.Search
                         {
                             status.SearchResult.Add(entry);
                             _searchResult.Add(entry);
+                            Logger.Info("Cached entry found");
                         }
+                        else
+                            Logger.Info("No cached entry");
 
                         i++;
                         countProgress++;
@@ -123,12 +143,16 @@ namespace CoverMyOST.Models.Search
                         status.SearchResult = new CoverSearchResult();
                         progress.Report(status);
 
+                        Logger.Info("Next gallery : {0}", status.GalleryName);
+
                         status.SearchResult = gallery is OnlineGallery
                             ? await (gallery as OnlineGallery).SearchOnlineAsync(albumName, _cancellationTokenSource.Token)
                             : await gallery.SearchAsync(albumName, _cancellationTokenSource.Token);
 
                         foreach (CoverEntry entry in status.SearchResult)
                             _searchResult.Add(entry);
+
+                        Logger.Info("{0} entries found", status.SearchResult.Count);
 
                         i++;
                         countProgress++;
@@ -140,10 +164,12 @@ namespace CoverMyOST.Models.Search
                     ct.ThrowIfCancellationRequested();
                 }
 
-                State = CoverSearchState.Wait;
+                Logger.Info("Search succeeded");
 
                 if (SearchSuccess != null)
                     SearchSuccess.Invoke(this, EventArgs.Empty);
+
+                progressHandler.ProgressChanged -= ProgressHandlerOnProgressChanged;
             }
             catch (OperationCanceledException)
             {
@@ -155,12 +181,15 @@ namespace CoverMyOST.Models.Search
                     ErrorMessage = e.Message
                 };
 
+                Logger.Error(e.Message);
+
                 if (SearchError != null)
                     SearchError.Invoke(this, args);
             }
             finally
             {
                 State = CoverSearchState.Wait;
+                Logger.Info("Search ended");
 
                 if (SearchEnd != null)
                     SearchEnd.Invoke(this, EventArgs.Empty);
@@ -173,6 +202,7 @@ namespace CoverMyOST.Models.Search
                 throw new InvalidOperationException("There is no search currently running.");
 
             State = CoverSearchState.Cancel;
+            Logger.Info("Search canceled");
 
             if (SearchCancel != null)
                 SearchCancel.Invoke(this, EventArgs.Empty);
