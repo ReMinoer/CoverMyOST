@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
-using CoverMyOST.Models.MusicPlayers;
+using CoverMyOST.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
-using CoverMyOST.Windows.Models;
-using CoverMyOST.Windows.Views;
+using CoverMyOST.Windows.MusicPlayers;
 
 namespace CoverMyOST.Windows
 {

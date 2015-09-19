@@ -1,6 +1,5 @@
 using System.Linq;
 using CoverMyOST.Galleries;
-using CoverMyOST.Models.Galleries;
 using Diese.Modelization;
 
 namespace CoverMyOST.DataModels

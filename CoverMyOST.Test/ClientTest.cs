@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using CoverMyOST.FileManagers;
 using CoverMyOST.Galleries.Base;
-using CoverMyOST.Models.Files;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
@@ -14,7 +14,7 @@ namespace CoverMyOST.Test
         public void ChangeDirectory()
         {
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             // Test
@@ -40,10 +40,10 @@ namespace CoverMyOST.Test
             temp2.Save();
 
             // Process 1
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
-            var filter = new MusicFilesFilter(loader)
+            var filter = new MusicFileRefiner(loader)
             {
                 Filter = MusicFileFilter.NoAlbum
             };
@@ -70,7 +70,7 @@ namespace CoverMyOST.Test
             ResetFile(filePath);
 
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             const string name = "Insert an album name here";
@@ -90,7 +90,7 @@ namespace CoverMyOST.Test
             ResetFile(filePath);
 
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             var cover = new Bitmap(Image.FromFile(TestPaths.CoverA));
@@ -108,7 +108,7 @@ namespace CoverMyOST.Test
             MusicFile temp = ResetFile(filePath);
 
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             IOnlineGallery gallery = galleryFactory();
@@ -137,7 +137,7 @@ namespace CoverMyOST.Test
             tempCover.First().AddToGalleryCache(query);
 
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             CoverEntry coverEntry = gallery.SearchCached(query);
@@ -153,7 +153,7 @@ namespace CoverMyOST.Test
 
         static public MusicFile LoadFile(string path)
         {
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             return loader.Files[path];

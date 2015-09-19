@@ -1,5 +1,5 @@
-﻿using CoverMyOST.Models.Galleries;
-using CoverMyOST.Windows.Views;
+﻿using CoverMyOST.Galleries;
+using CoverMyOST.Windows.Dialogs.Views;
 
 namespace CoverMyOST.Windows.Dialogs
 {

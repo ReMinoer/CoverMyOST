@@ -48,30 +48,30 @@
   <ItemGroup>
     <Compile Include="Dialogs\CoverSeriesWizardDialog.cs" />
     <Compile Include="Dialogs\GalleryManagerDialog.cs" />
-    <Compile Include="Models\MainModel.cs" />
-    <Compile Include="Views\MainView.cs">
+    <Compile Include="MainModel.cs" />
+    <Compile Include="MainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\MainView.Designer.cs">
+    <Compile Include="MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.cs" />
-    <Compile Include="Models\WindowsMediaPlayerModel.cs" />
+    <Compile Include="MusicPlayers\WindowsMediaPlayerModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\CoverSeriesWizardView.cs">
+    <Compile Include="Dialogs\Views\CoverSeriesWizardView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\CoverSeriesWizardView.Designer.cs">
+    <Compile Include="Dialogs\Views\CoverSeriesWizardView.Designer.cs">
       <DependentUpon>CoverSeriesWizardView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\GalleryManagerView.cs">
+    <Compile Include="Dialogs\Views\GalleryManagerView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\GalleryManagerView.Designer.cs">
+    <Compile Include="Dialogs\Views\GalleryManagerView.Designer.cs">
       <DependentUpon>GalleryManagerView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\MainView.resx">
+    <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -83,7 +83,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\CoverSeriesWizardView.resx">
+    <EmbeddedResource Include="Dialogs\Views\CoverSeriesWizardView.resx">
       <DependentUpon>CoverSeriesWizardView.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="NLog.config">

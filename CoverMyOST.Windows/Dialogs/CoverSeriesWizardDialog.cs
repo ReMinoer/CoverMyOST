@@ -1,21 +1,21 @@
-﻿using CoverMyOST.Models.Edition;
-using CoverMyOST.Models.Galleries;
-using CoverMyOST.Models.MusicPlayers;
-using CoverMyOST.Models.Wizards;
-using CoverMyOST.Windows.Models;
-using CoverMyOST.Windows.Views;
+﻿using CoverMyOST.Editors;
+using CoverMyOST.Galleries;
+using CoverMyOST.MusicPlayers;
+using CoverMyOST.Windows.Dialogs.Views;
+using CoverMyOST.Windows.MusicPlayers;
+using CoverMyOST.Wizards;
 
 namespace CoverMyOST.Windows.Dialogs
 {
     public class CoverSeriesWizardDialog
     {
-        public CoverSeriesWizardModel Model { get; private set; }
+        public CoverSeriesWizard Model { get; private set; }
         public IMusicPlayerModel MusicPlayer { get; private set; }
         public CoverSeriesWizardView View { get; private set; }
 
         public CoverSeriesWizardDialog(MusicFileCollectionEditor musicFileEditors, GalleryManager galleryManager)
         {
-            Model = new CoverSeriesWizardModel(musicFileEditors, galleryManager);
+            Model = new CoverSeriesWizard(musicFileEditors, galleryManager);
             View = new CoverSeriesWizardView();
 
 #if !MONO

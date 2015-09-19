@@ -1,4 +1,4 @@
-using CoverMyOST.Models.Configuration;
+using CoverMyOST.Configuration;
 using Diese.Modelization;
 
 namespace CoverMyOST.DataModels
@@ -15,13 +15,13 @@ namespace CoverMyOST.DataModels
 
         public void From(UserConfiguration obj)
         {
-            WorkingDirectory = obj.MusicFilesLoader.WorkingDirectory;
+            WorkingDirectory = obj.MusicFileLoader.WorkingDirectory;
             GalleriesManager.From(obj.GalleryManager);
         }
 
         public void Configure(UserConfiguration obj)
         {
-            obj.MusicFilesLoader.ChangeDirectory(WorkingDirectory);
+            obj.MusicFileLoader.ChangeDirectory(WorkingDirectory);
             GalleriesManager.Configure(obj.GalleryManager);
         }
     }

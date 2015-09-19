@@ -1,6 +1,6 @@
 ﻿using System.Linq;
+using CoverMyOST.FileManagers;
 using CoverMyOST.Galleries;
-using CoverMyOST.Models.Files;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
@@ -15,7 +15,7 @@ namespace CoverMyOST.Test
             string filePath = TestPaths.MusicC;
 
             // Process
-            var loader = new MusicFilesLoader();
+            var loader = new MusicFileLoader();
             loader.ChangeDirectory(TestPaths.MusicDirectory);
 
             var localGallery = new LocalGallery("Test", TestPaths.CoverDirectory);
