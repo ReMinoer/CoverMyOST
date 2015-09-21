@@ -71,6 +71,9 @@
     <Compile Include="Dialogs\Views\GalleryManagerView.Designer.cs">
       <DependentUpon>GalleryManagerView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialogs\Views\GalleryManagerView.resx">
+      <DependentUpon>GalleryManagerView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
