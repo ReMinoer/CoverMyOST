@@ -18,6 +18,11 @@ namespace CoverMyOST.Galleries
     {
         private readonly MiniMALClient _miniMal;
 
+        public override string Description
+        {
+            get { return "Anime and manga database. Provide one portrait-oriented picture by entry."; }
+        }
+
         public MyAnimeListGallery()
             : base("MyAnimeList", "MyAnimeList")
         {

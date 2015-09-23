@@ -5,13 +5,13 @@ namespace CoverMyOST.DataModels
 {
     public class LocalGalleryData : ICreator<LocalGallery>
     {
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
 
         public void From(LocalGallery obj)
         {
-            Enable = obj.Enable;
+            Enabled = obj.Enabled;
             Name = obj.Name;
             Path = obj.Path;
         }
@@ -20,7 +20,7 @@ namespace CoverMyOST.DataModels
         {
             var obj = new LocalGallery(Name, Path)
             {
-                Enable = Enable
+                Enabled = Enabled
             };
             return obj;
         }

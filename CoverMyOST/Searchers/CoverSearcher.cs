@@ -72,7 +72,7 @@ namespace CoverMyOST.Searchers
             int cacheCount = 0;
             foreach (ICoversGallery coversGallery in galleries)
             {
-                if (!coversGallery.Enable)
+                if (!coversGallery.Enabled)
                     continue;
 
                 if (coversGallery is LocalGallery)
@@ -99,7 +99,7 @@ namespace CoverMyOST.Searchers
                 int i = 0;
                 foreach (ICoversGallery gallery in galleries)
                 {
-                    if (gallery.Enable && gallery is OnlineGallery && (gallery as OnlineGallery).UseCache)
+                    if (gallery.Enabled && gallery is OnlineGallery && (gallery as OnlineGallery).UseCache)
                     {
                         status.Progress = countProgress / galleryCount;
                         status.GalleryName = galleries.ElementAt(i).Name + " (cache)";
@@ -135,7 +135,7 @@ namespace CoverMyOST.Searchers
 
                 foreach (ICoversGallery gallery in galleries)
                 {
-                    if (gallery.Enable)
+                    if (gallery.Enabled)
                     {
                         status.Progress = countProgress / galleryCount;
                         status.GalleryName = galleries.ElementAt(i).Name;

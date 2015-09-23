@@ -209,6 +209,7 @@
             this.MinimumSize = new System.Drawing.Size(554, 447);
             this.Name = "CoverSeriesWizardView";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select a cover";
             ((System.ComponentModel.ISupportInitialize)(this._coverPreview)).EndInit();
             this.statusStrip1.ResumeLayout(false);

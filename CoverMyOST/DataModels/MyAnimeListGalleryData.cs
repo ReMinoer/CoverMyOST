@@ -5,18 +5,18 @@ namespace CoverMyOST.DataModels
 {
     public class MyAnimeListGalleryData : IConfigurator<MyAnimeListGallery>
     {
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
         public bool UseCache { get; set; }
 
         public void From(MyAnimeListGallery obj)
         {
-            Enable = obj.Enable;
+            Enabled = obj.Enabled;
             UseCache = obj.UseCache;
         }
 
         public void Configure(MyAnimeListGallery obj)
         {
-            obj.Enable = Enable;
+            obj.Enabled = Enabled;
             obj.UseCache = UseCache;
         }
     }

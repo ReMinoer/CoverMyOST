@@ -27,7 +27,7 @@ namespace CoverMyOST.Galleries.Base
             _cacheSubFolder = cacheSubFolder;
             Name = name;
 
-            Enable = true;
+            Enabled = true;
             UseCache = true;
         }
 

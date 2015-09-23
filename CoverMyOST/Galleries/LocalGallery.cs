@@ -19,6 +19,11 @@ namespace CoverMyOST.Galleries
 
         public string Path { get; set; }
 
+        public override string Description
+        {
+            get { return string.Format("Path : {0}", Path); }
+        }
+
         public LocalGallery(string name, string path)
         {
             Name = name;

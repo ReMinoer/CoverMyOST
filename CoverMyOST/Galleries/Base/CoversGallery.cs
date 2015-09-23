@@ -6,11 +6,12 @@ namespace CoverMyOST.Galleries.Base
 {
     public abstract class CoversGallery : Component<ICoversGallery, ICoversGalleryParent>, ICoversGallery
     {
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
+        public abstract string Description { get; }
 
         protected CoversGallery()
         {
-            Enable = true;
+            Enabled = true;
         }
 
         public abstract CoverSearchResult Search(string query);

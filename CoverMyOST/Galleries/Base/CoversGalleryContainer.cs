@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Diese.Composition;
 
@@ -7,7 +8,12 @@ namespace CoverMyOST.Galleries.Base
     public class CoversGalleryContainer<T> : Container<ICoversGallery, ICoversGalleryParent, T>, ICoversGalleryContainer<T>
         where T : class, ICoversGallery
     {
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
+
+        public virtual string Description
+        {
+            get { return string.Join(", ", this.Select(x => x.Description)); }
+        }
 
         public CoversGalleryContainer(int size)
             : base(size)
