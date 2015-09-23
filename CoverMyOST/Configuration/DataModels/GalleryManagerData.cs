@@ -2,7 +2,7 @@ using System.Linq;
 using CoverMyOST.Galleries;
 using Diese.Modelization;
 
-namespace CoverMyOST.DataModels
+namespace CoverMyOST.Configuration.DataModels
 {
     public class GalleryManagerData : IConfigurator<GalleryManager>
     {

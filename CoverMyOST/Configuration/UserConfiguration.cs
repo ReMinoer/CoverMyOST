@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using CoverMyOST.DataModels;
+using CoverMyOST.Configuration.DataModels;
 using CoverMyOST.FileManagers;
 using CoverMyOST.Galleries;
 using Diese.Serialization;

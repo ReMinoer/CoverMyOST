@@ -51,7 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataModels\MyAnimeListGalleryData.cs" />
+    <Compile Include="Configuration\DataModels\MyAnimeListGalleryData.cs" />
     <Compile Include="Galleries\Base\CoversGallery.cs" />
     <Compile Include="Galleries\Base\CoversGalleryContainer.cs" />
     <Compile Include="Galleries\Base\CoversGalleryComposite.cs" />
@@ -82,9 +82,9 @@
     <Compile Include="MusicFile.cs" />
     <Compile Include="Galleries\LocalGallery.cs" />
     <Compile Include="FileManagers\MusicFileFilter.cs" />
-    <Compile Include="DataModels\UserConfigurationData.cs" />
-    <Compile Include="DataModels\GalleryManagerData.cs" />
-    <Compile Include="DataModels\LocalGalleryData.cs" />
+    <Compile Include="Configuration\DataModels\UserConfigurationData.cs" />
+    <Compile Include="Configuration\DataModels\GalleryManagerData.cs" />
+    <Compile Include="Configuration\DataModels\LocalGalleryData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

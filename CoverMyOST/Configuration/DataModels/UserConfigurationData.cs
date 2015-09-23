@@ -1,7 +1,6 @@
-using CoverMyOST.Configuration;
 using Diese.Modelization;
 
-namespace CoverMyOST.DataModels
+namespace CoverMyOST.Configuration.DataModels
 {
     public class UserConfigurationData : IConfigurator<UserConfiguration>
     {

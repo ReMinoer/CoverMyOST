@@ -1,7 +1,7 @@
 using CoverMyOST.Galleries;
 using Diese.Modelization;
 
-namespace CoverMyOST.DataModels
+namespace CoverMyOST.Configuration.DataModels
 {
     public class LocalGalleryData : ICreator<LocalGallery>
     {
