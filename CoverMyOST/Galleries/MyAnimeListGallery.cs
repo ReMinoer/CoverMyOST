@@ -11,7 +11,6 @@ using MiniMAL.Anime;
 
 namespace CoverMyOST.Galleries
 {
-    // TODO : Fix cancelable request for MyAnimeList
     // TODO : Create an understandable error when no results
     // TODO : Create a special account for MyAnimeList
     public sealed class MyAnimeListGallery : OnlineGallery

@@ -8,6 +8,7 @@ using NLog;
 
 namespace CoverMyOST.Wizards
 {
+    // TODO : Handle connexion to Internet
     public class CoverSeriesWizard
     {
         private readonly Logger Logger = LogManager.GetCurrentClassLogger();

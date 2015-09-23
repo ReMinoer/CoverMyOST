@@ -4,6 +4,7 @@ using Diese.Composition;
 
 namespace CoverMyOST.Galleries.Base
 {
+    // TODO : Add icon to cover galleries
     public interface ICoversGallery : IComponent<ICoversGallery, ICoversGalleryParent>
     {
         bool Enabled { get; set; }

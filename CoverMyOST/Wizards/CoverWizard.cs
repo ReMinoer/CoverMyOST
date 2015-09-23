@@ -92,8 +92,6 @@ namespace CoverMyOST.Wizards
         {
             if (_coverSearch.State == CoverSearchState.Search)
                 _coverSearch.CancelSearch();
-
-            // BUG : Client continue to search if dialog close.
         }
 
         public void Apply()
