@@ -5,23 +5,23 @@ namespace CoverMyOST.Configuration.DataModels
     public class UserConfigurationData : IConfigurator<UserConfiguration>
     {
         public string WorkingDirectory { get; set; }
-        public GalleryManagerData GalleriesManager { get; set; }
+        public GalleryManagerData GalleryManager { get; set; }
 
         public UserConfigurationData()
         {
-            GalleriesManager = new GalleryManagerData();
+            GalleryManager = new GalleryManagerData();
         }
 
         public void From(UserConfiguration obj)
         {
             WorkingDirectory = obj.MusicFileLoader.WorkingDirectory;
-            GalleriesManager.From(obj.GalleryManager);
+            GalleryManager.From(obj.GalleryManager);
         }
 
         public void Configure(UserConfiguration obj)
         {
             obj.MusicFileLoader.ChangeDirectory(WorkingDirectory);
-            GalleriesManager.Configure(obj.GalleryManager);
+            GalleryManager.Configure(obj.GalleryManager);
         }
     }
 }
