@@ -24,7 +24,7 @@ namespace CoverMyOST.Windows
         public event EventHandler StopMusicRequest;
         public event EventHandler<CloseRequestArgs> CloseRequest;
 
-        public MainView(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
+        public MainView()
         {
             InitializeComponent();
 
@@ -32,10 +32,6 @@ namespace CoverMyOST.Windows
 
             foreach (string name in Enum.GetNames(typeof(MusicFileFilter)))
                 filterComboBox.Items.Add(Regex.Replace(name, "([a-z])([A-Z])", "$1 $2"));
-
-            ResetView(musicFiles, selectedFiles);
-
-            coversButton.Enabled = selectedFiles.Any();
 
             openButton.Click += OpenButtonOnClick;
             saveAllButton.Click += SaveAllButtonOnClick;
@@ -51,24 +47,26 @@ namespace CoverMyOST.Windows
             Closing += OnClosing;
         }
 
-        public void ResetView(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
+        public void ResetView(IEnumerable<MusicFile> displayedFiles, IEnumerable<MusicFile> selectedFiles)
         {
             filterComboBox.SelectedIndex = 0;
-            RefreshGrid(musicFiles, selectedFiles);
+            RefreshGrid(displayedFiles, selectedFiles);
         }
 
-        public void RefreshGrid(IEnumerable<MusicFile> musicFiles, IEnumerable<MusicFile> selectedFiles)
+        public void RefreshGrid(IEnumerable<MusicFile> displayedFiles, IEnumerable<MusicFile> selectedFiles)
         {
             statusStripLabel.Text = @"Refresh...";
 
             IEnumerable<MusicFile> selectedList = selectedFiles.ToList();
             gridView.Rows.Clear();
 
-            foreach (MusicFile musicFile in musicFiles)
+            foreach (MusicFile musicFile in displayedFiles)
             {
                 gridView.Rows.Add(selectedList.Contains(musicFile), musicFile.Cover, Path.GetFileName(musicFile.Path),
                     musicFile.Album, "Play");
             }
+
+            coversButton.Enabled = selectedList.Any();
         }
 
         public void HighlightAlbumChange(string filename)

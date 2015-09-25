@@ -15,13 +15,16 @@ namespace CoverMyOST.Windows
         public MainWindow()
         {
             Model = new MainModel();
-            View = new MainView(Model.Files, Model.SelectedFiles);
+            View = new MainView();
 
 #if !MONO
             MusicPlayer = new WindowsMediaPlayerModel();
 #else
             MusicPlayer = new DefaultMusicPlayerModel();
 #endif
+
+            View.ResetView(Model.Files, Model.SelectedFiles);
+            View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
 
             // Handle files
 
