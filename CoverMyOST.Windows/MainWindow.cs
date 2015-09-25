@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using CoverMyOST.FileManagers;
 using CoverMyOST.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
 using CoverMyOST.Windows.MusicPlayers;
@@ -32,6 +33,8 @@ namespace CoverMyOST.Windows
             {
                 MusicPlayer.Stop();
                 Model.ChangeFolder(args.FolderPath);
+                Model.ChangeAllFilesSelection(true);
+                Model.ChangeFilter(MusicFileFilter.None);
                 View.RefreshGrid(Model.DisplayedFiles, Model.SelectedFiles);
                 View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
                 View.CompleteFolderChange();

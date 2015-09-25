@@ -192,11 +192,13 @@
             this.gridView.Size = new System.Drawing.Size(717, 336);
             this.gridView.TabIndex = 3;
             // 
-            // IsSelected
+            // Selected
             // 
+            this.Selected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Selected.FillWeight = 6.817649F;
             this.Selected.HeaderText = "";
             this.Selected.Name = "Selected";
+            this.Selected.Width = 5;
             // 
             // Cover
             // 
@@ -263,13 +265,13 @@
         private System.Windows.Forms.ToolStripStatusLabel statusStripLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton coversButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton stopButton;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Selected;
         private System.Windows.Forms.DataGridViewImageColumn Cover;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
         private System.Windows.Forms.DataGridViewButtonColumn Song;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton stopButton;
     }
 }
 
