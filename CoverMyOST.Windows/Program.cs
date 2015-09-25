@@ -24,7 +24,7 @@ namespace CoverMyOST.Windows
             }
             catch (Exception e)
             {
-                Logger.Error(e.Message);
+                Logger.Error(e);
                 throw;
             }
         }
