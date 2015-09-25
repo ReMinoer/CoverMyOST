@@ -18,10 +18,11 @@ namespace CoverMyOST.Windows.Dialogs
 
             View.TryAddLocalGalleryRequest += (sender, args) =>
             {
-                if (Model.TryAddLocalGallery(args.Gallery))
+                string errorMessage;
+                if (Model.TryAddLocalGallery(args.Gallery, out errorMessage))
                     View.CompleteAddLocalGallery(args.Gallery);
                 else
-                    View.FailAddLocalGallery(args.Gallery.Name);
+                    View.FailAddLocalGallery(errorMessage);
             };
 
             View.RemoveLocalGalleryRequest += (sender, args) =>

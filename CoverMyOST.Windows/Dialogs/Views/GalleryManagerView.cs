@@ -43,9 +43,9 @@ namespace CoverMyOST.Windows.Dialogs.Views
             AddToLocalGridView(localGallery);
         }
 
-        public void FailAddLocalGallery(string name)
+        public void FailAddLocalGallery(string errorMessage)
         {
-            MessageBox.Show(@"A gallery with the same name exists already.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(errorMessage, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public void CompleteChangeDescriptionRequest(string description)
