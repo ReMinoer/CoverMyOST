@@ -243,27 +243,32 @@ namespace CoverMyOST.Windows
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            if (_isSaved)
-                return;
-
             var args = new CloseRequestArgs();
 
-            const string title = @"Confirmation";
-            const string msg = @"Do you want to save modifications before quit ?";
-
-            switch (MessageBox.Show(msg, title, MessageBoxButtons.YesNoCancel))
+            if (!_isSaved)
             {
-                case DialogResult.Yes:
-                    args.SaveRequested = true;
-                    Enabled = false;
-                    break;
-                case DialogResult.No:
-                    args.SaveRequested = false;
-                    Enabled = false;
-                    break;
-                case DialogResult.Cancel:
-                    cancelEventArgs.Cancel = true;
-                    return;
+                const string title = @"Confirmation";
+                const string msg = @"Do you want to save modifications before quit ?";
+
+                switch (MessageBox.Show(msg, title, MessageBoxButtons.YesNoCancel))
+                {
+                    case DialogResult.Yes:
+                        args.SaveRequested = true;
+                        Enabled = false;
+                        break;
+                    case DialogResult.No:
+                        args.SaveRequested = false;
+                        Enabled = false;
+                        break;
+                    case DialogResult.Cancel:
+                        cancelEventArgs.Cancel = true;
+                        return;
+                }
+            }
+            else
+            {
+                args.SaveRequested = false;
+                Enabled = false;
             }
 
             if (CloseRequest != null)
