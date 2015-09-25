@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
+using NLog;
 
 namespace CoverMyOST.Windows
 {
     static internal class Program
     {
+        static private readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         ///     Point d'entrée principal de l'application.
         /// </summary>
@@ -14,8 +17,16 @@ namespace CoverMyOST.Windows
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var mainWindow = new MainWindow();
-            Application.Run(mainWindow.View);
+            try
+            {
+                var mainWindow = new MainWindow();
+                Application.Run(mainWindow.View);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message);
+                throw;
+            }
         }
     }
 }
