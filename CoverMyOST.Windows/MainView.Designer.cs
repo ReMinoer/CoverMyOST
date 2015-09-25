@@ -150,6 +150,7 @@
             // stopButton
             // 
             this.stopButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.stopButton.Enabled = false;
             this.stopButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(70, 22);
@@ -163,6 +164,7 @@
             // coversButton
             // 
             this.coversButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.coversButton.Enabled = false;
             this.coversButton.Image = ((System.Drawing.Image)(resources.GetObject("coversButton.Image")));
             this.coversButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.coversButton.Name = "coversButton";

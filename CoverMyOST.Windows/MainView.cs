@@ -28,8 +28,6 @@ namespace CoverMyOST.Windows
         {
             InitializeComponent();
 
-            stopButton.Enabled = false;
-
             foreach (string name in Enum.GetNames(typeof(MusicFileFilter)))
                 filterComboBox.Items.Add(Regex.Replace(name, "([a-z])([A-Z])", "$1 $2"));
 
