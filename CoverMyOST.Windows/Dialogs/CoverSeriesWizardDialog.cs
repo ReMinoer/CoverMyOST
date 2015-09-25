@@ -122,7 +122,6 @@ namespace CoverMyOST.Windows.Dialogs
             };
 
             Model.ResetSearch();
-            View.Initialize(Model.FilePath, Model.SelectedCover, Model.EditedAlbum, Model.FileIndex, Model.FilesCount);
         }
     }
 }

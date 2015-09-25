@@ -43,11 +43,6 @@ namespace CoverMyOST.Searchers
             if (string.IsNullOrEmpty(albumName))
                 return;
 
-            var progressHandler = new Progress<CoverSearchStatus>();
-            progressHandler.ProgressChanged += ProgressHandlerOnProgressChanged;
-
-            IProgress<CoverSearchStatus> progress = progressHandler;
-
             _cancellationTokenSource = new CancellationTokenSource();
             CancellationToken ct = _cancellationTokenSource.Token;
 
@@ -93,7 +88,7 @@ namespace CoverMyOST.Searchers
             {
                 ct.ThrowIfCancellationRequested();
 
-                progress.Report(status);
+                ReportProgress(status);
 
                 double countProgress = 0;
                 int i = 0;
@@ -104,7 +99,7 @@ namespace CoverMyOST.Searchers
                         status.Progress = countProgress / galleryCount;
                         status.GalleryName = galleries.ElementAt(i).Name + " (cache)";
                         status.SearchResult = new CoverSearchResult();
-                        progress.Report(status);
+                        ReportProgress(status);
 
                         Logger.Info("Next gallery : {0}", status.GalleryName);
 
@@ -124,7 +119,7 @@ namespace CoverMyOST.Searchers
                         countProgress++;
 
                         status.Progress = countProgress / galleryCount;
-                        progress.Report(status);
+                        ReportProgress(status);
                     }
 
                     ct.ThrowIfCancellationRequested();
@@ -140,7 +135,7 @@ namespace CoverMyOST.Searchers
                         status.Progress = countProgress / galleryCount;
                         status.GalleryName = galleries.ElementAt(i).Name;
                         status.SearchResult = new CoverSearchResult();
-                        progress.Report(status);
+                        ReportProgress(status);
 
                         Logger.Info("Next gallery : {0}", status.GalleryName);
 
@@ -157,7 +152,7 @@ namespace CoverMyOST.Searchers
                         countProgress++;
 
                         status.Progress = countProgress / galleryCount;
-                        progress.Report(status);
+                        ReportProgress(status);
                     }
 
                     ct.ThrowIfCancellationRequested();
@@ -167,8 +162,6 @@ namespace CoverMyOST.Searchers
 
                 if (SearchSuccess != null)
                     SearchSuccess.Invoke(this, EventArgs.Empty);
-
-                progressHandler.ProgressChanged -= ProgressHandlerOnProgressChanged;
             }
             catch (OperationCanceledException)
             {
@@ -209,7 +202,7 @@ namespace CoverMyOST.Searchers
             _cancellationTokenSource.Cancel();
         }
 
-        private void ProgressHandlerOnProgressChanged(object sender, CoverSearchStatus coverSearchStatus)
+        private void ReportProgress(CoverSearchStatus coverSearchStatus)
         {
             var args = new SearchProgressEventArgs
             {
@@ -217,7 +210,7 @@ namespace CoverMyOST.Searchers
             };
 
             if (SearchProgress != null)
-                SearchProgress.Invoke(sender, args);
+                SearchProgress.Invoke(this, args);
         }
     }
 

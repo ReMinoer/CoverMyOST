@@ -156,8 +156,10 @@ namespace CoverMyOST.Wizards
 
         private void WizardModelOnSearchLaunch(object sender, EventArgs eventArgs)
         {
-            //if (Initialize != null)
-            //    Initialize.Invoke(this, EventArgs.Empty);
+            _currentIsCancel = false;
+
+            if (Initialize != null)
+                Initialize.Invoke(this, EventArgs.Empty);
         }
 
         private void WizardModelOnSearchCancel(object sender, EventArgs eventArgs)
