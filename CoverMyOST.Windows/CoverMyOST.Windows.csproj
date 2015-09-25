@@ -41,13 +41,21 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\CoverSeriesWizardDialog.cs" />
     <Compile Include="Dialogs\GalleryManagerDialog.cs" />
+    <Compile Include="Dialogs\Views\LocalGalleryCreatorView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\Views\LocalGalleryCreatorView.Designer.cs">
+      <DependentUpon>LocalGalleryCreatorView.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainModel.cs" />
     <Compile Include="MainView.cs">
       <SubType>Form</SubType>
@@ -71,8 +79,12 @@
     <Compile Include="Dialogs\Views\GalleryManagerView.Designer.cs">
       <DependentUpon>GalleryManagerView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sockets\LocalGalleryCreator.cs" />
     <EmbeddedResource Include="Dialogs\Views\GalleryManagerView.resx">
       <DependentUpon>GalleryManagerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\Views\LocalGalleryCreatorView.resx">
+      <DependentUpon>LocalGalleryCreatorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
@@ -117,6 +129,18 @@
     <ProjectReference Include="..\External\Diese\Diese.Composition\Diese.Composition.csproj">
       <Project>{e8d6f663-89a6-497f-a02f-d0fc562d2d0e}</Project>
       <Name>Diese.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\External\Diese\Diese.Modelization\Diese.Modelization.csproj">
+      <Project>{0781AD0F-EB0F-442E-9A1C-34C2AA9319FD}</Project>
+      <Name>Diese.Modelization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\External\FormPlug\FormPlug.WindowsForm\FormPlug.WindowsForm.csproj">
+      <Project>{85b0105b-0cdb-473c-823a-af976abbdec4}</Project>
+      <Name>FormPlug.WindowsForm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\External\FormPlug\FormPlug\FormPlug.csproj">
+      <Project>{fa85047c-1340-4cb2-b888-cfd45ab9dd85}</Project>
+      <Name>FormPlug</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

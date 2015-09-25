@@ -4,3 +4,6 @@
 [submodule "External/Diese"]
 	path = External/Diese
 	url = https://github.com/ReMinoer/Diese.git
+[submodule "External/FormPlug"]
+	path = External/FormPlug
+	url = https://github.com/ReMinoer/FormPlug.git

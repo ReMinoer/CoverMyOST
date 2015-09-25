@@ -69,7 +69,7 @@ namespace CoverMyOST.Windows
 
             View.ShowGalleryManagerRequest += (sender, args) =>
             {
-                var galleryManagerUi = new GalleryManagerDialog();
+                var galleryManagerUi = new GalleryManagerDialog(Model.GalleryManager);
                 galleryManagerUi.View.ShowDialog();
             };
 
