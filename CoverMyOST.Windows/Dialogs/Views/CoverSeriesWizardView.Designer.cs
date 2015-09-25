@@ -204,9 +204,9 @@
             this.Controls.Add(this._applyButton);
             this.Controls.Add(this.groupBox);
             this.Controls.Add(this._listView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(554, 447);
             this.Name = "CoverSeriesWizardView";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

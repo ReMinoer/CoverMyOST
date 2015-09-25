@@ -33,6 +33,10 @@
             this.descriptionTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionHeaderLabel = new System.Windows.Forms.Label();
             this.onlineGridView = new System.Windows.Forms.DataGridView();
+            this.OnlineName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OnlineEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.UseCache = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ClearCache = new System.Windows.Forms.DataGridViewButtonColumn();
             this.localGroupBox = new System.Windows.Forms.GroupBox();
             this.localGridView = new System.Windows.Forms.DataGridView();
             this.LocalName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,10 +44,6 @@
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
-            this.OnlineName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OnlineEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.UseCache = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ClearCache = new System.Windows.Forms.DataGridViewButtonColumn();
             this.onlineGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.onlineGridView)).BeginInit();
             this.localGroupBox.SuspendLayout();
@@ -108,6 +108,37 @@
             this.onlineGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.onlineGridView.Size = new System.Drawing.Size(381, 323);
             this.onlineGridView.TabIndex = 0;
+            // 
+            // OnlineName
+            // 
+            this.OnlineName.HeaderText = "Name";
+            this.OnlineName.Name = "OnlineName";
+            this.OnlineName.ReadOnly = true;
+            // 
+            // OnlineEnabled
+            // 
+            this.OnlineEnabled.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.OnlineEnabled.HeaderText = "Enabled";
+            this.OnlineEnabled.Name = "OnlineEnabled";
+            this.OnlineEnabled.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.OnlineEnabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.OnlineEnabled.Width = 71;
+            // 
+            // UseCache
+            // 
+            this.UseCache.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.UseCache.HeaderText = "Use cache";
+            this.UseCache.Name = "UseCache";
+            this.UseCache.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.UseCache.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.UseCache.Width = 84;
+            // 
+            // ClearCache
+            // 
+            this.ClearCache.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ClearCache.HeaderText = "Clear cache";
+            this.ClearCache.Name = "ClearCache";
+            this.ClearCache.Width = 70;
             // 
             // localGroupBox
             // 
@@ -191,37 +222,6 @@
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
             // 
-            // OnlineName
-            // 
-            this.OnlineName.HeaderText = "Name";
-            this.OnlineName.Name = "OnlineName";
-            this.OnlineName.ReadOnly = true;
-            // 
-            // OnlineEnabled
-            // 
-            this.OnlineEnabled.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.OnlineEnabled.HeaderText = "Enabled";
-            this.OnlineEnabled.Name = "OnlineEnabled";
-            this.OnlineEnabled.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.OnlineEnabled.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.OnlineEnabled.Width = 71;
-            // 
-            // UseCache
-            // 
-            this.UseCache.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.UseCache.HeaderText = "Use cache";
-            this.UseCache.Name = "UseCache";
-            this.UseCache.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.UseCache.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.UseCache.Width = 84;
-            // 
-            // ClearCache
-            // 
-            this.ClearCache.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ClearCache.HeaderText = "Clear cache";
-            this.ClearCache.Name = "ClearCache";
-            this.ClearCache.Width = 70;
-            // 
             // GalleryManagerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -230,10 +230,9 @@
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.localGroupBox);
             this.Controls.Add(this.onlineGroupBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(700, 500);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "GalleryManagerView";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.ShowInTaskbar = false;
