@@ -18,8 +18,9 @@ namespace CoverMyOST.Windows
         public event EventHandler<ChangeFilterRequestArgs> ChangeFilterRequest;
         public event EventHandler ShowGalleryManagerRequest;
         public event EventHandler ShowCoverSeriesWizardRequest;
-        public event EventHandler<SelectedFileChangedArgs> SelectedFilesChanged;
         public event EventHandler<AlbumNameChangedArgs> AlbumNameChanged;
+        public event EventHandler<SelectedFileChangedArgs> SelectedFilesChanged;
+        public event EventHandler<IndividualWizardRequestArgs> IndividualWizardRequest;
         public event EventHandler<PlayMusicArgs> PlayMusicRequest;
         public event EventHandler StopMusicRequest;
         public event EventHandler<CloseRequestArgs> CloseRequest;
@@ -41,6 +42,7 @@ namespace CoverMyOST.Windows
             gridView.CellValueChanged += GridViewOnCellValueChanged;
             gridView.CellContentClick += GridViewOnCellContentClick;
             gridView.CellMouseUp += GridViewOnCellMouseUp;
+            gridView.CellDoubleClick += GridViewOnCellDoubleClick;
 
             Closing += OnClosing;
         }
@@ -237,6 +239,27 @@ namespace CoverMyOST.Windows
             }
         }
 
+        private void GridViewOnCellDoubleClick(object sender, DataGridViewCellEventArgs eventArgs)
+        {
+            switch (gridView.Columns[eventArgs.ColumnIndex].Name)
+            {
+                case "Cover":
+                case "File":
+
+                    DataGridViewRow row = gridView.Rows[eventArgs.RowIndex];
+
+                    var args = new IndividualWizardRequestArgs
+                    {
+                        Filename = (string)row.Cells["File"].Value
+                    };
+
+                    if (IndividualWizardRequest != null)
+                        IndividualWizardRequest.Invoke(this, args);
+
+                    break;
+            }
+        }
+
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             var args = new CloseRequestArgs();
@@ -301,6 +324,11 @@ namespace CoverMyOST.Windows
         {
             public string Filename { get; set; }
             public string AlbumName { get; set; }
+        }
+
+        public class IndividualWizardRequestArgs : EventArgs
+        {
+            public string Filename { get; set; }
         }
     }
 }

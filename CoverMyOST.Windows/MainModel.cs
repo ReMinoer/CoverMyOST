@@ -39,6 +39,11 @@ namespace CoverMyOST.Windows
             get { return _musicFileLoader.WorkingDirectory; }
         }
 
+        public MusicFile this[string filename]
+        {
+            get { return _musicFileLoader.Files[Path.Combine(WorkingDirectory, filename)]; }
+        }
+
         public MainModel()
         {
             _musicFileLoader = new MusicFileLoader();

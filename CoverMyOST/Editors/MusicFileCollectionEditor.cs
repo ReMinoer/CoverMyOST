@@ -24,6 +24,11 @@ namespace CoverMyOST.Editors
             _editors = new Dictionary<string, MusicFileEditor>();
         }
 
+        public MusicFileCollectionEditor(params MusicFileEditor[] editors)
+        {
+            _editors = editors.ToDictionary(x => x.File.Path, x => x);
+        }
+
         public void ApplyAll()
         {
             foreach (MusicFileEditor editor in _editors.Values)

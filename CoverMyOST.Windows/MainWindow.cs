@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using CoverMyOST.Editors;
 using CoverMyOST.FileManagers;
 using CoverMyOST.MusicPlayers;
 using CoverMyOST.Windows.Dialogs;
@@ -7,6 +8,7 @@ using CoverMyOST.Windows.MusicPlayers;
 
 namespace CoverMyOST.Windows
 {
+    // BUG : Cache cover doesn't show
     public class MainWindow
     {
         public MainModel Model { get; private set; }
@@ -68,6 +70,21 @@ namespace CoverMyOST.Windows
                 string path = Path.Combine(Model.WorkingDirectory, args.Filename);
                 Model.ChangeFileAlbumName(path, args.AlbumName);
                 View.HighlightAlbumChange(args.Filename);
+                View.SetAsEdited();
+            };
+
+            View.IndividualWizardRequest += (sender, args) =>
+            {
+                MusicPlayer.Stop();
+
+                var editor = new MusicFileCollectionEditor(Model.MusicFileCollectionEditor[Model[args.Filename].Path]);
+
+                var coverSeriesWizardDialog = new CoverSeriesWizardDialog(editor, Model.GalleryManager);
+                coverSeriesWizardDialog.View.ShowDialog();
+
+                View.RefreshGrid(Model.DisplayedFiles, Model.SelectedFiles);
+                View.ShowCountsInStatusStrip(Model.Files.Count(), Model.SelectedFiles.Count(), Model.DisplayedFiles.Count());
+
                 View.SetAsEdited();
             };
 
