@@ -87,11 +87,7 @@ namespace CoverMyOST.Wizards
 
         public void ResetSearch()
         {
-            _currentIsCancel = false;
             _wizardModel.SetMusicFile(_musicFileEditors.ElementAt(FileIndex));
-
-            if (Initialize != null)
-                Initialize.Invoke(this, EventArgs.Empty);
         }
 
         public void Close()
