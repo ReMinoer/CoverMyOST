@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -81,7 +82,14 @@ namespace CoverMyOST
 
         public void Save()
         {
-            _file.Save();
+            try
+            {
+                _file.Save();
+            }
+            catch (Exception)
+            {
+                _file.Save();
+            }
         }
     }
 }
