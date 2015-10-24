@@ -8,7 +8,6 @@ using CoverMyOST.Windows.MusicPlayers;
 
 namespace CoverMyOST.Windows
 {
-    // BUG : Cache cover doesn't show
     public class MainWindow
     {
         public MainModel Model { get; private set; }
