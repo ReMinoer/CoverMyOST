@@ -15,6 +15,7 @@ namespace CoverMyOST.Wizards
         private readonly MusicFileCollectionEditor _musicFileEditors;
         private readonly CoverWizard _wizardModel;
         private bool _currentIsCancel;
+        private bool _albumEdition;
         public int FileIndex { get; private set; }
 
         public int FilesCount
@@ -115,6 +116,7 @@ namespace CoverMyOST.Wizards
 
         public void EditAlbum(string albumName)
         {
+            _albumEdition = true;
             _wizardModel.EditAlbum(albumName);
         }
 
@@ -133,26 +135,10 @@ namespace CoverMyOST.Wizards
             _wizardModel.RemoveCoverSelected();
         }
 
-        private bool NextFile()
-        {
-            FileIndex++;
-            if (FileIndex < _musicFileEditors.Count())
-            {
-                Logger.Info("Next file : {0}/{1}", FileIndex + 1, _musicFileEditors.Count());
-                return true;
-            }
-
-            Logger.Info("No files left. Wizard will end");
-
-            if (ProcessEnd != null)
-                ProcessEnd.Invoke(this, EventArgs.Empty);
-
-            return false;
-        }
-
         private void WizardModelOnSearchLaunch(object sender, EventArgs eventArgs)
         {
             _currentIsCancel = false;
+            _albumEdition = false;
 
             if (Initialize != null)
                 Initialize.Invoke(this, EventArgs.Empty);
@@ -171,11 +157,25 @@ namespace CoverMyOST.Wizards
                 return;
             }
 
-            if (_currentIsCancel)
+            if (_currentIsCancel && (_albumEdition || NextFile()))
+                ResetSearch();
+        }
+
+        private bool NextFile()
+        {
+            FileIndex++;
+            if (FileIndex < _musicFileEditors.Count())
             {
-                if (NextFile())
-                    ResetSearch();
+                Logger.Info("Next file : {0}/{1}", FileIndex + 1, _musicFileEditors.Count());
+                return true;
             }
+
+            Logger.Info("No files left. Wizard will end");
+
+            if (ProcessEnd != null)
+                ProcessEnd.Invoke(this, EventArgs.Empty);
+
+            return false;
         }
     }
 }
