@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -34,6 +35,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
             _albumTextBox.GotFocus += AlbumTextBoxOnGotFocus;
 
             _listView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
+            
+            Closing += OnClosing;
         }
 
         public void Initialize(string filename, Bitmap cover, string album, int fileIndex, int filesCount)
@@ -207,6 +210,11 @@ namespace CoverMyOST.Windows.Dialogs.Views
             _albumTextBox.Enabled = state;
             _applyButton.Enabled = state;
             _playButton.Enabled = state;
+        }
+
+        private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
+        {
+            _listView.ItemSelectionChanged -= ListViewOnItemSelectionChanged;
         }
 
         public enum CoverSelectionAction
