@@ -1,4 +1,5 @@
 using System.Linq;
+using CoverMyOST.Configuration.DataModels.Galleries;
 using CoverMyOST.Galleries;
 using Diese.Modelization;
 

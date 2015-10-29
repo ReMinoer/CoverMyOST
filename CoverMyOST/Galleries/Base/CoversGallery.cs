@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using CoverMyOST.Configuration.DataModels;
 using Diese.Composition;
 
 namespace CoverMyOST.Galleries.Base

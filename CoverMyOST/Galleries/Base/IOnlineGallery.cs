@@ -1,5 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using CoverMyOST.Configuration.DataModels;
+using CoverMyOST.Galleries.Configurators;
 
 namespace CoverMyOST.Galleries.Base
 {
@@ -10,5 +12,6 @@ namespace CoverMyOST.Galleries.Base
         Task<CoverSearchResult> SearchOnlineAsync(string query, CancellationToken ct);
         CoverEntry SearchCached(string query);
         void ClearCache();
+        IOnlineGalleryConfigurator GetConfigurator();
     }
 }

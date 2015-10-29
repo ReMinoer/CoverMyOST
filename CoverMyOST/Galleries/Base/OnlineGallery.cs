@@ -4,6 +4,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using CoverMyOST.Configuration.DataModels;
+using CoverMyOST.Galleries.Configurators;
 
 namespace CoverMyOST.Galleries.Base
 {
@@ -81,6 +83,8 @@ namespace CoverMyOST.Galleries.Base
             if (Directory.Exists(CacheDirectory))
                 Directory.Delete(CacheDirectory, true);
         }
+
+        public abstract IOnlineGalleryConfigurator GetConfigurator();
 
         internal void AddCoverToCache(CoverEntry entry, string name)
         {

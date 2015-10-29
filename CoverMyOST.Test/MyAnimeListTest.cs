@@ -1,4 +1,5 @@
 ﻿using CoverMyOST.Galleries;
+using CoverMyOST.Galleries.Base;
 using CoverMyOST.Test.Content;
 using NUnit.Framework;
 
@@ -9,13 +10,22 @@ namespace CoverMyOST.Test
         [Test]
         public void AssignCoverOnline()
         {
-            ClientTest.AssignCoverOnline(() => new MyAnimeListGallery(), TestPaths.MusicA, "Planetes");
+            ClientTest.AssignCoverOnline(GalleryFactory, TestPaths.MusicA, "Planetes");
         }
 
         [Test]
         public void AssignCoverCached()
         {
-            ClientTest.AssignCoverCached(() => new MyAnimeListGallery(), TestPaths.MusicA, "Planetes");
+            ClientTest.AssignCoverCached(GalleryFactory, TestPaths.MusicA, "Planetes");
+        }
+
+        private IOnlineGallery GalleryFactory()
+        {
+            return new MyAnimeListGallery
+            {
+                Username = "TryMiniMAL",
+                Password = "tryminimal"
+            };
         }
     }
 }

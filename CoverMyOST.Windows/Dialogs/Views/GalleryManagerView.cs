@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using CoverMyOST.Configuration.DataModels;
 using CoverMyOST.Galleries;
 using CoverMyOST.Galleries.Base;
+using CoverMyOST.Galleries.Configurators;
 using CoverMyOST.Windows.Sockets;
+using Diese.Modelization;
 using FormPlug.WindowsForm;
 
 namespace CoverMyOST.Windows.Dialogs.Views
 {
     public partial class GalleryManagerView : Form
     {
+        private const string ConfigureButtonText = "Configure";
         private const string ClearButtonText = "Clear";
         public event EventHandler<AddLocalGalleryRequestEventArgs> TryAddLocalGalleryRequest;
         public event EventHandler<RemoveLocalGalleryRequestEventArgs> RemoveLocalGalleryRequest;
         public event EventHandler<ChangeDescriptionRequestEventArgs> ChangeDescriptionRequest;
+        public event EventHandler<OnlineConfigurationRequestEventArgs> OnlineConfigurationRequest;
         public event EventHandler<EnabledChangedEventArgs> GalleryEnabledChanged;
         public event EventHandler<UseCacheChangedEventArgs> UseCacheChanged;
         public event EventHandler<ClearCacheRequestEventArgs> ClearCacheRequest;
@@ -23,7 +28,7 @@ namespace CoverMyOST.Windows.Dialogs.Views
             InitializeComponent();
 
             foreach (OnlineGallery onlineGallery in onlineGalleries)
-                onlineGridView.Rows.Add(onlineGallery.Name, onlineGallery.Enabled, onlineGallery.UseCache, ClearButtonText);
+                onlineGridView.Rows.Add(onlineGallery.Name, ConfigureButtonText, onlineGallery.Enabled, onlineGallery.UseCache, ClearButtonText);
 
             foreach (LocalGallery localGallery in localGalleries)
                 AddToLocalGridView(localGallery);
@@ -53,6 +58,15 @@ namespace CoverMyOST.Windows.Dialogs.Views
             descriptionTextBox.Text = description;
         }
 
+        public void ContinueConfigureRequest(IOnlineGalleryConfigurator configurator)
+        {
+            var autoPlugForm = new AutoPlugFlowLayoutForm(configurator);
+
+            DialogResult result = autoPlugForm.ShowDialog();
+            if (result == DialogResult.OK)
+                configurator.Apply();
+        }
+
         private void OnlineGridViewOnSelectionChanged(object sender, EventArgs eventArgs)
         {
             if (onlineGridView.SelectedRows.Count == 0)
@@ -69,6 +83,17 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
             switch (onlineGridView.Columns[eventArgs.ColumnIndex].Name)
             {
+                case "Configure":
+
+                    var configureArgs = new OnlineConfigurationRequestEventArgs {
+                        GalleryName = (string)row.Cells["OnlineName"].Value
+                    };
+
+                    if (OnlineConfigurationRequest != null)
+                        OnlineConfigurationRequest.Invoke(this, configureArgs);
+
+                    break;
+
                 case "OnlineEnabled":
 
                     var enabledArgs = new EnabledChangedEventArgs() {
@@ -96,18 +121,18 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
                 case "ClearCache":
 
-                    var claerCacheArgs = new ClearCacheRequestEventArgs {
+                    var clearCacheArgs = new ClearCacheRequestEventArgs {
                         GalleryName = (string)row.Cells["OnlineName"].Value
                     };
 
-                    string message = string.Format(@"Are you sure you want to clear the cache of the {0} ?", claerCacheArgs.GalleryName);
+                    string message = string.Format(@"Are you sure you want to clear the cache of the {0} ?", clearCacheArgs.GalleryName);
                     DialogResult dialogResult = MessageBox.Show(message, @"Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (dialogResult != DialogResult.Yes)
                         return;
 
                     if (ClearCacheRequest != null)
-                        ClearCacheRequest.Invoke(this, claerCacheArgs);
+                        ClearCacheRequest.Invoke(this, clearCacheArgs);
 
                     break;
             }
@@ -230,6 +255,15 @@ namespace CoverMyOST.Windows.Dialogs.Views
         public class ClearCacheRequestEventArgs : EventArgs
         {
             public string GalleryName { get; set; }
+        }
+
+        public class OnlineConfigurationRequestEventArgs
+        {
+            public string GalleryName { get; set; }
+        }
+
+        public class OnlineConfigurationChangedEventArgs
+        {
         }
     }
 }

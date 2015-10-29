@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using CoverMyOST.Galleries.Base;
 using MiniMAL;
 using MiniMAL.Anime;
+using System.Security.Cryptography;
+using System.Text;
+using CoverMyOST.Galleries.Configurators;
+using FormPlug.SocketAttributes;
 
 namespace CoverMyOST.Galleries
 {
@@ -15,7 +19,16 @@ namespace CoverMyOST.Galleries
     // TODO : Create a special account for MyAnimeList
     public sealed class MyAnimeListGallery : OnlineGallery
     {
+        static private readonly ASCIIEncoding Encoding = new ASCIIEncoding();
         private readonly MiniMALClient _miniMal;
+        public string Username { get; set; }
+        public byte[] CryptedPassword { get; set; }
+
+        public string Password
+        {
+            get { return Encoding.GetString(ProtectedData.Unprotect(CryptedPassword, null, DataProtectionScope.CurrentUser)); }
+            set { CryptedPassword = ProtectedData.Protect(Encoding.GetBytes(value), null, DataProtectionScope.CurrentUser); }
+        }
 
         public override string Description
         {
@@ -34,8 +47,7 @@ namespace CoverMyOST.Galleries
             {
                 ct.ThrowIfCancellationRequested();
 
-                if (!_miniMal.IsConnected)
-                    Login();
+                _miniMal.Login(Username, Password);
 
                 var result = new CoverSearchResult();
 
@@ -78,11 +90,39 @@ namespace CoverMyOST.Galleries
             {
                 return new CoverSearchResult();
             }
+            finally
+            {
+                if (_miniMal.IsConnected)
+                    _miniMal.Logout();
+            }
         }
 
-        private void Login()
+        public override IOnlineGalleryConfigurator GetConfigurator()
         {
-            _miniMal.Login("TryMiniMAL", "tryminimal");
+            var configurator = new MyAnimeListGalleryConfigurator();
+            configurator.From(this);
+            return configurator;
+        }
+
+        private sealed class MyAnimeListGalleryConfigurator : OnlineGalleryConfiguratorBase<MyAnimeListGallery>
+        {
+            [TextSocket]
+            public string Username { get; set; }
+
+            [TextSocket(Password = true)]
+            public string Password { get; set; }
+
+            protected override void FromGallery(MyAnimeListGallery obj)
+            {
+                Username = obj.Username;
+                Password = obj.Password;
+            }
+
+            public override void Configure(MyAnimeListGallery obj)
+            {
+                obj.Username = Username;
+                obj.Password = Password;
+            }
         }
     }
 }

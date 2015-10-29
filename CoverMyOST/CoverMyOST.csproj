@@ -46,12 +46,15 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="taglib-sharp">
       <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\DataModels\MyAnimeListGalleryData.cs" />
+    <Compile Include="Configuration\DataModels\Galleries\MyAnimeListGalleryData.cs" />
+    <Compile Include="Galleries\Configurators\IGalleryConfigurator.cs" />
+    <Compile Include="Galleries\Configurators\OnlineGalleryConfiguratorBase.cs" />
     <Compile Include="Galleries\Base\CoversGallery.cs" />
     <Compile Include="Galleries\Base\CoversGalleryContainer.cs" />
     <Compile Include="Galleries\Base\CoversGalleryComposite.cs" />
@@ -84,7 +87,7 @@
     <Compile Include="FileManagers\MusicFileFilter.cs" />
     <Compile Include="Configuration\DataModels\UserConfigurationData.cs" />
     <Compile Include="Configuration\DataModels\GalleryManagerData.cs" />
-    <Compile Include="Configuration\DataModels\LocalGalleryData.cs" />
+    <Compile Include="Configuration\DataModels\Galleries\LocalGalleryData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -101,6 +104,10 @@
     <ProjectReference Include="..\External\Diese\Diese.Serialization\Diese.Serialization.csproj">
       <Project>{4AE2D764-4161-453D-8B2D-BD66607EC27A}</Project>
       <Name>Diese.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\External\FormPlug\FormPlug\FormPlug.csproj">
+      <Project>{FA85047C-1340-4CB2-B888-CFD45AB9DD85}</Project>
+      <Name>FormPlug</Name>
     </ProjectReference>
     <ProjectReference Include="..\External\MiniMAL\MiniMAL\MiniMAL.csproj">
       <Project>{102BFC84-17FE-4619-99F4-7EBF8C7D8DAF}</Project>

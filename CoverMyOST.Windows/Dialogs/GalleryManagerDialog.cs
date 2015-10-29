@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using CoverMyOST.Galleries;
 using CoverMyOST.Galleries.Base;
+using CoverMyOST.Galleries.Configurators;
 using CoverMyOST.Windows.Dialogs.Views;
 
 namespace CoverMyOST.Windows.Dialogs
 {
-    internal class GalleryManagerDialog : IDisposable
+    internal class GalleryManagerDialog
     {
         public GalleryManager Model { get; private set; }
         public GalleryManagerView View { get; private set; }
@@ -36,6 +36,12 @@ namespace CoverMyOST.Windows.Dialogs
                 View.CompleteChangeDescriptionRequest(description);
             };
 
+            View.OnlineConfigurationRequest += (sender, args) =>
+            {
+                IOnlineGalleryConfigurator configurator = Model.GetAllComponentsInChildren<OnlineGallery>().First(x => x.Name == args.GalleryName).GetConfigurator();
+                View.ContinueConfigureRequest(configurator);
+            };
+
             View.GalleryEnabledChanged += (sender, args) =>
             {
                 Model.GetComponentInChildren(args.GalleryName).Enabled = args.Enabled;
@@ -50,11 +56,6 @@ namespace CoverMyOST.Windows.Dialogs
             {
                 Model.GetAllComponentsInChildren<OnlineGallery>().First(x => x.Name == args.GalleryName).ClearCache();
             };
-        }
-
-        public void Dispose()
-        {
-
         }
     }
 }
