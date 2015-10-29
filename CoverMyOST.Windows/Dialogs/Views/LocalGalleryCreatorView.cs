@@ -18,7 +18,9 @@ namespace CoverMyOST.Windows.Dialogs.Views
         private sealed class PlugablePanel : PlugablePanel<LocalGalleryCreatorView, LocalGalleryCreator, Control>
         {
             public PlugablePanel(LocalGalleryCreatorView panel)
-                : base(panel) { }
+                : base(panel)
+            {
+            }
 
             protected override void CreatePlugs(LocalGalleryCreatorView panel)
             {

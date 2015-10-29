@@ -39,11 +39,6 @@ namespace CoverMyOST.Windows
             get { return _musicFileLoader.WorkingDirectory; }
         }
 
-        public MusicFile this[string filename]
-        {
-            get { return _musicFileLoader.Files[Path.Combine(WorkingDirectory, filename)]; }
-        }
-
         public MainModel()
         {
             _musicFileLoader = new MusicFileLoader();
@@ -66,6 +61,11 @@ namespace CoverMyOST.Windows
 
             ChangeAllFilesSelection(true);
             MusicFileCollectionEditor.Files = _musicFileLoader.Files.Values;
+        }
+
+        public MusicFile this[string filename]
+        {
+            get { return _musicFileLoader.Files[Path.Combine(WorkingDirectory, filename)]; }
         }
 
         public void ChangeFolder(string folderPath)

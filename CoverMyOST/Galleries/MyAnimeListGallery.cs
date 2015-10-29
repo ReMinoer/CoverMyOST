@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoverMyOST.Galleries.Base;
-using MiniMAL;
-using MiniMAL.Anime;
-using System.Security.Cryptography;
-using System.Text;
 using CoverMyOST.Galleries.Configurators;
 using FormPlug.SocketAttributes;
+using MiniMAL;
+using MiniMAL.Anime;
 
 namespace CoverMyOST.Galleries
 {
@@ -112,16 +112,16 @@ namespace CoverMyOST.Galleries
             [TextSocket(Password = true)]
             public string Password { get; set; }
 
-            protected override void FromGallery(MyAnimeListGallery obj)
-            {
-                Username = obj.Username;
-                Password = obj.Password;
-            }
-
             public override void Configure(MyAnimeListGallery obj)
             {
                 obj.Username = Username;
                 obj.Password = Password;
+            }
+
+            protected override void FromGallery(MyAnimeListGallery obj)
+            {
+                Username = obj.Username;
+                Password = obj.Password;
             }
         }
     }

@@ -35,7 +35,7 @@ namespace CoverMyOST.Windows.Dialogs.Views
             _albumTextBox.GotFocus += AlbumTextBoxOnGotFocus;
 
             _listView.ItemSelectionChanged += ListViewOnItemSelectionChanged;
-            
+
             Closing += OnClosing;
         }
 

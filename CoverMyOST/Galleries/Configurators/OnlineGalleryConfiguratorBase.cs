@@ -24,8 +24,6 @@ namespace CoverMyOST.Galleries.Configurators
             FromGallery(_gallery);
         }
 
-        protected abstract void FromGallery(TGallery gallery);
-
         public abstract void Configure(TGallery obj);
 
         public void Apply()
@@ -35,5 +33,7 @@ namespace CoverMyOST.Galleries.Configurators
 
             Configure(_gallery);
         }
+
+        protected abstract void FromGallery(TGallery gallery);
     }
 }

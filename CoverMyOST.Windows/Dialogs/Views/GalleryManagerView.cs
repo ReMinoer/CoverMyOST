@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using CoverMyOST.Configuration.DataModels;
 using CoverMyOST.Galleries;
 using CoverMyOST.Galleries.Base;
 using CoverMyOST.Galleries.Configurators;
 using CoverMyOST.Windows.Sockets;
-using Diese.Modelization;
 using FormPlug.WindowsForm;
 
 namespace CoverMyOST.Windows.Dialogs.Views
@@ -85,7 +83,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
             {
                 case "Configure":
 
-                    var configureArgs = new OnlineConfigurationRequestEventArgs {
+                    var configureArgs = new OnlineConfigurationRequestEventArgs
+                    {
                         GalleryName = (string)row.Cells["OnlineName"].Value
                     };
 
@@ -96,7 +95,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
                 case "OnlineEnabled":
 
-                    var enabledArgs = new EnabledChangedEventArgs() {
+                    var enabledArgs = new EnabledChangedEventArgs()
+                    {
                         GalleryName = (string)row.Cells["OnlineName"].Value,
                         Enabled = (bool)row.Cells["OnlineEnabled"].Value
                     };
@@ -107,7 +107,7 @@ namespace CoverMyOST.Windows.Dialogs.Views
                     break;
 
                 case "UseCache":
-                    
+
                     var useCacheArgs = new UseCacheChangedEventArgs()
                     {
                         GalleryName = (string)row.Cells["OnlineName"].Value,
@@ -121,7 +121,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
                 case "ClearCache":
 
-                    var clearCacheArgs = new ClearCacheRequestEventArgs {
+                    var clearCacheArgs = new ClearCacheRequestEventArgs
+                    {
                         GalleryName = (string)row.Cells["OnlineName"].Value
                     };
 
@@ -147,7 +148,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
             {
                 case "LocalEnabled":
 
-                    var enabledArgs = new EnabledChangedEventArgs {
+                    var enabledArgs = new EnabledChangedEventArgs
+                    {
                         GalleryName = (string)row.Cells["LocalName"].Value,
                         Enabled = (bool)row.Cells["LocalEnabled"].Value
                     };
@@ -174,7 +176,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
         private void DescriptionSelectionChanged(string galleryName)
         {
-            var args = new ChangeDescriptionRequestEventArgs {
+            var args = new ChangeDescriptionRequestEventArgs
+            {
                 GalleryName = galleryName
             };
 
@@ -210,7 +213,8 @@ namespace CoverMyOST.Windows.Dialogs.Views
 
             DataGridViewRow row = localGridView.SelectedRows[0];
 
-            var args = new RemoveLocalGalleryRequestEventArgs {
+            var args = new RemoveLocalGalleryRequestEventArgs
+            {
                 GalleryName = (string)row.Cells["LocalName"].Value
             };
 

@@ -105,7 +105,7 @@ namespace CoverMyOST.Test
         static public void AssignCoverOnline(Func<IOnlineGallery> galleryFactory, string filePath, string query)
         {
             // Prerequisites
-            MusicFile temp = ResetFile(filePath);
+            ResetFile(filePath);
 
             // Process
             var loader = new MusicFileLoader();
